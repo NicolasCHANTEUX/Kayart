@@ -1,0 +1,350 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductCondition {
+  new
+  used
+  service
+
+  @@map("product_condition")
+}
+
+enum ProductAvailability {
+  draft
+  available
+  reserved
+  madeToOrder @map("made_to_order")
+  unavailable
+  archived
+
+  @@map("product_availability")
+}
+
+enum OrderStatus {
+  pending
+  paid
+  preparing
+  ready
+  shipped
+  completed
+  cancelled
+  refunded
+
+  @@map("order_status")
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  cancelled
+  refunded
+
+  @@map("payment_status")
+}
+
+enum RequestStatus {
+  new
+  inProgress @map("in_progress")
+  answered
+  closed
+
+  @@map("request_status")
+}
+
+enum ReservationStatus {
+  new
+  accepted
+  rejected
+  expired
+  converted
+  cancelled
+
+  @@map("reservation_status")
+}
+
+enum MediaVisibility {
+  public
+  private
+
+  @@map("media_visibility")
+}
+
+model Category {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentId    String?    @map("parent_id") @db.Uuid
+  name        String
+  slug        String     @unique
+  description String?
+  position    Int        @default(0)
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime   @default(now()) @map("updated_at") @db.Timestamptz(6)
+  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryTree")
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId          String?             @map("category_id") @db.Uuid
+  name                String
+  slug                String              @unique
+  sku                 String?             @unique
+  shortDescription    String?             @map("short_description")
+  description         String?
+  condition           ProductCondition    @default(new)
+  availability        ProductAvailability @default(draft)
+  priceCents          Int?                @map("price_cents")
+  compareAtPriceCents Int?                @map("compare_at_price_cents")
+  currency            String              @default("EUR") @db.Char(3)
+  stockQuantity       Int?                @map("stock_quantity")
+  isFeatured          Boolean             @default(false) @map("is_featured")
+  isReservable        Boolean             @default(false) @map("is_reservable")
+  isCustomizable      Boolean             @default(false) @map("is_customizable")
+  publishedAt         DateTime?           @map("published_at") @db.Timestamptz(6)
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime            @default(now()) @map("updated_at") @db.Timestamptz(6)
+  category            Category?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  attributes          ProductAttribute[]
+  images              ProductImage[]
+  orderItems          OrderItem[]
+  reservations        Reservation[]
+  stockAlerts         StockAlert[]
+
+  @@index([categoryId])
+  @@index([availability])
+  @@index([condition])
+  @@map("products")
+}
+
+model ProductAttribute {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  label     String
+  value     String
+  unit      String?
+  position  Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_attributes")
+}
+
+model MediaAsset {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bucket           String
+  path             String
+  originalFilename String?         @map("original_filename")
+  altText          String?         @map("alt_text")
+  mimeType         String          @map("mime_type")
+  sizeBytes        Int             @map("size_bytes")
+  width            Int?
+  height           Int?
+  visibility       MediaVisibility @default(public)
+  createdAt        DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  productImages    ProductImage[]
+  blogPosts        BlogPost[]
+  requestMedia     RequestMedia[]
+
+  @@map("media_assets")
+}
+
+model ProductImage {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId    String     @map("product_id") @db.Uuid
+  mediaAssetId String     @map("media_asset_id") @db.Uuid
+  isPrimary    Boolean    @default(false) @map("is_primary")
+  position     Int        @default(0)
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  mediaAsset   MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model Customer {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authUserId  String?       @unique @map("auth_user_id") @db.Uuid
+  email       String
+  firstName   String?       @map("first_name")
+  lastName    String?       @map("last_name")
+  phone       String?
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  orders      Order[]
+  reservations Reservation[]
+
+  @@map("customers")
+}
+
+model Order {
+  id                      String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderNumber             String        @unique @map("order_number")
+  customerId              String?       @map("customer_id") @db.Uuid
+  guestEmail              String        @map("guest_email")
+  status                  OrderStatus   @default(pending)
+  paymentStatus           PaymentStatus @default(pending) @map("payment_status")
+  currency                String        @default("EUR") @db.Char(3)
+  subtotalCents           Int           @default(0) @map("subtotal_cents")
+  shippingCents           Int           @default(0) @map("shipping_cents")
+  totalCents              Int           @default(0) @map("total_cents")
+  customerNote            String?       @map("customer_note")
+  stripeCheckoutSessionId String?       @unique @map("stripe_checkout_session_id")
+  stripePaymentIntentId   String?       @unique @map("stripe_payment_intent_id")
+  billingAddress          Json?         @map("billing_address")
+  shippingAddress         Json?         @map("shipping_address")
+  paidAt                  DateTime?     @map("paid_at") @db.Timestamptz(6)
+  createdAt               DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  customer                Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items                   OrderItem[]
+
+  @@index([guestEmail])
+  @@index([status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId        String   @map("order_id") @db.Uuid
+  productId      String?  @map("product_id") @db.Uuid
+  productName    String   @map("product_name")
+  productSku     String?  @map("product_sku")
+  quantity       Int
+  unitPriceCents Int      @map("unit_price_cents")
+  totalCents     Int      @map("total_cents")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product        Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@map("order_items")
+}
+
+model Reservation {
+  id         String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId  String            @map("product_id") @db.Uuid
+  customerId String?           @map("customer_id") @db.Uuid
+  name       String
+  email      String
+  phone      String?
+  message    String?
+  status     ReservationStatus @default(new)
+  expiresAt  DateTime?         @map("expires_at") @db.Timestamptz(6)
+  createdAt  DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime          @default(now()) @map("updated_at") @db.Timestamptz(6)
+  product    Product           @relation(fields: [productId], references: [id], onDelete: Restrict)
+  customer   Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@map("reservations")
+}
+
+model ContactRequest {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    RequestStatus @default(new)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([status])
+  @@map("contact_requests")
+}
+
+model RepairRequest {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String
+  email             String
+  phone             String?
+  productType       String?       @map("product_type")
+  damageDescription String        @map("damage_description")
+  status            RequestStatus @default(new)
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([status])
+  @@map("repair_requests")
+}
+
+model CustomRequest {
+  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String
+  email              String
+  phone              String?
+  discipline         String?
+  practiceLevel      String?       @map("practice_level")
+  projectDescription String        @map("project_description")
+  constraints        String?
+  budgetHint         String?       @map("budget_hint")
+  status             RequestStatus @default(new)
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([status])
+  @@map("custom_requests")
+}
+
+model RequestMedia {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestType  String     @map("request_type")
+  requestId    String     @map("request_id") @db.Uuid
+  mediaAssetId String     @map("media_asset_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  mediaAsset   MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict)
+
+  @@map("request_media")
+}
+
+model BlogPost {
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  slug         String      @unique
+  excerpt      String?
+  content      String?
+  coverMediaId String?     @map("cover_media_id") @db.Uuid
+  isPublished  Boolean     @default(false) @map("is_published")
+  publishedAt  DateTime?   @map("published_at") @db.Timestamptz(6)
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
+  coverMedia   MediaAsset? @relation(fields: [coverMediaId], references: [id], onDelete: SetNull)
+
+  @@index([isPublished, publishedAt])
+  @@map("blog_posts")
+}
+
+model StockAlert {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId   String    @map("product_id") @db.Uuid
+  email       String
+  token       String    @unique @default(dbgenerated("encode(gen_random_bytes(32), 'hex')"))
+  notifiedAt  DateTime? @map("notified_at") @db.Timestamptz(6)
+  cancelledAt DateTime? @map("cancelled_at") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("stock_alerts")
+}
+
+model AuditLog {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorUserId String?  @map("actor_user_id") @db.Uuid
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String?  @map("entity_id") @db.Uuid
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("audit_logs")
+}

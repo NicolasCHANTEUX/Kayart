@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="KayArt">
+  <rect width="512" height="512" fill="#101312"/>
+  <path d="M88 336 424 176" stroke="#D9FF3F" stroke-width="42" stroke-linecap="square"/>
+  <path d="M108 176h82l72 106 72-106h70L292 336h-65L108 176Z" fill="#F1F0E9"/>
+</svg>

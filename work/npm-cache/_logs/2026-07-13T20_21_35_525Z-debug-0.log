@@ -1,0 +1,87 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.13.0
+2 info using node@v24.16.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\Nicolas\Documents\Codex\2026-07-13\github-plugin-github-openai-curated-remote-2\.npmrc
+5 silly config load:file:C:\Users\Nicolas\.npmrc
+6 silly config load:file:C:\Users\Nicolas\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" ".\\work\\npm-cache" "--fetch-timeout" "30000" "--fetch-retries" "1" "--loglevel" "warn"
+9 verbose logfile logs-max:10 dir:C:\Users\Nicolas\Documents\Codex\2026-07-13\github-plugin-github-openai-curated-remote-2\work\npm-cache\_logs\2026-07-13T20_21_35_525Z-
+10 verbose logfile C:\Users\Nicolas\Documents\Codex\2026-07-13\github-plugin-github-openai-curated-remote-2\work\npm-cache\_logs\2026-07-13T20_21_35_525Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+14 silly idealTree buildDeps
+15 silly fetch manifest next@15.5.18
+16 silly packumentCache full:https://registry.npmjs.org/next cache-miss
+17 http fetch GET https://registry.npmjs.org/next attempt 1 failed with EACCES
+18 http fetch GET https://registry.npmjs.org/npm attempt 2 failed with EACCES
+19 http fetch GET https://registry.npmjs.org/next attempt 2 failed with EACCES
+20 silly fetch manifest react@19.2.6
+21 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+22 http fetch GET https://registry.npmjs.org/react attempt 1 failed with EACCES
+23 http fetch GET https://registry.npmjs.org/react attempt 2 failed with EACCES
+24 silly fetch manifest react-dom@19.2.6
+25 silly packumentCache full:https://registry.npmjs.org/react-dom cache-miss
+26 http fetch GET https://registry.npmjs.org/react-dom attempt 1 failed with EACCES
+27 http fetch GET https://registry.npmjs.org/react-dom attempt 2 failed with EACCES
+28 silly fetch manifest @types/node@22.19.19
+29 silly packumentCache full:https://registry.npmjs.org/@types%2fnode cache-miss
+30 http fetch GET https://registry.npmjs.org/@types%2fnode attempt 1 failed with EACCES
+31 http fetch GET https://registry.npmjs.org/@types%2fnode attempt 2 failed with EACCES
+32 silly fetch manifest @types/react@19.2.17
+33 silly packumentCache full:https://registry.npmjs.org/@types%2freact cache-miss
+34 http fetch GET https://registry.npmjs.org/@types%2freact attempt 1 failed with EACCES
+35 http fetch GET https://registry.npmjs.org/@types%2freact attempt 2 failed with EACCES
+36 silly fetch manifest @types/react-dom@19.2.3
+37 silly packumentCache full:https://registry.npmjs.org/@types%2freact-dom cache-miss
+38 http fetch GET https://registry.npmjs.org/@types%2freact-dom attempt 1 failed with EACCES
+39 http fetch GET https://registry.npmjs.org/@types%2freact-dom attempt 2 failed with EACCES
+40 silly fetch manifest typescript@5.9.3
+41 silly packumentCache full:https://registry.npmjs.org/typescript cache-miss
+42 http fetch GET https://registry.npmjs.org/typescript attempt 1 failed with EACCES
+43 http fetch GET https://registry.npmjs.org/typescript attempt 2 failed with EACCES
+44 silly placeDep ROOT @types/node@ OK for: kayart-web@0.1.0 want: 22.19.19
+45 silly placeDep ROOT @types/react@ OK for: kayart-web@0.1.0 want: 19.2.17
+46 silly placeDep ROOT @types/react-dom@ OK for: kayart-web@0.1.0 want: 19.2.3
+47 silly placeDep ROOT next@ OK for: kayart-web@0.1.0 want: 15.5.18
+48 silly placeDep ROOT react@ OK for: kayart-web@0.1.0 want: 19.2.6
+49 silly placeDep ROOT react-dom@ OK for: kayart-web@0.1.0 want: 19.2.6
+50 silly placeDep ROOT typescript@ OK for: kayart-web@0.1.0 want: 5.9.3
+51 verbose type system
+52 verbose stack FetchError: request to https://registry.npmjs.org/@types%2fnode failed, reason: 
+52 verbose stack     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+52 verbose stack     at ClientRequest.emit (node:events:509:28)
+52 verbose stack     at emitErrorEvent (node:_http_client:109:11)
+52 verbose stack     at _destroy (node:_http_client:993:9)
+52 verbose stack     at onSocketNT (node:_http_client:1014:5)
+52 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:91:21)
+53 error code EACCES
+54 error errno EACCES
+55 error FetchError: request to https://registry.npmjs.org/@types%2fnode failed, reason: 
+55 error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+55 error     at ClientRequest.emit (node:events:509:28)
+55 error     at emitErrorEvent (node:_http_client:109:11)
+55 error     at _destroy (node:_http_client:993:9)
+55 error     at onSocketNT (node:_http_client:1014:5)
+55 error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+55 error   code: 'EACCES',
+55 error   errno: 'EACCES',
+55 error   type: 'system',
+55 error   requiredBy: '.'
+55 error }
+56 error
+56 error The operation was rejected by your operating system.
+56 error It's possible that the file was already in use (by a text editor or antivirus), or that you lack permissions to access it.
+56 error
+56 error If you believe this might be a permissions issue, please double-check the permissions of the file and its containing directories, or try running the command again as root/Administrator.
+57 silly unfinished npm timer reify 1783974095774
+58 silly unfinished npm timer reify:loadTrees 1783974095776
+59 verbose cwd C:\Users\Nicolas\Documents\Codex\2026-07-13\github-plugin-github-openai-curated-remote-2
+60 verbose os Windows_NT 10.0.26200
+61 verbose node v24.16.0
+62 verbose npm  v11.13.0
+63 verbose exit 1
+64 verbose code 1
+65 error A complete log of this run can be found in: C:\Users\Nicolas\Documents\Codex\2026-07-13\github-plugin-github-openai-curated-remote-2\work\npm-cache\_logs\2026-07-13T20_21_35_525Z-debug-0.log
