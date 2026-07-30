@@ -7,11 +7,11 @@ export default function CartPage() {
   return (
     <section className="section section--light">
       <div className="container">
-        <div className="eyebrow">Checkout invite</div>
+        <div className="eyebrow">Checkout invité</div>
         <h1 className="page-title">Panier</h1>
         <p className="lead">
-          Le panier sera developpe apres le catalogue et le schema produit. La V1 gardera l'achat
-          invite obligatoire, sans creation de compte imposee.
+          Le panier sera développé après le catalogue et le schéma produit. La V1 gardera l'achat
+          invité obligatoire, sans création de compte imposée.
         </p>
       </div>
     </section>

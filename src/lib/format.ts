@@ -10,13 +10,29 @@ export function formatPrice(product: Product): string {
       return "Sur devis";
     }
 
-    return "A definir";
+    return "À définir";
   }
 
+  return formatMoneyCents(product.priceCents, product.currency);
+}
+
+export function formatMoneyCents(value: number, currency: Product["currency"] = "EUR") {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
-    currency: product.currency
-  }).format(product.priceCents / 100);
+    currency
+  }).format(value / 100);
+}
+
+export function getDiscountPercent(product: Product) {
+  if (
+    product.priceCents === null ||
+    !product.compareAtPriceCents ||
+    product.compareAtPriceCents <= product.priceCents
+  ) {
+    return null;
+  }
+
+  return Math.round(((product.compareAtPriceCents - product.priceCents) / product.compareAtPriceCents) * 100);
 }
 
 export function formatStock(product: Product): string {
@@ -33,8 +49,8 @@ export function formatStock(product: Product): string {
   }
 
   if (product.stockQuantity === 1) {
-    return "1 piece";
+    return "1 pièce";
   }
 
-  return `${product.stockQuantity} pieces`;
+  return `${product.stockQuantity} pièces`;
 }

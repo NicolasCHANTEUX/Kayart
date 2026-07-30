@@ -3,7 +3,7 @@ import { listPublishedProducts } from "@/server/catalog/catalog.service";
 
 export const metadata = {
   title: "Boutique",
-  description: "Catalogue KayArt : produits neufs, occasion, services et pieces sur mesure."
+  description: "Catalogue KayArt : produits neufs, imparfaits, services et pièces sur mesure."
 };
 
 export default async function ShopPage() {
@@ -14,12 +14,11 @@ export default async function ShopPage() {
       <div className="container">
         <div className="section__header">
           <div>
-            <div className="eyebrow">Catalogue V1</div>
+            <div className="eyebrow">Catalogue</div>
             <h1 className="page-title">Boutique</h1>
           </div>
           <p className="lead">
-            Les donnees sont temporaires pour cadrer l'interface. Elles seront remplacees par la
-            base PostgreSQL/Supabase quand le schema sera valide.
+            Produits neufs, pièces imparfaites, services atelier et projets sur commande.
           </p>
         </div>
         <div className="grid">

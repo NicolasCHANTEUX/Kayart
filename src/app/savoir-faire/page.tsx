@@ -1,6 +1,6 @@
 export const metadata = {
   title: "Savoir-faire",
-  description: "L'atelier, les gestes et les choix techniques derriere les pieces KayArt."
+  description: "L'atelier, les gestes et les choix techniques derrière les pièces KayArt."
 };
 
 export default function CraftPage() {
@@ -10,8 +10,8 @@ export default function CraftPage() {
         <div className="eyebrow">Atelier</div>
         <h1 className="page-title">Savoir-faire</h1>
         <p className="lead">
-          Une page pour montrer la fabrication, les matieres, le controle, les reparations et les
-          realisations. Elle deviendra un pilier de confiance autant qu'une page SEO.
+          Une page pour montrer la fabrication, les matières, le contrôle, les réparations et les
+          réalisations. Elle deviendra un pilier de confiance autant qu'une page SEO.
         </p>
       </div>
     </section>

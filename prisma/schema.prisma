@@ -8,6 +8,7 @@ datasource db {
 
 enum ProductCondition {
   new
+  imperfect
   used
   service
 
@@ -75,6 +76,13 @@ enum MediaVisibility {
   @@map("media_visibility")
 }
 
+enum CustomerRole {
+  customer
+  admin
+
+  @@map("customer_role")
+}
+
 model Category {
   id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   parentId    String?    @map("parent_id") @db.Uuid
@@ -94,12 +102,14 @@ model Category {
 
 model Product {
   id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  baseProductId       String?             @map("base_product_id") @db.Uuid
   categoryId          String?             @map("category_id") @db.Uuid
   name                String
   slug                String              @unique
   sku                 String?             @unique
   shortDescription    String?             @map("short_description")
   description         String?
+  defectDescription   String?             @map("defect_description")
   condition           ProductCondition    @default(new)
   availability        ProductAvailability @default(draft)
   priceCents          Int?                @map("price_cents")
@@ -112,6 +122,8 @@ model Product {
   publishedAt         DateTime?           @map("published_at") @db.Timestamptz(6)
   createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt           DateTime            @default(now()) @map("updated_at") @db.Timestamptz(6)
+  baseProduct         Product?            @relation("ProductImperfectBase", fields: [baseProductId], references: [id], onDelete: SetNull)
+  imperfectProducts   Product[]           @relation("ProductImperfectBase")
   category            Category?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   attributes          ProductAttribute[]
   images              ProductImage[]
@@ -119,6 +131,7 @@ model Product {
   reservations        Reservation[]
   stockAlerts         StockAlert[]
 
+  @@index([baseProductId])
   @@index([categoryId])
   @@index([availability])
   @@index([condition])
@@ -175,6 +188,7 @@ model Customer {
   id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   authUserId  String?       @unique @map("auth_user_id") @db.Uuid
   email       String
+  role        CustomerRole  @default(customer)
   firstName   String?       @map("first_name")
   lastName    String?       @map("last_name")
   phone       String?
@@ -328,7 +342,7 @@ model StockAlert {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   productId   String    @map("product_id") @db.Uuid
   email       String
-  token       String    @unique @default(dbgenerated("encode(gen_random_bytes(32), 'hex')"))
+  token       String    @unique
   notifiedAt  DateTime? @map("notified_at") @db.Timestamptz(6)
   cancelledAt DateTime? @map("cancelled_at") @db.Timestamptz(6)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)

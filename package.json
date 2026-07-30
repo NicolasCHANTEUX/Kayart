@@ -10,6 +10,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
+    "db:seed": "node scripts/seed-catalog.mjs",
     "start": "next start",
     "lint": "npm run typecheck",
     "typecheck": "tsc --noEmit",

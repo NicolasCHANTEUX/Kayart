@@ -4,13 +4,14 @@
 
 create extension if not exists "pgcrypto";
 
-create type product_condition as enum ('new', 'used', 'service');
+create type product_condition as enum ('new', 'imperfect', 'used', 'service');
 create type product_availability as enum ('draft', 'available', 'reserved', 'made_to_order', 'unavailable', 'archived');
 create type order_status as enum ('pending', 'paid', 'preparing', 'ready', 'shipped', 'completed', 'cancelled', 'refunded');
 create type payment_status as enum ('pending', 'paid', 'failed', 'cancelled', 'refunded');
 create type request_status as enum ('new', 'in_progress', 'answered', 'closed');
 create type reservation_status as enum ('new', 'accepted', 'rejected', 'expired', 'converted', 'cancelled');
 create type media_visibility as enum ('public', 'private');
+create type customer_role as enum ('customer', 'admin');
 
 create table categories (
   id uuid primary key default gen_random_uuid(),
@@ -26,12 +27,14 @@ create table categories (
 
 create table products (
   id uuid primary key default gen_random_uuid(),
+  base_product_id uuid references products(id) on delete set null,
   category_id uuid references categories(id) on delete set null,
   name text not null,
   slug text not null unique,
   sku text unique,
   short_description text,
   description text,
+  defect_description text,
   condition product_condition not null default 'new',
   availability product_availability not null default 'draft',
   price_cents integer,
@@ -90,6 +93,7 @@ create table customers (
   id uuid primary key default gen_random_uuid(),
   auth_user_id uuid unique,
   email text not null,
+  role customer_role not null default 'customer',
   first_name text,
   last_name text,
   phone text,
@@ -217,7 +221,7 @@ create table stock_alerts (
   id uuid primary key default gen_random_uuid(),
   product_id uuid not null references products(id) on delete cascade,
   email text not null,
-  token text not null unique default encode(gen_random_bytes(32), 'hex'),
+  token text not null unique,
   notified_at timestamptz,
   cancelled_at timestamptz,
   created_at timestamptz not null default now()
@@ -233,6 +237,7 @@ create table audit_logs (
   created_at timestamptz not null default now()
 );
 
+create index products_base_product_id_idx on products(base_product_id);
 create index products_category_id_idx on products(category_id);
 create index products_availability_idx on products(availability);
 create index products_condition_idx on products(condition);
@@ -245,4 +250,3 @@ create index repair_requests_status_idx on repair_requests(status);
 create index custom_requests_status_idx on custom_requests(status);
 create index contact_requests_status_idx on contact_requests(status);
 create index blog_posts_published_idx on blog_posts(is_published, published_at);
-

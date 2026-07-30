@@ -7,7 +7,7 @@ const processSteps = [
   "Preparation",
   "Stratification",
   "Finition",
-  "Controle"
+  "Contrôle"
 ];
 
 export default async function HomePage() {
@@ -17,11 +17,11 @@ export default async function HomePage() {
     <>
       <section className="hero">
         <div className="container hero__content">
-          <div className="eyebrow">Atelier carbone / kayak / pieces techniques</div>
-          <h1>Carbon in Motion</h1>
+          <div className="eyebrow">Atelier carbone / kayak / pièces techniques</div>
+          <h1>KayArt</h1>
           <p>
-            Pieces en carbone faconnees a la main pour la performance, la precision et la
-            duree. Boutique, reparation, occasion et projets sur mesure.
+            Fabrication carbone, réparation de kayak, pièces uniques et projets sur mesure.
+            Une boutique d'atelier pensée pour comprendre, choisir et confier le bon matériel.
           </p>
           <div className="hero__actions">
             <Link className="button button--primary" href="/boutique">
@@ -37,7 +37,7 @@ export default async function HomePage() {
       <section className="section">
         <div className="container">
           <div className="section__header">
-            <h2>Produits, services et pieces uniques</h2>
+            <h2>Produits, services et pièces uniques</h2>
             <Link className="button button--ghost" href="/boutique">
               Tout voir
             </Link>
@@ -56,9 +56,9 @@ export default async function HomePage() {
             <div className="eyebrow">Savoir-faire</div>
             <h2>Une logique d'atelier avant une logique de catalogue</h2>
             <p className="lead">
-              KayArt doit montrer le geste, les matieres, les contraintes et les choix techniques.
-              Chaque fiche, chaque demande et chaque image doit aider le client a comprendre ce
-              qu'il achete ou ce qu'il confie a l'atelier.
+              KayArt doit montrer le geste, les matières, les contraintes et les choix techniques.
+              Chaque fiche, chaque demande et chaque image doit aider le client à comprendre ce
+              qu'il achète ou ce qu'il confie à l'atelier.
             </p>
           </div>
           <div className="process">
@@ -75,48 +75,48 @@ export default async function HomePage() {
       <section className="section">
         <div className="container">
           <div className="section__header">
-            <h2>Reparation et sur-mesure comme parcours dedies</h2>
+            <h2>Réparation et sur-mesure comme parcours dédiés</h2>
           </div>
           <div className="grid">
-            <article className="feature-card">
+            <article className="feature-card feature-card--repair">
               <div className="feature-card__visual" aria-hidden="true" />
               <div>
                 <div className="meta">Diagnostic</div>
-                <h3>Reparation carbone</h3>
+                <h3>Réparation carbone</h3>
               </div>
               <p>
-                Un formulaire dedie permettra d'envoyer photos, contexte et description du
-                dommage pour une reponse claire de l'atelier.
+                Un formulaire dédié permettra d'envoyer photos, contexte et description du
+                dommage pour une réponse claire de l'atelier.
               </p>
               <Link className="button button--ghost" href="/reparation">
                 Demander un diagnostic
               </Link>
             </article>
 
-            <article className="feature-card">
+            <article className="feature-card feature-card--custom">
               <div className="feature-card__visual" aria-hidden="true" />
               <div>
                 <div className="meta">Projet</div>
                 <h3>Fabrication sur mesure</h3>
               </div>
               <p>
-                Dimensions, usage, niveau, contraintes et finition seront cadres dans une demande
+                Dimensions, usage, niveau, contraintes et finition seront cadrés dans une demande
                 simple, sans transformer la V1 en configurateur complexe.
               </p>
               <Link className="button button--ghost" href="/sur-mesure">
-                Preparer une demande
+                Préparer une demande
               </Link>
             </article>
 
-            <article className="feature-card">
+            <article className="feature-card feature-card--journal">
               <div className="feature-card__visual" aria-hidden="true" />
               <div>
                 <div className="meta">PWA</div>
-                <h3>Installable sans complexite</h3>
+                <h3>Installable sans complexité</h3>
               </div>
               <p>
-                Le socle prevoit une PWA progressive : installation mobile et desktop, cache
-                sobre, sans panier offline ni notification prematuree.
+                Le socle prévoit une PWA progressive : installation mobile et desktop, cache
+                sobre, sans panier offline ni notification prématurée.
               </p>
               <Link className="button button--ghost" href="/journal">
                 Suivre le projet

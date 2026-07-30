@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Reparation",
-  description: "Demander un diagnostic de reparation carbone a l'atelier KayArt."
+  title: "Réparation",
+  description: "Demander un diagnostic de réparation carbone à l'atelier KayArt."
 };
 
 export default function RepairPage() {
@@ -9,15 +9,15 @@ export default function RepairPage() {
       <div className="container split">
         <div>
           <div className="eyebrow">Diagnostic atelier</div>
-          <h1 className="page-title">Reparation</h1>
+          <h1 className="page-title">Réparation</h1>
           <p className="lead">
-            Cette page cadrera le parcours de demande avec description, photos, type de piece et
-            reponse de l'atelier. Le formulaire sera branche apres le schema de donnees.
+            Cette page cadrera le parcours de demande avec description, photos, type de pièce et
+            réponse de l'atelier. Le formulaire sera branché après le schéma de données.
           </p>
         </div>
         <div className="feature-card">
           <div className="meta">V1</div>
-          <h3>Formulaire prevu</h3>
+          <h3>Formulaire prévu</h3>
           <p>Nom, email, type de produit, description du dommage, photos et consentement.</p>
         </div>
       </div>

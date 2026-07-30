@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "KayArt",
     short_name: "KayArt",
-    description: "Pieces carbone artisanales, reparation et sur-mesure.",
+    description: "Pièces carbone artisanales, réparation et sur-mesure.",
     start_url: "/",
     display: "standalone",
     background_color: "#101312",

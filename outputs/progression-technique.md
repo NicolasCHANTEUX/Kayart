@@ -10,8 +10,23 @@ Date : 14 juillet 2026
 - Admin produits en place.
 - Formulaire nouveau produit en place.
 - Chemin de sauvegarde produit prepare cote serveur, actif uniquement en mode Prisma.
+- Mise a jour rapide du stock preparee dans l'admin produits, active uniquement en mode Prisma.
 - Schema PostgreSQL/Supabase V1 en place.
 - Prisma Client genere et audit npm propre cote utilisateur.
+- Projet Supabase Kayart prepare cote variables locales.
+- URLs PostgreSQL Supabase identifiees : transaction pooler et session pooler.
+- Correction Supabase : le token des alertes stock n'utilise plus `gen_random_bytes`.
+- `db:push` reussi cote utilisateur : la base Supabase est synchronisee avec Prisma.
+- `KAYART_DATA_SOURCE=prisma` active dans `.env.local`.
+- Seed catalogue ajoute via `npm.cmd run db:seed`.
+- Rapport ancien admin analyse et decisions stock documentees.
+- Formulaire produit renforce : SKU/categorie/description obligatoires, prix barre, poids, dimensions.
+- Liste admin enrichie : recherche, filtres categorie/type/stock, badges de stock coherents.
+- Export Sigma/Figma Make analyse et premiere charte graphique appliquee.
+- Liste admin produits finalisee : message V1 retire, disponibilite en lecture seule, stock seul modifiable.
+- Upload multi-images ajoute au formulaire produit avec drag/drop et image de couverture.
+- Les cartes produit et l'admin affichent l'image principale quand elle existe.
+- Formulaire de creation transforme en assistant progressif avec etapes bloquees et grisage anime.
 
 ## Regle de travail
 
@@ -36,10 +51,10 @@ Elles passent par :
 - `src/server/catalog/catalog.repository.ts`
 - `src/server/catalog/catalog.service.ts`
 
-Aujourd'hui, le repository utilise encore les donnees mockees par defaut.
+Aujourd'hui, `.env.local` utilise le repository Prisma.
 
-Le repository Prisma est code, mais desactive par defaut. On pourra l'activer sans changer les pages
-boutique, fiche produit ou admin produits.
+Le repository mock reste disponible pour developper sans base reelle ou diagnostiquer un probleme de
+connexion, sans changer les pages boutique, fiche produit ou admin produits.
 
 Selection :
 
@@ -75,7 +90,8 @@ npm.cmd run db:generate
 npm.cmd run typecheck
 ```
 
-Le branchement technique est pret ; il manque seulement la base reelle et les variables d'environnement.
+Le branchement technique est actif en local. Les prochaines etapes portent sur les donnees, l'admin et
+les protections d'acces.
 
 Un mapper est deja pret :
 
@@ -89,19 +105,41 @@ Le formulaire admin nouveau produit passe par :
 - `src/server/catalog/catalog.input.ts`
 - `src/server/catalog/catalog.repository.ts`
 
+En mode `prisma`, le formulaire cree un produit en base.
 En mode `mock`, le bouton reste desactive pour eviter une fausse sauvegarde.
-En mode `prisma`, le formulaire creera un produit en base.
+
+La liste admin produits permet aussi de preparer la mise a jour rapide :
+
+- statut catalogue ;
+- quantite en stock.
+
+Cette action est active en mode `prisma` et desactivee en mode `mock`.
 
 ## Prochaine etape technique
 
-Configurer Supabase/PostgreSQL :
+Initialiser les premieres donnees et tester l'admin :
 
-1. Creer ou ouvrir le projet Supabase.
-2. Recuperer l'URL PostgreSQL compatible Prisma.
-3. Renseigner `DATABASE_URL` dans l'environnement local.
-4. Passer `KAYART_DATA_SOURCE=prisma`.
-5. Executer `npm.cmd run db:push` ou une migration quand le schema est valide.
-6. Ajouter des donnees de depart pour les categories et produits.
+1. Executer `npm.cmd run db:seed`.
+2. Redemarrer `npm.cmd run dev`.
+3. Ouvrir `/admin/produits`.
+4. Verifier que les produits seedes apparaissent.
+5. Tester la mise a jour rapide du stock.
+6. Tester la creation d'un produit brouillon.
+7. Verifier les filtres admin : recherche, categorie, type, stock.
+8. Parcourir l'accueil et la boutique pour valider la nouvelle direction visuelle.
+9. Creer un produit avec plusieurs images et verifier que la couverture apparait dans la liste.
+10. Tester le verrouillage des etapes du formulaire admin produit.
+
+Note Supabase : si `db:push` echoue sur `gen_random_bytes`, le schema a ete corrige pour ne plus
+dependre de cette fonction. Relancer `npm.cmd run db:push`.
+
+Les informations deja configurees localement :
+
+- URL projet Supabase ;
+- cle publishable cote client ;
+- cle secret cote serveur.
+
+L'URL REST `/rest/v1` ne suffit pas a Prisma : il faut une URL PostgreSQL.
 
 ## Audit Prisma / Hono
 

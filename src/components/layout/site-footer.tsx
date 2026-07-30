@@ -16,9 +16,9 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <Link href="/mentions-legales">Mentions legales</Link>
+          <Link href="/mentions-legales">Mentions légales</Link>
           {" / "}
-          <Link href="/confidentialite">Confidentialite</Link>
+          <Link href="/confidentialite">Confidentialité</Link>
           {" / "}
           <Link href="/cgv">CGV</Link>
         </div>

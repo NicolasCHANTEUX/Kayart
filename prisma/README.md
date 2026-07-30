@@ -26,13 +26,28 @@ Dans l'environnement du terminal, dans `.env`, ou dans `.env.local` :
 
 ```text
 DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
 KAYART_DATA_SOURCE="mock"
 ```
 
 `db:generate` peut fonctionner sans URL reelle. `db:push` et `db:migrate` necessiteront une vraie `DATABASE_URL`.
 
+Pour Supabase, utiliser les chaines PostgreSQL du Connect dialog, pas l'URL REST `/rest/v1`.
+
+- `DATABASE_URL` : transaction-mode pooler, port `6543`, utilisee par l'application.
+- `DIRECT_URL` : session-mode pooler, port `5432`, utilisee par Prisma pour `db:push` et les migrations.
+
 Le fichier `prisma.config.ts` charge `.env` puis `.env.local` pour que les commandes Prisma voient les
-memes variables que le serveur Next local.
+memes variables que le serveur Next local. Il utilise `DIRECT_URL` en priorite pour les commandes Prisma,
+puis `DATABASE_URL` en secours.
+
+Avant de remplir `DATABASE_URL`, lancer dans Supabase SQL Editor :
+
+```sql
+-- database/supabase-prisma-user.sql
+```
+
+Puis creer un mot de passe fort pour l'utilisateur `prisma` et l'utiliser dans la chaine de connexion.
 
 ## Commandes prevues
 
@@ -40,14 +55,18 @@ memes variables que le serveur Next local.
 npm.cmd run db:generate
 npm.cmd run db:push
 npm.cmd run db:migrate
+npm.cmd run db:seed
 ```
 
 ## Etat
 
 Le schema Prisma est un squelette V1 aligne sur `database/schema-v1.sql`.
 
-Prisma Client est genere. L'application utilise le repository mock tant que la base n'est pas configuree,
-mais le repository Prisma sait deja lire les categories/produits et creer un produit depuis l'admin.
+Prisma Client est genere. En local, l'application utilise le repository Prisma quand
+`KAYART_DATA_SOURCE=prisma`.
+
+Le repository Prisma sait lire les categories/produits, creer un produit depuis l'admin et mettre a jour
+rapidement le stock.
 
 Avec Prisma 7, une connexion PostgreSQL directe necessite un adapter runtime, par exemple `@prisma/adapter-pg`, puis une instanciation du type :
 
@@ -64,12 +83,14 @@ L'application utilise `KAYART_DATA_SOURCE`.
 - `mock` : donnees temporaires locales ;
 - `prisma` : repository Prisma, necessite `DATABASE_URL`.
 
-Tant que Supabase/PostgreSQL n'est pas configure, garder `KAYART_DATA_SOURCE=mock`.
+Tant que Supabase/PostgreSQL n'est pas configure dans un autre environnement, garder
+`KAYART_DATA_SOURCE=mock`.
 
 Quand la base sera prete :
 
 ```bat
 npm.cmd run db:push
+npm.cmd run db:seed
 ```
 
 Puis basculer :
