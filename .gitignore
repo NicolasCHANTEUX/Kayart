@@ -25,3 +25,7 @@ pnpm-debug.log*
 # system
 .DS_Store
 Thumbs.db
+
+public/uploads/**
+!public/uploads/**/
+!public/uploads/**/.gitkeep
