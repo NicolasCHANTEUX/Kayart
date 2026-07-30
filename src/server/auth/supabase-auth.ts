@@ -1,4 +1,5 @@
 import type { AuthenticatedUser } from "@/types/auth";
+import { normalizeSiteUrl } from "@/config/site";
 
 type SupabasePasswordSession = {
   accessToken: string;
@@ -219,5 +220,5 @@ function getRecoveryErrorMessage(payload: SupabaseErrorResponse) {
 }
 
 function getSiteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/u, "");
+  return normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_URL ?? "http://localhost:3000");
 }

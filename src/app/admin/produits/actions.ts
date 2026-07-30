@@ -105,7 +105,7 @@ export async function createProductAction(formData: FormData) {
   try {
     const input = parseProductFormData(formData);
     const imageUploads = parseProductImageFormData(formData);
-    const images = await storeProductImages(input.slug, input.name, imageUploads);
+    const images = await storeProductImages(input.name, imageUploads);
 
     await createProduct({
       ...input,
@@ -170,7 +170,7 @@ export async function createImperfectProductAction(formData: FormData) {
     const finalPriceCents = Math.round(
       (imperfectInput.basePriceCents * (100 - imperfectInput.discountPercent)) / 100
     );
-    const images = await storeProductImages(productSlug, productName, imageUploads);
+    const images = await storeProductImages(productName, imageUploads);
 
     await createProduct({
       name: productName,
@@ -246,7 +246,7 @@ export async function updateProductAction(formData: FormData) {
   try {
     const input = parseProductUpdateFormData(formData);
     const imageUploads = parseProductImageFormData(formData);
-    const images = await storeProductImages(input.slug, input.name, imageUploads);
+    const images = await storeProductImages(input.name, imageUploads);
 
     await updateProduct({
       ...input,
