@@ -1290,11 +1290,38 @@ select {
 }
 
 .existing-image {
+  position: relative;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--paper);
+}
+
+.existing-image__remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(156, 47, 36, 0.34);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #9c2f24;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+.existing-image__remove:hover,
+.existing-image__remove:focus-visible {
+  border-color: #9c2f24;
+  background: #fff6f4;
 }
 
 .existing-image img {
@@ -2202,7 +2229,23 @@ select {
 }
 
 .admin-orders-table {
-  min-width: 780px;
+  min-width: 940px;
+}
+
+.order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.order-actions form {
+  margin: 0;
+}
+
+.order-actions__button {
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 0.72rem;
 }
 
 .order-number-cell,
@@ -2264,6 +2307,12 @@ select {
 
 .table-badge--order-paid,
 .table-badge--order-shipped {
+  border-color: rgba(124, 58, 237, 0.24);
+  background: rgba(124, 58, 237, 0.1);
+  color: #5b21b6 !important;
+}
+
+.table-badge--order-fictive {
   border-color: rgba(124, 58, 237, 0.24);
   background: rgba(124, 58, 237, 0.1);
   color: #5b21b6 !important;

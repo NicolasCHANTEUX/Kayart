@@ -56,10 +56,12 @@ export function ProductForm({
   const [autoSku, setAutoSku] = useState(
     !defaultValues?.sku || defaultValues.sku === skuFromName(defaultValues.name ?? "")
   );
+  const [deletedImageIds, setDeletedImageIds] = useState<string[]>([]);
   const [unlockedStep, setUnlockedStep] = useState(0);
   const [stepError, setStepError] = useState<string | null>(null);
   const isReadyToSubmit = canPersist && unlockedStep === steps.length - 1;
   const salePreview = getSalePreview(basePrice, discountPercent);
+  const visibleExistingImages = existingImages.filter((image) => !deletedImageIds.includes(image.id));
 
   useEffect(() => {
     refreshUnlockState();
@@ -133,6 +135,12 @@ export function ProductForm({
     return index > unlockedStep;
   }
 
+  function removeExistingImage(imageId: string) {
+    setDeletedImageIds((currentIds) => (
+      currentIds.includes(imageId) ? currentIds : [...currentIds, imageId]
+    ));
+  }
+
   function stageClassName(index: number) {
     return isStepLocked(index) ? "form-stage form-stage--locked" : "form-stage";
   }
@@ -149,6 +157,9 @@ export function ProductForm({
       {errorMessage ? <p className="form-notice form-notice--error">{errorMessage}</p> : null}
       {stepError ? <p className="form-notice form-notice--error">{stepError}</p> : null}
       {productId ? <input name="id" type="hidden" value={productId} /> : null}
+      {deletedImageIds.map((imageId) => (
+        <input key={imageId} name="deletedImageId" type="hidden" value={imageId} />
+      ))}
 
       <div className="form-steps" aria-label="Progression du formulaire produit">
         {steps.map((step, index) => {
@@ -385,10 +396,18 @@ export function ProductForm({
 
       <fieldset className={stageClassName(5)} id="product-step-images" inert={isStepLocked(5)}>
         <legend>Images produit</legend>
-        {existingImages.length > 0 ? (
+        {visibleExistingImages.length > 0 ? (
           <div className="existing-images" aria-label="Images actuelles du produit">
-            {existingImages.map((image) => (
+            {visibleExistingImages.map((image) => (
               <figure className={image.isPrimary ? "existing-image existing-image--primary" : "existing-image"} key={image.id}>
+                <button
+                  aria-label="Supprimer cette image"
+                  className="existing-image__remove"
+                  onClick={() => removeExistingImage(image.id)}
+                  type="button"
+                >
+                  {"\u00d7"}
+                </button>
                 <img alt={image.altText ?? ""} src={image.url} />
                 <figcaption>{image.isPrimary ? "Couverture actuelle" : "Image existante"}</figcaption>
               </figure>

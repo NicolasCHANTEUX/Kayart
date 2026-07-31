@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminOrderActions } from "@/components/admin/admin-order-actions";
 import { AdminOrderCreator } from "@/components/admin/admin-order-creator";
 import { formatMoneyCents } from "@/lib/format";
 import {
@@ -6,7 +7,6 @@ import {
   listAdminOrders,
   listAdminProducts
 } from "@/server/catalog/catalog.service";
-import type { Product } from "@/types/catalog";
 import type { AdminOrder, OrderStatus, PaymentStatus } from "@/types/orders";
 
 export const metadata = {
@@ -17,6 +17,7 @@ type AdminOrdersPageProps = {
   searchParams?: Promise<{
     created?: string;
     error?: string;
+    updated?: string;
   }>;
 };
 
@@ -32,7 +33,7 @@ const orderStatusLabels: Record<OrderStatus, string> = {
 };
 
 const paymentStatusLabels: Record<PaymentStatus, string> = {
-  pending: "Paiement attendu",
+  pending: "Impayée",
   paid: "Payée",
   failed: "Échec",
   cancelled: "Annulé",
@@ -43,7 +44,6 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
   const [products, orders] = await Promise.all([listAdminProducts(), listAdminOrders()]);
   const params = searchParams ? await searchParams : {};
   const canPersist = isCatalogPersistenceEnabled();
-  const orderableProducts = products.filter(isDirectSaleProduct);
 
   return (
     <section className="section admin-page">
@@ -57,29 +57,32 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
             <Link className="button button--ghost" href="/admin">
               Retour admin
             </Link>
-            <AdminOrderCreator canPersist={canPersist} products={orderableProducts} />
+            <AdminOrderCreator canPersist={canPersist} products={products} />
           </div>
         </div>
 
         <div className="admin-panel">
           {params.error ? <p className="form-notice form-notice--error">{params.error}</p> : null}
           {params.created === "1" ? (
-            <p className="form-notice form-notice--success">Commande créée et stock mis à jour.</p>
+            <p className="form-notice form-notice--success">Commande factice créée. Aucun stock modifié.</p>
+          ) : null}
+          {params.updated === "paid" ? (
+            <p className="form-notice form-notice--success">Paiement marqué comme payé.</p>
+          ) : null}
+          {params.updated === "deleted" ? (
+            <p className="form-notice form-notice--success">Commande supprimée.</p>
           ) : null}
 
           <div className="admin-panel__header">
             <div>
-              <strong>Ventes directes</strong>
-              <p>
-                Créez une commande lorsque la vente se fait hors site, puis gardez une trace claire
-                dans l'historique.
-              </p>
+              <strong>Commandes factices</strong>
+              <p>Créez une commande de test pour préparer ou simuler un panier sans modifier le stock.</p>
             </div>
           </div>
 
-          {orderableProducts.length === 0 ? (
+          {products.length === 0 ? (
             <p className="admin-panel__note">
-              Aucun produit avec stock suivi n'est disponible pour créer une vente directe.
+              Aucun produit n'est disponible pour créer une commande factice.
             </p>
           ) : null}
 
@@ -92,6 +95,7 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
                   <th>Total</th>
                   <th>Statut</th>
                   <th>Paiement</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -110,8 +114,8 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
                       <strong>{formatMoneyCents(order.totalCents)}</strong>
                     </td>
                     <td>
-                      <span className={`table-badge table-badge--order-${order.status}`}>
-                        {orderStatusLabels[order.status]}
+                      <span className={`table-badge table-badge--order-${order.isFictive ? "fictive" : order.status}`}>
+                        {order.isFictive ? "Factice" : orderStatusLabels[order.status]}
                       </span>
                     </td>
                     <td>
@@ -119,12 +123,15 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
                         {paymentStatusLabels[order.paymentStatus]}
                       </span>
                     </td>
+                    <td>
+                      <AdminOrderActions canPersist={canPersist} order={order} />
+                    </td>
                   </tr>
                 ))}
 
                 {orders.length === 0 ? (
                   <tr>
-                    <td colSpan={5}>Aucune commande enregistrée pour le moment.</td>
+                    <td colSpan={6}>Aucune commande enregistrée pour le moment.</td>
                   </tr>
                 ) : null}
               </tbody>
@@ -154,15 +161,6 @@ function OrderItemsList({ order }: { order: AdminOrder }) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function isDirectSaleProduct(product: Product) {
-  return (
-    product.condition !== "service" &&
-    product.stockQuantity !== null &&
-    product.availability !== "archived" &&
-    product.availability !== "draft"
   );
 }
 

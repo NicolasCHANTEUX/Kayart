@@ -87,6 +87,7 @@ export function mapPrismaAdminOrder(order: PrismaOrderWithItems): AdminOrder {
     customerNote: order.customerNote,
     paidAt: order.paidAt?.toISOString() ?? null,
     createdAt: order.createdAt.toISOString(),
+    isFictive: isFictiveAdminOrder(order),
     items: order.items.map((item) => ({
       id: item.id,
       productId: item.productId,
@@ -97,6 +98,15 @@ export function mapPrismaAdminOrder(order: PrismaOrderWithItems): AdminOrder {
       totalCents: item.totalCents
     }))
   };
+}
+
+function isFictiveAdminOrder(order: PrismaOrderWithItems) {
+  return (
+    order.orderNumber.startsWith("TEST-") ||
+    order.orderNumber.startsWith("ADM-") ||
+    order.customerNote?.startsWith("Commande factice admin") === true ||
+    order.customerNote?.startsWith("Vente directe admin") === true
+  );
 }
 
 function mapPrismaBaseProduct(product: PrismaProductBaseRelations): ProductBaseModel {

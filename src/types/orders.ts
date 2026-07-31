@@ -33,5 +33,6 @@ export type AdminOrder = {
   customerNote: string | null;
   paidAt: string | null;
   createdAt: string;
+  isFictive: boolean;
   items: AdminOrderItem[];
 };

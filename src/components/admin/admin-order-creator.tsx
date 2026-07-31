@@ -22,19 +22,6 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
   const [nextRowIndex, setNextRowIndex] = useState(2);
   const [rows, setRows] = useState<OrderRow[]>([{ id: "row-1", productId: "", quantity: 1 }]);
   const productsById = useMemo(() => new Map(products.map((product) => [product.id, product])), [products]);
-  const selectedQuantities = useMemo(() => {
-    const quantities = new Map<string, number>();
-
-    rows.forEach((row) => {
-      if (!row.productId) {
-        return;
-      }
-
-      quantities.set(row.productId, (quantities.get(row.productId) ?? 0) + row.quantity);
-    });
-
-    return quantities;
-  }, [rows]);
   const selectedItems = rows
     .map((row) => ({
       product: productsById.get(row.productId),
@@ -45,16 +32,7 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
     (total, item) => total + (item.product.priceCents ?? 0) * item.quantity,
     0
   );
-  const hasStockIssue = rows.some((row) => {
-    const product = productsById.get(row.productId);
-
-    if (!product || product.stockQuantity === null) {
-      return false;
-    }
-
-    return (selectedQuantities.get(product.id) ?? 0) > product.stockQuantity;
-  });
-  const canSubmit = canPersist && selectedItems.length > 0 && !hasStockIssue;
+  const canSubmit = canPersist && selectedItems.length > 0;
 
   function addRow() {
     setRows((currentRows) => [
@@ -79,18 +57,12 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
   }
 
   function updateRowProduct(rowId: string, productId: string) {
-    const product = productsById.get(productId);
-
     setRows((currentRows) =>
       currentRows.map((row) =>
         row.id === rowId
           ? {
               ...row,
-              productId,
-              quantity:
-                product?.stockQuantity !== null && product?.stockQuantity !== undefined
-                  ? Math.min(Math.max(row.quantity, 1), Math.max(product.stockQuantity, 1))
-                  : row.quantity
+              productId
             }
           : row
       )
@@ -126,9 +98,9 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
           <div aria-modal="true" className="admin-modal admin-modal--wide order-modal" role="dialog">
             <div className="modal-header-row">
               <div>
-                <span className="modal-eyebrow">Vente directe</span>
+                <span className="modal-eyebrow">Commande factice</span>
                 <h2>Créer une commande</h2>
-                <p>Enregistrez une vente faite en face à face et retirez automatiquement le stock.</p>
+                <p>Créez une commande de test sans modifier le stock des produits.</p>
               </div>
               <button className="modal-close-button" onClick={() => setIsOpen(false)} type="button">
                 {"\u00d7"}
@@ -141,7 +113,7 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
                 <label>
                   Email client
                   <input
-                    defaultValue="vente-directe@kayart.local"
+                    defaultValue="commande-factice@kayart.local"
                     name="guestEmail"
                     placeholder="client@example.com"
                     type="email"
@@ -149,7 +121,7 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
                 </label>
                 <label>
                   Note interne
-                  <input name="customerNote" placeholder="Paiement espece, retrait atelier..." type="text" />
+                  <input name="customerNote" placeholder="Essai admin, démonstration, brouillon..." type="text" />
                 </label>
               </div>
 
@@ -159,11 +131,6 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
                   const selectedInOtherRows = new Set(
                     rows.filter((otherRow) => otherRow.id !== row.id).map((otherRow) => otherRow.productId)
                   );
-                  const totalForProduct = row.productId ? selectedQuantities.get(row.productId) ?? 0 : 0;
-                  const hasRowStockIssue =
-                    product?.stockQuantity !== null &&
-                    product?.stockQuantity !== undefined &&
-                    totalForProduct > product.stockQuantity;
 
                   return (
                     <div className="order-line" key={row.id}>
@@ -177,10 +144,7 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
                           <option value="">Choisir un produit</option>
                           {products.map((option) => (
                             <option
-                              disabled={
-                                option.stockQuantity === 0 ||
-                                (selectedInOtherRows.has(option.id) && option.id !== row.productId)
-                              }
+                              disabled={selectedInOtherRows.has(option.id) && option.id !== row.productId}
                               key={option.id}
                               value={option.id}
                             >
@@ -211,12 +175,11 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
                         ×
                       </button>
                       {product ? (
-                        <div className={hasRowStockIssue ? "order-line__meta order-line__meta--error" : "order-line__meta"}>
+                        <div className="order-line__meta">
                           <span>
                             Prix unitaire :{" "}
                             {product.priceCents === null ? "à définir" : formatMoneyCents(product.priceCents)}
                           </span>
-                          {hasRowStockIssue ? <strong>Stock insuffisant.</strong> : null}
                         </div>
                       ) : null}
                     </div>

@@ -1,5 +1,6 @@
 import { categories, products } from "@/data/products";
 import type {
+  AdminOrderActionInput,
   AdminOrderCreateInput,
   CategoryCreateInput,
   CategoryDeleteInput,
@@ -38,6 +39,8 @@ export type CatalogRepository = {
   updateProductVisibility(input: ProductVisibilityUpdateInput): Promise<Product>;
   deleteProduct(input: ProductDeleteInput): Promise<void>;
   createAdminOrder(input: AdminOrderCreateInput): Promise<AdminOrder>;
+  markAdminOrderPaid(input: AdminOrderActionInput): Promise<AdminOrder>;
+  deleteAdminOrder(input: AdminOrderActionInput): Promise<void>;
 };
 
 const productCoreInclude = {
@@ -135,6 +138,14 @@ export const mockCatalogRepository: CatalogRepository = {
 
   async createAdminOrder() {
     throw new Error("La creation commande necessite KAYART_DATA_SOURCE=prisma.");
+  },
+
+  async markAdminOrderPaid() {
+    throw new Error("La mise a jour paiement necessite KAYART_DATA_SOURCE=prisma.");
+  },
+
+  async deleteAdminOrder() {
+    throw new Error("La suppression commande necessite KAYART_DATA_SOURCE=prisma.");
   }
 };
 
@@ -337,7 +348,30 @@ export const prismaCatalogRepository: CatalogRepository = {
         throw new Error("Produit introuvable.");
       }
 
-      const hasPrimaryImage = existing.images.some((image) => image.isPrimary);
+      const imagesToDelete = existing.images.filter((image) => input.deletedImageIds.includes(image.id));
+      const mediaAssetIdsToDelete = imagesToDelete.map((image) => image.mediaAssetId);
+      const remainingImages = existing.images.filter((image) => !input.deletedImageIds.includes(image.id));
+      const hasPrimaryImage = remainingImages.some((image) => image.isPrimary);
+
+      if (imagesToDelete.length > 0) {
+        await tx.productImage.deleteMany({
+          where: {
+            id: {
+              in: imagesToDelete.map((image) => image.id)
+            },
+            productId: input.id
+          }
+        });
+
+        await tx.mediaAsset.deleteMany({
+          where: {
+            id: {
+              in: mediaAssetIdsToDelete
+            }
+          }
+        });
+      }
+
       const row = await tx.product.update({
         data: {
           attributes: {
@@ -362,7 +396,7 @@ export const prismaCatalogRepository: CatalogRepository = {
               ? {
                   create: input.images.map((image, index) => ({
                     isPrimary: hasPrimaryImage ? false : image.isPrimary,
-                    position: existing.images.length + index,
+                    position: remainingImages.length + index,
                     mediaAsset: {
                       create: {
                         altText: image.altText,
@@ -398,6 +432,33 @@ export const prismaCatalogRepository: CatalogRepository = {
           id: input.id
         }
       });
+
+      if (!row.images.some((image) => image.isPrimary) && row.images.length > 0) {
+        const firstImage = [...row.images].sort((first, second) => first.position - second.position)[0];
+
+        if (firstImage) {
+          const promotedRow = await tx.product.update({
+            data: {
+              images: {
+                update: {
+                  data: {
+                    isPrimary: true
+                  },
+                  where: {
+                    id: firstImage.id
+                  }
+                }
+              }
+            },
+            include: productInclude,
+            where: {
+              id: input.id
+            }
+          });
+
+          return mapPrismaProduct(promotedRow);
+        }
+      }
 
       return mapPrismaProduct(row);
     });
@@ -489,13 +550,10 @@ export const prismaCatalogRepository: CatalogRepository = {
       const requestedProductIds = input.items.map((item) => item.productId);
       const productRows = await tx.product.findMany({
         select: {
-          availability: true,
-          condition: true,
           id: true,
           name: true,
           priceCents: true,
-          sku: true,
-          stockQuantity: true
+          sku: true
         },
         where: {
           id: {
@@ -512,22 +570,6 @@ export const prismaCatalogRepository: CatalogRepository = {
           throw new Error("Un produit de la commande est introuvable.");
         }
 
-        if (product.condition === "service") {
-          throw new Error(`Le service "${product.name}" ne peut pas décrémenter de stock.`);
-        }
-
-        if (product.availability === "archived" || product.availability === "draft") {
-          throw new Error(`Le produit "${product.name}" n'est pas prêt pour une vente directe.`);
-        }
-
-        if (product.stockQuantity === null) {
-          throw new Error(`Le stock du produit "${product.name}" n'est pas suivi.`);
-        }
-
-        if (product.stockQuantity < item.quantity) {
-          throw new Error(`Stock insuffisant pour "${product.name}".`);
-        }
-
         const unitPriceCents = product.priceCents ?? 0;
 
         return {
@@ -540,32 +582,11 @@ export const prismaCatalogRepository: CatalogRepository = {
         };
       });
 
-      for (const item of orderItems) {
-        const updateResult = await tx.product.updateMany({
-          data: {
-            stockQuantity: {
-              decrement: item.quantity
-            },
-            updatedAt: new Date()
-          },
-          where: {
-            id: item.productId,
-            stockQuantity: {
-              gte: item.quantity
-            }
-          }
-        });
-
-        if (updateResult.count !== 1) {
-          throw new Error(`Stock insuffisant pour "${item.productName}".`);
-        }
-      }
-
       const subtotalCents = orderItems.reduce((total, item) => total + item.totalCents, 0);
       const row = await tx.order.create({
         data: {
           currency: "EUR",
-          customerNote: formatAdminOrderNote(input.customerNote),
+          customerNote: formatFictiveOrderNote(input.customerNote),
           guestEmail: input.guestEmail,
           items: {
             create: orderItems.map((item) => ({
@@ -577,11 +598,11 @@ export const prismaCatalogRepository: CatalogRepository = {
               unitPriceCents: item.unitPriceCents
             }))
           },
-          orderNumber: generateAdminOrderNumber(),
-          paidAt: new Date(),
-          paymentStatus: "paid",
+          orderNumber: generateFictiveOrderNumber(),
+          paidAt: null,
+          paymentStatus: "pending",
           shippingCents: 0,
-          status: "completed",
+          status: "pending",
           subtotalCents,
           totalCents: subtotalCents
         },
@@ -590,19 +611,46 @@ export const prismaCatalogRepository: CatalogRepository = {
 
       return mapPrismaAdminOrder(row);
     });
+  },
+
+  async markAdminOrderPaid(input) {
+    const prisma = getPrismaClient();
+    const row = await prisma.order.update({
+      data: {
+        paidAt: new Date(),
+        paymentStatus: "paid",
+        updatedAt: new Date()
+      },
+      include: orderInclude,
+      where: {
+        id: input.id
+      }
+    });
+
+    return mapPrismaAdminOrder(row);
+  },
+
+  async deleteAdminOrder(input) {
+    const prisma = getPrismaClient();
+
+    await prisma.order.delete({
+      where: {
+        id: input.id
+      }
+    });
   }
 };
 
-function generateAdminOrderNumber() {
+function generateFictiveOrderNumber() {
   const now = new Date();
   const date = now.toISOString().slice(0, 10).replaceAll("-", "");
   const suffix = `${now.getTime().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 
-  return `ADM-${date}-${suffix.toUpperCase()}`;
+  return `TEST-${date}-${suffix.toUpperCase()}`;
 }
 
-function formatAdminOrderNote(note: string | null) {
-  const prefix = "Vente directe admin";
+function formatFictiveOrderNote(note: string | null) {
+  const prefix = "Commande factice admin";
 
   if (!note) {
     return prefix;

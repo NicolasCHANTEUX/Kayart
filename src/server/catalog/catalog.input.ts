@@ -48,6 +48,7 @@ export type ProductCreateInput = {
 
 export type ProductUpdateInput = ProductCreateInput & {
   id: string;
+  deletedImageIds: string[];
 };
 
 export type ProductDeleteInput = {
@@ -89,6 +90,10 @@ export type AdminOrderCreateInput = {
   guestEmail: string;
   customerNote: string | null;
   items: AdminOrderItemInput[];
+};
+
+export type AdminOrderActionInput = {
+  id: string;
 };
 
 export type ImperfectProductFormInput = {
@@ -280,6 +285,10 @@ export function parseImperfectProductFormData(formData: FormData): ImperfectProd
 export function parseProductUpdateFormData(formData: FormData): ProductUpdateInput {
   const issues: Record<string, string> = {};
   const id = readText(formData, "id");
+  const deletedImageIds = formData
+    .getAll("deletedImageId")
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+    .map((value) => value.trim());
 
   if (!id) {
     issues.id = "Le produit est introuvable.";
@@ -293,7 +302,8 @@ export function parseProductUpdateFormData(formData: FormData): ProductUpdateInp
 
   return {
     ...input,
-    id
+    id,
+    deletedImageIds
   };
 }
 
@@ -445,6 +455,23 @@ export function parseAdminOrderFormData(formData: FormData): AdminOrderCreateInp
       productId,
       quantity
     }))
+  };
+}
+
+export function parseAdminOrderActionFormData(formData: FormData): AdminOrderActionInput {
+  const issues: Record<string, string> = {};
+  const id = readText(formData, "id");
+
+  if (!id) {
+    issues.id = "La commande est introuvable.";
+  }
+
+  if (Object.keys(issues).length > 0) {
+    throw new OrderFormError(issues);
+  }
+
+  return {
+    id
   };
 }
 

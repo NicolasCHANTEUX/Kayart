@@ -1,5 +1,6 @@
 import { getCatalogRepository } from "@/server/catalog/catalog.repository";
 import type {
+  AdminOrderActionInput,
   AdminOrderCreateInput,
   CategoryCreateInput,
   CategoryDeleteInput,
@@ -78,6 +79,14 @@ export async function deleteProduct(input: ProductDeleteInput) {
 
 export async function createAdminOrder(input: AdminOrderCreateInput) {
   return getCatalogRepository().createAdminOrder(input);
+}
+
+export async function markAdminOrderPaid(input: AdminOrderActionInput) {
+  return getCatalogRepository().markAdminOrderPaid(input);
+}
+
+export async function deleteAdminOrder(input: AdminOrderActionInput) {
+  return getCatalogRepository().deleteAdminOrder(input);
 }
 
 export async function listStaticProductParams() {
