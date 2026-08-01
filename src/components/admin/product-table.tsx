@@ -76,7 +76,7 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
                   className={isHidden ? "data-table__row--muted data-table__row--paged" : "data-table__row--paged"}
                   key={product.id}
                 >
-                  <td>
+                  <td data-label="Produit">
                     <div className="admin-product-cell">
                       <div className="admin-product-thumb">
                         {product.primaryImageUrl ? <img alt="" src={product.primaryImageUrl} /> : <span>Sans image</span>}
@@ -87,26 +87,26 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
                       </div>
                     </div>
                   </td>
-                  <td>{product.categoryName}</td>
-                  <td>
+                  <td data-label="Catégorie">{product.categoryName}</td>
+                  <td data-label="Type">
                     <span className={`table-badge table-badge--condition-${product.condition}`}>
                       {productConditionLabels[product.condition]}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="Statut">
                     <span className={`table-badge table-badge--availability-${product.availability}`}>
                       {productAvailabilityLabels[product.availability]}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="Prix">
                     <ProductPrice compact product={product} />
                   </td>
-                  <td>
+                  <td data-label="Stock">
                     <span className={`stock-badge stock-badge--${getStockTone(product)}`}>
                       {formatStock(product)}
                     </span>
                   </td>
-                  <td className="actions-cell">
+                  <td className="actions-cell" data-label="Actions">
                     <ProductRowActions canPersist={canPersist} product={product} />
                   </td>
                 </tr>

@@ -101,29 +101,29 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
               <tbody>
                 {orders.map((order) => (
                   <tr key={order.id}>
-                    <td>
+                    <td data-label="Commande">
                       <div className="order-number-cell">
                         <strong>{order.orderNumber}</strong>
                         <span>{formatOrderDate(order.createdAt)}</span>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Produits">
                       <OrderItemsList order={order} />
                     </td>
-                    <td>
+                    <td data-label="Total">
                       <strong>{formatMoneyCents(order.totalCents)}</strong>
                     </td>
-                    <td>
+                    <td data-label="Statut">
                       <span className={`table-badge table-badge--order-${order.isFictive ? "fictive" : order.status}`}>
                         {order.isFictive ? "Factice" : orderStatusLabels[order.status]}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="Paiement">
                       <span className={`table-badge table-badge--payment-${order.paymentStatus}`}>
                         {paymentStatusLabels[order.paymentStatus]}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="Actions">
                       <AdminOrderActions canPersist={canPersist} order={order} />
                     </td>
                   </tr>
