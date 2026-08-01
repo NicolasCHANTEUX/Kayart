@@ -338,7 +338,8 @@ select {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .product-card--imperfect .product-card__visual,
@@ -1161,7 +1162,8 @@ select {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .model-preview__image span {
@@ -1328,7 +1330,8 @@ select {
   width: 100%;
   height: 118px;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .existing-image figcaption {
@@ -1449,7 +1452,8 @@ select {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .product-gallery__empty {
@@ -1543,7 +1547,8 @@ select {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .product-summary-card,
