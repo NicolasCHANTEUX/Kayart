@@ -102,7 +102,7 @@ export function ProductForm({
   }
 
   function handleSkuChange(value: string) {
-    const nextSku = value.toUpperCase();
+    const nextSku = value.toUpperCase().replace(/[^A-Z0-9_-]/g, "");
     setSku(nextSku);
     setAutoSku(nextSku === skuFromName(name));
   }
@@ -211,7 +211,6 @@ export function ProductForm({
             <input
               name="sku"
               onChange={(event) => handleSkuChange(event.currentTarget.value)}
-              pattern="[A-Za-z0-9_\\-]+"
               placeholder="PAG-CAR-SIG"
               required
               type="text"
