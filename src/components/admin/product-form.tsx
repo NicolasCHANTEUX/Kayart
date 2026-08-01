@@ -211,7 +211,7 @@ export function ProductForm({
             <input
               name="sku"
               onChange={(event) => handleSkuChange(event.currentTarget.value)}
-              pattern="[A-Za-z0-9_-]+"
+              pattern="[A-Za-z0-9_\\-]+"
               placeholder="PAG-CAR-SIG"
               required
               type="text"

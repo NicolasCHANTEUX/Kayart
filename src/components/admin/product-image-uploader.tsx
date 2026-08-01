@@ -9,6 +9,17 @@ type PreviewImage = {
   url: string;
 };
 
+type DirectUploadTarget = {
+  bucket: string;
+  signedUrl: string;
+  publicUrl: string;
+  originalFilename: string;
+  mimeType: string;
+  sizeBytes: number;
+  isPrimary: boolean;
+  position: number;
+};
+
 type ProductImageUploaderProps = {
   disabled?: boolean;
   emptyHint?: string;
@@ -17,6 +28,7 @@ type ProductImageUploaderProps = {
 };
 
 const maxImageCount = 6;
+const maxImageSizeBytes = 12 * 1024 * 1024;
 
 export function ProductImageUploader({
   disabled = false,
@@ -26,13 +38,75 @@ export function ProductImageUploader({
 }: ProductImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<PreviewImage[]>([]);
+  const coverIndexRef = useRef(0);
+  const disabledRef = useRef(disabled);
+  const isDirectUploadReadyRef = useRef(false);
+  const isUploadingRef = useRef(false);
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [coverIndex, setCoverIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const isDisabled = disabled || isUploading;
 
   useEffect(() => {
     imagesRef.current = images;
   }, [images]);
+
+  useEffect(() => {
+    coverIndexRef.current = coverIndex;
+  }, [coverIndex]);
+
+  useEffect(() => {
+    disabledRef.current = disabled;
+  }, [disabled]);
+
+  useEffect(() => {
+    const form = inputRef.current?.form;
+
+    if (!form) {
+      return;
+    }
+
+    const currentForm = form;
+
+    function handleSubmit(event: SubmitEvent) {
+      if (disabledRef.current || !shouldUseDirectImageUpload()) {
+        return;
+      }
+
+      if (isDirectUploadReadyRef.current) {
+        isDirectUploadReadyRef.current = false;
+        return;
+      }
+
+      const currentImages = imagesRef.current;
+
+      if (currentImages.length === 0) {
+        return;
+      }
+
+      if (isUploadingRef.current) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+
+      if (!currentForm.checkValidity()) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      void prepareDirectUploadAndSubmit(currentForm, currentImages);
+    }
+
+    currentForm.addEventListener("submit", handleSubmit, true);
+
+    return () => {
+      currentForm.removeEventListener("submit", handleSubmit, true);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -42,10 +116,18 @@ export function ProductImageUploader({
 
   function addFiles(files: File[]) {
     const availableSlots = Math.max(maxImageCount - images.length, 0);
-    const nextFiles = files
-      .filter((file) => file.type.startsWith("image/"))
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    const hasOversizedFile = imageFiles.some((file) => file.size > maxImageSizeBytes);
+    const nextFiles = imageFiles
+      .filter((file) => file.size <= maxImageSizeBytes)
       .filter((file) => !images.some((image) => isSameFile(image.file, file)))
       .slice(0, availableSlots);
+
+    if (hasOversizedFile) {
+      setUploadError("Chaque image doit faire 12 Mo maximum.");
+    } else {
+      setUploadError(null);
+    }
 
     if (nextFiles.length === 0) {
       syncInputFiles(images);
@@ -65,6 +147,26 @@ export function ProductImageUploader({
     syncInputFiles(nextImages);
     setImages(nextImages);
     setCoverIndex((current) => Math.min(current, Math.max(nextImages.length - 1, 0)));
+  }
+
+  async function prepareDirectUploadAndSubmit(form: HTMLFormElement, selectedImages: PreviewImage[]) {
+    setUploadError(null);
+    setIsUploading(true);
+    isUploadingRef.current = true;
+
+    try {
+      const uploadedImages = await uploadImagesToSupabase(selectedImages, coverIndexRef.current);
+      attachUploadedImageFields(form, uploadedImages);
+
+      syncInputFiles([]);
+      isDirectUploadReadyRef.current = true;
+      form.requestSubmit();
+    } catch (error) {
+      setUploadError(getUploadErrorMessage(error));
+    } finally {
+      isUploadingRef.current = false;
+      setIsUploading(false);
+    }
   }
 
   function removeImage(indexToRemove: number) {
@@ -111,7 +213,7 @@ export function ProductImageUploader({
         ref={inputRef}
         accept="image/*"
         className="sr-only"
-        disabled={disabled}
+        disabled={isDisabled}
         multiple
         name="images"
         onChange={(event) => addFiles(Array.from(event.currentTarget.files ?? []))}
@@ -120,15 +222,15 @@ export function ProductImageUploader({
 
       <button
         className={`drop-zone${isDragging ? " drop-zone--active" : ""}`}
-        disabled={disabled}
+        disabled={isDisabled}
         onClick={() => {
-          if (!disabled) {
+          if (!isDisabled) {
             inputRef.current?.click();
           }
         }}
         onDragEnter={(event) => {
           event.preventDefault();
-          if (disabled) {
+          if (isDisabled) {
             return;
           }
 
@@ -141,7 +243,7 @@ export function ProductImageUploader({
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {
           event.preventDefault();
-          if (disabled) {
+          if (isDisabled) {
             return;
           }
 
@@ -150,9 +252,11 @@ export function ProductImageUploader({
         }}
         type="button"
       >
-        <span>{title}</span>
-        <small>{hint}</small>
+        <span>{isUploading ? "Envoi des images..." : title}</span>
+        <small>{isUploading ? "Merci de patienter pendant le transfert vers Supabase." : hint}</small>
       </button>
+
+      {uploadError ? <p className="form-notice form-notice--error">{uploadError}</p> : null}
 
       {images.length > 0 ? (
         <div className="image-uploader-grid" aria-label="Images sélectionnées">
@@ -162,7 +266,7 @@ export function ProductImageUploader({
               <button
                 aria-pressed={coverIndex === index}
                 className="cover-button"
-                disabled={disabled}
+                disabled={isDisabled}
                 onClick={() => setCoverIndex(index)}
                 type="button"
               >
@@ -172,7 +276,7 @@ export function ProductImageUploader({
               <button
                 aria-label={`Retirer ${image.name}`}
                 className="remove-image-button"
-                disabled={disabled}
+                disabled={isDisabled}
                 onClick={() => removeImage(index)}
                 type="button"
               >
@@ -196,4 +300,92 @@ function isSameFile(firstFile: File, secondFile: File) {
     firstFile.size === secondFile.size &&
     firstFile.lastModified === secondFile.lastModified
   );
+}
+
+function shouldUseDirectImageUpload() {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+}
+
+async function uploadImagesToSupabase(images: PreviewImage[], coverIndex: number) {
+  const response = await fetch("/api/admin/product-images/upload-url", {
+    body: JSON.stringify({
+      files: images.map((image, index) => ({
+        name: image.name,
+        type: image.file.type,
+        size: image.size,
+        isPrimary: index === coverIndex,
+        position: index
+      }))
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "POST"
+  });
+  const payload = (await response.json().catch(() => ({}))) as {
+    error?: string;
+    uploads?: DirectUploadTarget[];
+  };
+
+  if (!response.ok) {
+    throw new Error(payload.error ?? "Impossible de préparer l'envoi des images.");
+  }
+
+  if (!payload.uploads || payload.uploads.length !== images.length) {
+    throw new Error("La préparation des images est incomplète.");
+  }
+
+  await Promise.all(
+    payload.uploads.map(async (target, index) => {
+      const body = new FormData();
+
+      body.append("cacheControl", "31536000");
+      body.append("", images[index].file);
+
+      const uploadResponse = await fetch(target.signedUrl, {
+        body,
+        headers: {
+          "x-upsert": "false"
+        },
+        method: "PUT"
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Impossible d'envoyer une image vers Supabase.");
+      }
+    })
+  );
+
+  return payload.uploads;
+}
+
+function attachUploadedImageFields(form: HTMLFormElement, uploadedImages: DirectUploadTarget[]) {
+  form
+    .querySelectorAll<HTMLInputElement>('input[data-direct-upload-field="true"]')
+    .forEach((field) => field.remove());
+
+  uploadedImages.forEach((image) => {
+    const field = document.createElement("input");
+
+    field.dataset.directUploadField = "true";
+    field.name = "uploadedImage";
+    field.type = "hidden";
+    field.value = JSON.stringify({
+      bucket: image.bucket,
+      path: image.publicUrl,
+      originalFilename: image.originalFilename,
+      mimeType: image.mimeType,
+      sizeBytes: image.sizeBytes,
+      isPrimary: image.isPrimary,
+      position: image.position
+    });
+
+    form.appendChild(field);
+  });
+}
+
+function getUploadErrorMessage(error: unknown) {
+  return error instanceof Error
+    ? error.message
+    : "Impossible d'envoyer les images pour le moment.";
 }

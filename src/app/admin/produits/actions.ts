@@ -11,6 +11,7 @@ import {
   parseProductDeleteFormData,
   parseProductFormData,
   parseProductImageFormData,
+  parseStoredProductImageFormData,
   parseProductStockFormData,
   parseProductUpdateFormData,
   parseProductVisibilityFormData,
@@ -104,8 +105,7 @@ export async function createProductAction(formData: FormData) {
 
   try {
     const input = parseProductFormData(formData);
-    const imageUploads = parseProductImageFormData(formData);
-    const images = await storeProductImages(input.name, imageUploads);
+    const images = await resolveProductImages(input.name, formData);
 
     await createProduct({
       ...input,
@@ -154,14 +154,6 @@ export async function createImperfectProductAction(formData: FormData) {
       });
     }
 
-    const imageUploads = parseProductImageFormData(formData);
-
-    if (imageUploads.length === 0) {
-      throw new ProductFormError({
-        images: "Ajoutez au moins une photo du défaut constaté."
-      });
-    }
-
     const uniqueSuffix = Date.now().toString(36).toUpperCase();
     const productName = `${baseProduct.name} - Imparfait`;
     const productSlug = slugify(`${baseProduct.slug}-imparfait-${uniqueSuffix.toLowerCase()}`);
@@ -170,7 +162,13 @@ export async function createImperfectProductAction(formData: FormData) {
     const finalPriceCents = Math.round(
       (imperfectInput.basePriceCents * (100 - imperfectInput.discountPercent)) / 100
     );
-    const images = await storeProductImages(productName, imageUploads);
+    const images = await resolveProductImages(productName, formData);
+
+    if (images.length === 0) {
+      throw new ProductFormError({
+        images: "Ajoutez au moins une photo du défaut constaté."
+      });
+    }
 
     await createProduct({
       name: productName,
@@ -245,8 +243,7 @@ export async function updateProductAction(formData: FormData) {
 
   try {
     const input = parseProductUpdateFormData(formData);
-    const imageUploads = parseProductImageFormData(formData);
-    const images = await storeProductImages(input.name, imageUploads);
+    const images = await resolveProductImages(input.name, formData);
 
     await updateProduct({
       ...input,
@@ -328,6 +325,22 @@ export async function showProductAction(formData: FormData) {
   }
 
   redirect("/admin/produits?updated=visible");
+}
+
+async function resolveProductImages(productName: string, formData: FormData) {
+  const storedImages = parseStoredProductImageFormData(formData, productName);
+  const imageUploads = parseProductImageFormData(formData);
+
+  if (storedImages.length + imageUploads.length > 6) {
+    throw new ProductFormError({
+      images: "Un produit peut recevoir 6 images maximum."
+    });
+  }
+
+  return [
+    ...storedImages,
+    ...(await storeProductImages(productName, imageUploads))
+  ];
 }
 
 async function saveProductDraft(formData: FormData) {

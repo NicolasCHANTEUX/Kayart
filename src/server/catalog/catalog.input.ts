@@ -508,6 +508,63 @@ export function parseProductImageFormData(formData: FormData): ProductImageUploa
   return uploads;
 }
 
+export function parseStoredProductImageFormData(
+  formData: FormData,
+  productName: string
+): ProductStoredImageInput[] {
+  const issues: Record<string, string> = {};
+  const values = formData
+    .getAll("uploadedImage")
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+
+  if (values.length > 6) {
+    issues.images = "Un produit peut recevoir 6 images maximum.";
+  }
+
+  const images = values.map((value, index) => {
+    const payload = parseStoredProductImagePayload(value);
+
+    if (!payload) {
+      issues.images = "Une image envoyée est invalide.";
+      return null;
+    }
+
+    if (!payload.mimeType.startsWith("image/")) {
+      issues.images = "Seuls les fichiers image sont acceptés.";
+    }
+
+    if (payload.sizeBytes > 12 * 1024 * 1024) {
+      issues.images = "Chaque image doit faire 12 Mo maximum.";
+    }
+
+    return {
+      bucket: payload.bucket,
+      path: payload.path,
+      originalFilename: payload.originalFilename,
+      altText: productName,
+      mimeType: payload.mimeType,
+      sizeBytes: payload.sizeBytes,
+      isPrimary: payload.isPrimary,
+      position: Number.isInteger(payload.position) ? payload.position : index
+    };
+  });
+
+  if (Object.keys(issues).length > 0) {
+    throw new ProductFormError(issues);
+  }
+
+  const validImages = images.filter((image): image is ProductStoredImageInput => Boolean(image));
+
+  if (validImages.length > 0 && !validImages.some((image) => image.isPrimary)) {
+    return validImages.map((image, index) => ({
+      ...image,
+      isPrimary: index === 0
+    }));
+  }
+
+  return validImages;
+}
+
 function readText(formData: FormData, name: string) {
   const value = formData.get(name);
   return typeof value === "string" ? value.trim() : "";
@@ -607,6 +664,55 @@ function isPositiveDecimal(value: string) {
 
 function isEmailLike(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function parseStoredProductImagePayload(value: string) {
+  const payload = parseJsonObject<Partial<ProductStoredImageInput>>(value);
+
+  if (!payload) {
+    return null;
+  }
+
+  const sizeBytes = Number(payload.sizeBytes);
+  const position = Number(payload.position);
+
+  if (
+    typeof payload.bucket !== "string" ||
+    typeof payload.path !== "string" ||
+    typeof payload.originalFilename !== "string" ||
+    typeof payload.mimeType !== "string" ||
+    !Number.isFinite(sizeBytes) ||
+    sizeBytes <= 0
+  ) {
+    return null;
+  }
+
+  const bucket = payload.bucket.trim();
+  const path = payload.path.trim();
+  const originalFilename = payload.originalFilename.trim();
+  const mimeType = payload.mimeType.trim();
+
+  if (!bucket || !path || !originalFilename || !mimeType) {
+    return null;
+  }
+
+  return {
+    bucket,
+    path,
+    originalFilename,
+    mimeType,
+    sizeBytes,
+    isPrimary: payload.isPrimary === true,
+    position
+  };
+}
+
+function parseJsonObject<T>(value: string): T | null {
+  try {
+    return JSON.parse(value) as T;
+  } catch (error) {
+    return null;
+  }
 }
 
 function parseProductAttributes(formData: FormData): ProductAttributeInput[] {
