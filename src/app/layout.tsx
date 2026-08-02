@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { RouteLoadingIndicator } from "@/components/layout/route-loading-indicator";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -35,6 +37,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="fr">
       <body>
+        <Suspense fallback={null}>
+          <RouteLoadingIndicator />
+        </Suspense>
         <div className="shell">
           <SiteHeader />
           <main>{children}</main>
