@@ -36,8 +36,10 @@ import {
 } from "@/server/catalog/catalog.service";
 import { requireAdminSession } from "@/server/auth/session";
 import { skuFromName, slugify } from "@/lib/slug";
+import { requireSameOriginAction } from "@/server/security/request-guards";
 
 export async function createCategoryAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -59,6 +61,7 @@ export async function createCategoryAction(formData: FormData) {
 }
 
 export async function updateCategoryAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -80,6 +83,7 @@ export async function updateCategoryAction(formData: FormData) {
 }
 
 export async function deleteCategoryAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -101,6 +105,7 @@ export async function deleteCategoryAction(formData: FormData) {
 }
 
 export async function createProductAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -130,6 +135,7 @@ export async function createProductAction(formData: FormData) {
 }
 
 export async function createImperfectProductAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -212,6 +218,7 @@ export async function createImperfectProductAction(formData: FormData) {
 }
 
 export async function updateProductStockAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -233,6 +240,7 @@ export async function updateProductStockAction(formData: FormData) {
 }
 
 export async function updateProductAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   const productId = formData.get("id");
@@ -265,6 +273,7 @@ export async function updateProductAction(formData: FormData) {
 }
 
 export async function deleteProductAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -286,6 +295,7 @@ export async function deleteProductAction(formData: FormData) {
 }
 
 export async function hideProductAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -307,6 +317,7 @@ export async function hideProductAction(formData: FormData) {
 }
 
 export async function showProductAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -345,12 +356,14 @@ async function resolveProductImages(productName: string, formData: FormData) {
 
 async function saveProductDraft(formData: FormData) {
   const cookieStore = await cookies();
+  const secure = process.env.NODE_ENV === "production";
 
   cookieStore.set(productFormDraftCookieName, encodeProductFormDraft(createProductFormDraft(formData)), {
     httpOnly: true,
     maxAge: 60 * 30,
     path: "/admin/produits/nouveau",
-    sameSite: "lax"
+    sameSite: "lax",
+    secure
   });
 }
 

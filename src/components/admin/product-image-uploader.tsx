@@ -29,6 +29,7 @@ type ProductImageUploaderProps = {
 
 const maxImageCount = 6;
 const maxImageSizeBytes = 12 * 1024 * 1024;
+const acceptedImageTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
 
 export function ProductImageUploader({
   disabled = false,
@@ -116,14 +117,17 @@ export function ProductImageUploader({
 
   function addFiles(files: File[]) {
     const availableSlots = Math.max(maxImageCount - images.length, 0);
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    const imageFiles = files.filter((file) => acceptedImageTypes.includes(file.type));
+    const hasRejectedFile = files.some((file) => !acceptedImageTypes.includes(file.type));
     const hasOversizedFile = imageFiles.some((file) => file.size > maxImageSizeBytes);
     const nextFiles = imageFiles
       .filter((file) => file.size <= maxImageSizeBytes)
       .filter((file) => !images.some((image) => isSameFile(image.file, file)))
       .slice(0, availableSlots);
 
-    if (hasOversizedFile) {
+    if (hasRejectedFile) {
+      setUploadError("Seuls les fichiers JPG, PNG, WebP ou GIF sont acceptés.");
+    } else if (hasOversizedFile) {
       setUploadError("Chaque image doit faire 12 Mo maximum.");
     } else {
       setUploadError(null);
@@ -211,7 +215,7 @@ export function ProductImageUploader({
       <input name="coverImageIndex" type="hidden" value={String(coverIndex)} />
       <input
         ref={inputRef}
-        accept="image/*"
+        accept="image/gif,image/jpeg,image/png,image/webp"
         className="sr-only"
         disabled={isDisabled}
         multiple

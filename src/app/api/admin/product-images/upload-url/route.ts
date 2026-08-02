@@ -2,8 +2,15 @@ import { NextResponse } from "next/server";
 import { getCurrentAuthSession } from "@/server/auth/session";
 import {
   createProductImageUploadTargets,
+  isAllowedProductImageType,
   type ProductImageUploadTargetInput
 } from "@/server/catalog/product-image-storage";
+import {
+  enforceRateLimit,
+  getRequestClientKey,
+  RateLimitError,
+  requireSameOriginRequest
+} from "@/server/security/request-guards";
 
 const maxImageCount = 6;
 const maxImageSizeBytes = 12 * 1024 * 1024;
@@ -19,6 +26,18 @@ type UploadUrlRequest = {
 };
 
 export async function POST(request: Request) {
+  try {
+    requireSameOriginRequest(request);
+    enforceRateLimit({
+      key: getRequestClientKey(request, "image-upload-url"),
+      limit: 30,
+      windowMs: 10 * 60 * 1000
+    });
+  } catch (error) {
+    const status = error instanceof RateLimitError ? 429 : 403;
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Requête refusée." }, { status });
+  }
+
   const session = await getCurrentAuthSession();
 
   if (session?.role !== "admin") {
@@ -36,10 +55,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Un produit peut recevoir 6 images maximum." }, { status: 400 });
   }
 
-  const invalidFile = files.find((file) => !file.type.startsWith("image/"));
+  const invalidFile = files.find((file) => !isAllowedProductImageType(file.name, file.type));
 
   if (invalidFile) {
-    return NextResponse.json({ error: "Seuls les fichiers image sont acceptés." }, { status: 400 });
+    return NextResponse.json({ error: "Seuls les fichiers JPG, PNG, WebP ou GIF sont acceptés." }, { status: 400 });
   }
 
   const oversizedFile = files.find((file) => file.size > maxImageSizeBytes);
@@ -63,7 +82,7 @@ function normalizeFiles(files: NonNullable<UploadUrlRequest["files"]>): ProductI
   return files
     .map((file, index) => {
       const name = typeof file.name === "string" ? file.name.trim() : "";
-      const type = typeof file.type === "string" ? file.type.trim() : "";
+      const type = typeof file.type === "string" ? file.type.trim().toLowerCase() : "";
       const size = typeof file.size === "number" ? file.size : Number(file.size);
       const position = typeof file.position === "number" ? file.position : index;
 

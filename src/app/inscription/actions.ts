@@ -7,12 +7,26 @@ import {
   AuthCredentialsError,
   signUpWithPassword
 } from "@/server/auth/supabase-auth";
+import {
+  enforceRateLimit,
+  getActionClientKey,
+  RateLimitError,
+  requireSameOriginAction
+} from "@/server/security/request-guards";
 
 export async function signupAction(formData: FormData) {
+  await requireSameOriginAction();
+
   let email = "";
 
   try {
     email = readRequiredField(formData, "email").toLowerCase();
+    enforceRateLimit({
+      key: await getActionClientKey("signup", email),
+      limit: 5,
+      windowMs: 60 * 60 * 1000
+    });
+
     const password = readRequiredField(formData, "password");
     const passwordConfirmation = readRequiredField(formData, "passwordConfirmation");
 
@@ -45,6 +59,10 @@ function readRequiredField(formData: FormData, name: string) {
 }
 
 function getSignupErrorMessage(error: unknown) {
+  if (error instanceof RateLimitError) {
+    return error.message;
+  }
+
   if (error instanceof AuthConfigurationError || error instanceof AuthCredentialsError || error instanceof Error) {
     return error.message;
   }

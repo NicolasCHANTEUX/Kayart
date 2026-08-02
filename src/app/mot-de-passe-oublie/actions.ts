@@ -6,12 +6,26 @@ import {
   AuthCredentialsError,
   requestPasswordRecovery
 } from "@/server/auth/supabase-auth";
+import {
+  enforceRateLimit,
+  getActionClientKey,
+  RateLimitError,
+  requireSameOriginAction
+} from "@/server/security/request-guards";
 
 export async function passwordRecoveryAction(formData: FormData) {
+  await requireSameOriginAction();
+
   let email = "";
 
   try {
     email = readRequiredField(formData, "email").toLowerCase();
+    enforceRateLimit({
+      key: await getActionClientKey("password-recovery", email),
+      limit: 5,
+      windowMs: 60 * 60 * 1000
+    });
+
     await requestPasswordRecovery(email);
   } catch (error) {
     const message = getRecoveryErrorMessage(error);
@@ -32,6 +46,10 @@ function readRequiredField(formData: FormData, name: string) {
 }
 
 function getRecoveryErrorMessage(error: unknown) {
+  if (error instanceof RateLimitError) {
+    return error.message;
+  }
+
   if (error instanceof AuthConfigurationError || error instanceof AuthCredentialsError || error instanceof Error) {
     return error.message;
   }

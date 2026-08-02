@@ -1,5 +1,9 @@
 import { productAvailabilityValues, productConditionValues } from "@/lib/catalog";
 import { slugify } from "@/lib/slug";
+import {
+  isAllowedProductImageType,
+  isTrustedStoredProductImageReference
+} from "@/server/catalog/product-image-storage";
 import type { ProductAvailability, ProductCondition } from "@/types/catalog";
 
 export type ProductAttributeInput = {
@@ -486,8 +490,8 @@ export function parseProductImageFormData(formData: FormData): ProductImageUploa
   }
 
   const uploads = files.map((file, index) => {
-    if (!file.type.startsWith("image/")) {
-      issues.images = "Seuls les fichiers image sont acceptés.";
+    if (!isAllowedProductImageType(file.name, file.type)) {
+      issues.images = "Seuls les fichiers JPG, PNG, WebP ou GIF sont acceptés.";
     }
 
     if (file.size > 12 * 1024 * 1024) {
@@ -529,8 +533,8 @@ export function parseStoredProductImageFormData(
       return null;
     }
 
-    if (!payload.mimeType.startsWith("image/")) {
-      issues.images = "Seuls les fichiers image sont acceptés.";
+    if (!isTrustedStoredProductImageReference(payload)) {
+      issues.images = "Une image envoyée est invalide.";
     }
 
     if (payload.sizeBytes > 12 * 1024 * 1024) {

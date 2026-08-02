@@ -11,14 +11,28 @@ import {
   AuthCredentialsError,
   signInWithPassword
 } from "@/server/auth/supabase-auth";
+import {
+  enforceRateLimit,
+  getActionClientKey,
+  RateLimitError,
+  requireSameOriginAction
+} from "@/server/security/request-guards";
 
 export async function loginAction(formData: FormData) {
+  await requireSameOriginAction();
+
   const requestedRedirect = sanitizeRedirectPath(readOptionalField(formData, "redirect"));
   let email = "";
   let redirectPath = "/";
 
   try {
     email = readRequiredField(formData, "email").toLowerCase();
+    enforceRateLimit({
+      key: await getActionClientKey("login", email),
+      limit: 8,
+      windowMs: 15 * 60 * 1000
+    });
+
     const password = readRequiredField(formData, "password");
     const passwordSession = await signInWithPassword(email, password);
     await persistPasswordSession(passwordSession);
@@ -74,6 +88,10 @@ function getPostLoginRedirectPath(role: string, requestedRedirect: string) {
 }
 
 function getLoginErrorMessage(error: unknown) {
+  if (error instanceof RateLimitError) {
+    return error.message;
+  }
+
   if (error instanceof AuthConfigurationError || error instanceof AuthCredentialsError) {
     return error.message;
   }

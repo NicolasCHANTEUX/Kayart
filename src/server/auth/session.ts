@@ -36,15 +36,20 @@ export async function persistPasswordSession(session: PasswordSessionCookieInput
 
 export async function clearPasswordSession() {
   const cookieStore = await cookies();
+  const secure = process.env.NODE_ENV === "production";
 
   cookieStore.set(accessTokenCookieName, "", {
     maxAge: 0,
-    path: "/"
+    path: "/",
+    sameSite: "lax",
+    secure
   });
 
   cookieStore.set(refreshTokenCookieName, "", {
     maxAge: 0,
-    path: "/"
+    path: "/",
+    sameSite: "lax",
+    secure
   });
 }
 

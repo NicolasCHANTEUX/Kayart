@@ -12,8 +12,10 @@ import {
   parseAdminOrderFormData
 } from "@/server/catalog/catalog.input";
 import { requireAdminSession } from "@/server/auth/session";
+import { requireSameOriginAction } from "@/server/security/request-guards";
 
 export async function createAdminOrderAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -32,6 +34,7 @@ export async function createAdminOrderAction(formData: FormData) {
 }
 
 export async function markAdminOrderPaidAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {
@@ -50,6 +53,7 @@ export async function markAdminOrderPaidAction(formData: FormData) {
 }
 
 export async function deleteAdminOrderAction(formData: FormData) {
+  await requireSameOriginAction();
   await requireAdminSession();
 
   try {

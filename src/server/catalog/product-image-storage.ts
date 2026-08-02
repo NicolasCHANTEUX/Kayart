@@ -5,6 +5,13 @@ import type { ProductImageUploadInput, ProductStoredImageInput } from "@/server/
 
 const localPublicBucket = "local-public";
 const defaultSupabaseBucket = "product-images";
+const allowedImageMimeTypes = new Set([
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/webp"
+]);
+const allowedImageExtensions = new Set([".gif", ".jpeg", ".jpg", ".png", ".webp"]);
 
 export type ProductImageUploadTargetInput = {
   name: string;
@@ -155,6 +162,38 @@ export async function createProductImageUploadTargets(
   );
 }
 
+export function isAllowedProductImageType(name: string, type: string) {
+  const normalizedType = type.trim().toLowerCase();
+  const extension = extname(name).toLowerCase();
+
+  return allowedImageMimeTypes.has(normalizedType) && allowedImageExtensions.has(extension);
+}
+
+export function isTrustedStoredProductImageReference(image: {
+  bucket: string;
+  mimeType: string;
+  path: string;
+}) {
+  if (!allowedImageMimeTypes.has(image.mimeType.trim().toLowerCase())) {
+    return false;
+  }
+
+  if (image.bucket === localPublicBucket) {
+    return /^\/uploads\/products\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(gif|jpe?g|png|webp)$/iu.test(image.path);
+  }
+
+  const projectUrl = cleanSupabaseUrl(process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
+  const bucket = process.env.SUPABASE_STORAGE_BUCKET ?? defaultSupabaseBucket;
+
+  if (!projectUrl || image.bucket !== bucket) {
+    return false;
+  }
+
+  const publicPrefix = `${projectUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/products/`;
+
+  return image.path.startsWith(publicPrefix) && /^https:\/\//iu.test(image.path);
+}
+
 function shouldUseSupabaseStorage() {
   if (process.env.KAYART_IMAGE_STORAGE === "local") {
     return false;
@@ -255,7 +294,7 @@ function getFileExtension(file: File) {
 function getFileExtensionFromNameOrType(name: string, type: string) {
   const fromName = extname(name).toLowerCase();
 
-  if ([".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(fromName)) {
+  if (allowedImageExtensions.has(fromName)) {
     return fromName;
   }
 
