@@ -1,4 +1,6 @@
 import { siteConfig } from "@/config/site";
+import { randomUUID } from "node:crypto";
+import { CustomerRequestForm } from "@/components/requests/customer-request-form";
 
 export const metadata = {
   title: "Contact",
@@ -21,6 +23,7 @@ export default async function ContactPage({ searchParams }: { searchParams?: Pro
             Pour commander une pièce, demander un devis ou parler d’une réparation, contactez-nous
             par email ou par téléphone. Nous confirmerons la disponibilité, le prix et la livraison avant toute commande.
           </p>
+          <CustomerRequestForm kind="contact" submissionKey={randomUUID()} subject={product ? subject : ""} enabled={process.env.KAYART_DATA_SOURCE === "prisma"} />
         </div>
         <div className="feature-card">
           <div className="meta">Email</div>

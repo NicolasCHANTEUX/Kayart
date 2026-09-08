@@ -1,0 +1,10 @@
+ALTER TABLE public.contact_requests ADD COLUMN submission_key uuid, ADD COLUMN privacy_acknowledged_at timestamptz;
+ALTER TABLE public.repair_requests ADD COLUMN submission_key uuid, ADD COLUMN privacy_acknowledged_at timestamptz;
+ALTER TABLE public.custom_requests ADD COLUMN submission_key uuid, ADD COLUMN privacy_acknowledged_at timestamptz;
+CREATE UNIQUE INDEX contact_requests_submission_key_key ON public.contact_requests(submission_key);
+CREATE UNIQUE INDEX repair_requests_submission_key_key ON public.repair_requests(submission_key);
+CREATE UNIQUE INDEX custom_requests_submission_key_key ON public.custom_requests(submission_key);
+CREATE TABLE public.request_rate_limits (key text PRIMARY KEY, count integer NOT NULL CHECK(count > 0), reset_at timestamptz NOT NULL);
+CREATE INDEX request_rate_limits_reset_at_idx ON public.request_rate_limits(reset_at);
+ALTER TABLE public.request_rate_limits ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.request_rate_limits FROM anon, authenticated;

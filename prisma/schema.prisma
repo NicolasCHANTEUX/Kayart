@@ -101,6 +101,8 @@ model Category {
 }
 
 model Product {
+  deliveryMode        String              @default("quote") @map("delivery_mode")
+  checkoutHolds       CheckoutHold[]
   id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   baseProductId       String?             @map("base_product_id") @db.Uuid
   categoryId          String?             @map("category_id") @db.Uuid
@@ -201,6 +203,13 @@ model Customer {
 }
 
 model Order {
+  isTest                  Boolean       @default(false) @map("is_test")
+  checkoutKey             String?       @unique @map("checkout_key") @db.Uuid
+  checkoutFingerprint     String?       @map("checkout_fingerprint")
+  fulfillmentMethod       String?       @map("fulfillment_method")
+  shippingZoneId          String?       @map("shipping_zone_id") @db.Uuid
+  shippingZone            ShippingZone? @relation(fields: [shippingZoneId], references: [id], onDelete: SetNull)
+  checkoutHolds           CheckoutHold[]
   id                      String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   orderNumber             String        @unique @map("order_number")
   customerId              String?       @map("customer_id") @db.Uuid
@@ -243,6 +252,39 @@ model OrderItem {
   @@map("order_items")
 }
 
+model ShippingZone {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  countryCodes String[] @map("country_codes")
+  postalPrefixes String[] @default([]) @map("postal_prefixes")
+  excludedPostalPrefixes String[] @default([]) @map("excluded_postal_prefixes")
+  priceCents Int? @map("price_cents")
+  enabled Boolean @default(false)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  orders Order[]
+  @@map("shipping_zones")
+}
+
+model CheckoutHold {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId String @map("order_id") @db.Uuid
+  productId String @map("product_id") @db.Uuid
+  quantity Int
+  status String @default("active")
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(6)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  @@unique([orderId, productId])
+  @@index([status, expiresAt])
+  @@map("checkout_holds")
+}
+
+model StripeEvent {
+  id String @id
+  processedAt DateTime @default(now()) @map("processed_at") @db.Timestamptz(6)
+  @@map("stripe_events")
+}
+
 model Reservation {
   id         String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   productId  String            @map("product_id") @db.Uuid
@@ -263,6 +305,8 @@ model Reservation {
 }
 
 model ContactRequest {
+  submissionKey String? @unique @map("submission_key") @db.Uuid
+  privacyAcknowledgedAt DateTime? @map("privacy_acknowledged_at") @db.Timestamptz(6)
   id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   email     String
@@ -278,6 +322,8 @@ model ContactRequest {
 }
 
 model RepairRequest {
+  submissionKey String? @unique @map("submission_key") @db.Uuid
+  privacyAcknowledgedAt DateTime? @map("privacy_acknowledged_at") @db.Timestamptz(6)
   id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name              String
   email             String
@@ -293,6 +339,8 @@ model RepairRequest {
 }
 
 model CustomRequest {
+  submissionKey String? @unique @map("submission_key") @db.Uuid
+  privacyAcknowledgedAt DateTime? @map("privacy_acknowledged_at") @db.Timestamptz(6)
   id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name               String
   email              String
@@ -319,6 +367,14 @@ model RequestMedia {
   mediaAsset   MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict)
 
   @@map("request_media")
+}
+
+model RequestRateLimit {
+  key String @id
+  count Int
+  resetAt DateTime @map("reset_at") @db.Timestamptz(6)
+  @@index([resetAt])
+  @@map("request_rate_limits")
 }
 
 model BlogPost {

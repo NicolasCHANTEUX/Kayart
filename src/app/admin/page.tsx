@@ -14,7 +14,7 @@ export default async function AdminPage() {
         <div className="eyebrow">Administration</div>
         <h1 className="page-title">Admin</h1>
         <p className="lead">
-          Pilotez les contenus, le catalogue et les futures demandes client depuis cet espace
+          Pilotez le catalogue et les demandes client depuis cet espace
           réservé aux comptes administrateurs.
         </p>
         <div className="admin-grid">
@@ -25,14 +25,14 @@ export default async function AdminPage() {
           </Link>
           <Link className="feature-card" href="/admin/commandes">
             <div className="meta">Commandes</div>
-            <h3>Ventes directes</h3>
-            <p>{orders.length} commandes enregistrées. Créez une vente atelier pour ajuster le stock.</p>
+            <h3>Commandes</h3>
+            <p>{orders.length} commandes affichées. Les simulations de test ne modifient pas le stock.</p>
           </Link>
-          <div className="feature-card">
+          <Link className="feature-card" href="/admin/demandes">
             <div className="meta">Demandes</div>
-            <h3>À brancher</h3>
-            <p>Réparation, sur-mesure et contact auront des files de traitement séparées.</p>
-          </div>
+            <h3>Demandes clients</h3>
+            <p>Consultez les messages, diagnostics de réparation et projets sur mesure, puis suivez leur traitement.</p>
+          </Link>
         </div>
       </div>
     </section>

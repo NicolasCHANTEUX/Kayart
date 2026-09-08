@@ -1,3 +1,6 @@
+import { randomUUID } from "node:crypto";
+import { CustomerRequestForm } from "@/components/requests/customer-request-form";
+import { siteConfig } from "@/config/site";
 export const metadata = {
   title: "Réparation",
   description: "Demander un diagnostic de réparation carbone à l'atelier KayArt."
@@ -11,14 +14,16 @@ export default function RepairPage() {
           <div className="eyebrow">Diagnostic atelier</div>
           <h1 className="page-title">Réparation</h1>
           <p className="lead">
-            Cette page cadrera le parcours de demande avec description, photos, type de pièce et
-            réponse de l'atelier. Le formulaire sera branché après le schéma de données.
+            Décrivez la pièce et les dommages constatés. Vous pouvez joindre des photos pour aider
+            l’atelier à évaluer la réparation. Un échange permettra de confirmer les possibilités et le devis.
           </p>
+          <CustomerRequestForm kind="repair" submissionKey={randomUUID()} enabled={process.env.KAYART_DATA_SOURCE === "prisma"} />
         </div>
         <div className="feature-card">
-          <div className="meta">V1</div>
-          <h3>Formulaire prévu</h3>
-          <p>Nom, email, type de produit, description du dommage, photos et consentement.</p>
+          <div className="meta">Atelier</div>
+          <h3>Préparer le diagnostic</h3>
+          <p>Précisez le type de pièce, son usage et les circonstances du dommage. Photographiez la pièce entière puis la zone concernée.</p>
+          <p><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></p>
         </div>
       </div>
     </section>
