@@ -1,4 +1,5 @@
 import { getDiscountPercent } from "@/lib/format";
+import { formatEuroInput } from "@/lib/money";
 import type { Product } from "@/types/catalog";
 
 export type ProductFormDraft = {
@@ -7,6 +8,7 @@ export type ProductFormDraft = {
   categoryId?: string;
   condition?: string;
   description?: string;
+  defectDescription?: string;
   dimensions?: string;
   discountPercent?: string;
   isCustomizable?: boolean;
@@ -28,6 +30,7 @@ const textFields = [
   "categoryId",
   "condition",
   "description",
+  "defectDescription",
   "dimensions",
   "discountPercent",
   "name",
@@ -85,10 +88,11 @@ export function createProductFormDraftFromProduct(product: Product): ProductForm
 
   return {
     availability: product.availability,
-    basePrice: basePriceCents !== null ? String(Math.round(basePriceCents / 100)) : undefined,
+    basePrice: basePriceCents !== null ? formatEuroInput(basePriceCents) : undefined,
     categoryId: product.categoryId,
     condition: product.condition,
     description: product.description,
+    defectDescription: product.defectDescription ?? undefined,
     dimensions: dimensions?.value,
     discountPercent: discountPercent ? String(discountPercent) : undefined,
     isCustomizable: product.isCustomizable,

@@ -286,7 +286,7 @@ export async function deleteProductAction(formData: FormData) {
 
     redirect(
       `/admin/produits?error=${encodeURIComponent(
-        "Impossible de supprimer le produit pour le moment."
+        "Impossible d’archiver le produit pour le moment."
       )}`
     );
   }
@@ -339,7 +339,8 @@ export async function showProductAction(formData: FormData) {
 }
 
 async function resolveProductImages(productName: string, formData: FormData) {
-  const storedImages = parseStoredProductImageFormData(formData, productName);
+  const session = await requireAdminSession();
+  const storedImages = parseStoredProductImageFormData(formData, productName, session.user.id);
   const imageUploads = parseProductImageFormData(formData);
 
   if (storedImages.length + imageUploads.length > 6) {

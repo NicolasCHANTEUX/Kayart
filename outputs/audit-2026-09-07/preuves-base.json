@@ -1,0 +1,327 @@
+{
+  "config": {
+    "dataSource": "prisma",
+    "imageStorage": "auto",
+    "hasDatabaseUrl": true,
+    "hasSupabaseUrl": true,
+    "hasStorageKey": true
+  },
+  "tables": [
+    {
+      "table_name": "audit_logs",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "blog_posts",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "categories",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "contact_requests",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "custom_requests",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "customers",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "media_assets",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "order_items",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "orders",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "product_attributes",
+      "rls": true,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "product_images",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "products",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "repair_requests",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "request_media",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "reservations",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    },
+    {
+      "table_name": "stock_alerts",
+      "rls": false,
+      "force_rls": false,
+      "anon_select": false,
+      "anon_insert": false,
+      "anon_update": false,
+      "anon_delete": false,
+      "authenticated_update": false
+    }
+  ],
+  "policies": [],
+  "authenticatedGrants": [
+    {
+      "table_name": "audit_logs",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "blog_posts",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "categories",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "contact_requests",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "custom_requests",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "customers",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "media_assets",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "order_items",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "orders",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "product_attributes",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "product_images",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "products",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "repair_requests",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "request_media",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "reservations",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    },
+    {
+      "table_name": "stock_alerts",
+      "can_select": false,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "customers",
+      "indexname": "customers_pkey",
+      "indexdef": "CREATE UNIQUE INDEX customers_pkey ON public.customers USING btree (id)"
+    },
+    {
+      "tablename": "customers",
+      "indexname": "customers_auth_user_id_key",
+      "indexdef": "CREATE UNIQUE INDEX customers_auth_user_id_key ON public.customers USING btree (auth_user_id)"
+    },
+    {
+      "tablename": "product_images",
+      "indexname": "product_images_pkey",
+      "indexdef": "CREATE UNIQUE INDEX product_images_pkey ON public.product_images USING btree (id)"
+    },
+    {
+      "tablename": "product_images",
+      "indexname": "product_images_product_id_idx",
+      "indexdef": "CREATE INDEX product_images_product_id_idx ON public.product_images USING btree (product_id)"
+    }
+  ],
+  "constraints": [],
+  "runtimeRole": [
+    {
+      "rolbypassrls": true,
+      "rolcreatedb": true,
+      "rolsuper": false
+    }
+  ],
+  "triggers": [],
+  "status": "read-only inspection successful",
+  "storageStatus": 200,
+  "storageBuckets": [
+    {
+      "id": "product-images",
+      "public": true,
+      "file_size_limit": null,
+      "allowed_mime_types": null
+    }
+  ]
+}

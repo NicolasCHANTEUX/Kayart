@@ -44,7 +44,7 @@ export default async function EditAdminProductPage({
             action={canPersist ? updateProductAction : undefined}
             canPersist={canPersist}
             categories={categories}
-            conditionOptions={product.condition === "imperfect" ? ["imperfect"] : ["new", "service"]}
+            conditionOptions={product.condition === "imperfect" ? ["imperfect"] : ["new", "used", "service"]}
             defaultValues={createProductFormDraftFromProduct(product)}
             errorMessage={paramsValue.error}
             existingImages={product.images}

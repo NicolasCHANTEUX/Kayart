@@ -15,7 +15,7 @@ type AdminOrderActionsProps = {
 
 export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const canMarkPaid = canPersist && order.paymentStatus !== "paid";
+  const canMarkPaid = canPersist && order.isFictive && order.paymentStatus === "pending" && order.status === "pending";
 
   return (
     <>
@@ -26,11 +26,11 @@ export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps)
         </form>
         <button
           className="button button--danger order-actions__button"
-          disabled={!canPersist}
+          disabled={!canMarkPaid}
           onClick={() => setIsDeleteOpen(true)}
           type="button"
         >
-          Supprimer
+          Annuler la simulation
         </button>
       </div>
 
@@ -38,9 +38,9 @@ export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps)
         <div className="modal-backdrop" role="presentation">
           <div aria-modal="true" className="admin-modal admin-modal--danger" role="dialog">
             <div>
-              <span className="modal-eyebrow">Suppression commande</span>
+              <span className="modal-eyebrow">Annulation de simulation</span>
               <h2>{order.orderNumber}</h2>
-              <p>Cette commande factice sera supprimée de l'historique.</p>
+              <p>La simulation sera annulée et restera dans l'historique.</p>
             </div>
             <form action={deleteAdminOrderAction} className="modal-form">
               <input name="id" type="hidden" value={order.id} />
@@ -48,7 +48,7 @@ export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps)
                 <button className="button button--ghost" onClick={() => setIsDeleteOpen(false)} type="button">
                   Annuler
                 </button>
-                <ActionButton danger label="Supprimer" />
+                <ActionButton danger label="Annuler la simulation" />
               </div>
             </form>
           </div>

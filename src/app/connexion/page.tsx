@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { sanitizeRedirectPath } from "@/lib/safe-redirect";
 import { loginAction } from "@/app/connexion/actions";
 import { AuthSubmitButton } from "@/components/auth/auth-submit-button";
 import { getCurrentAuthSession } from "@/server/auth/session";
@@ -24,7 +25,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     searchParams ?? Promise.resolve({} as LoginSearchParams),
     getCurrentAuthSession()
   ]);
-  const redirectPath = sanitizeRedirectParam(params.redirect);
+  const redirectPath = sanitizeRedirectPath(params.redirect);
 
   if (session?.role === "admin") {
     redirect(redirectPath || "/admin");
@@ -92,12 +93,4 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       </div>
     </section>
   );
-}
-
-function sanitizeRedirectParam(path?: string) {
-  if (!path || !path.startsWith("/") || path.startsWith("//")) {
-    return "";
-  }
-
-  return path;
 }

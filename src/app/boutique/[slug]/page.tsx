@@ -4,16 +4,15 @@ import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductPrice } from "@/components/catalog/product-price";
 import { productAvailabilityLabels, productConditionLabels } from "@/lib/catalog";
 import { formatStock, getDiscountPercent } from "@/lib/format";
-import { findProductBySlug, listStaticProductParams } from "@/server/catalog/catalog.service";
+import { findProductBySlug } from "@/server/catalog/catalog.service";
 import type { Product } from "@/types/catalog";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  return listStaticProductParams();
-}
+// Visibility, reservations and stock must be checked on every request.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: ProductPageProps) {
   const { slug } = await params;
@@ -176,30 +175,34 @@ export default async function ProductPage({ params }: ProductPageProps) {
 }
 
 function getPrimaryAction(product: Product) {
+  const href = `/contact?produit=${encodeURIComponent(product.name)}&reference=${encodeURIComponent(product.sku)}`;
+  if (product.availability === "reserved") {
+    return { href, label: "Pièce réservée — contacter l’atelier" };
+  }
   if (product.condition === "service") {
     return {
-      href: "/contact",
+      href,
       label: "Demander ce service"
     };
   }
 
   if (product.availability === "made-to-order" || product.isCustomizable || product.priceCents === null) {
     return {
-      href: "/contact",
+      href,
       label: "Demander un devis"
     };
   }
 
   if (product.stockQuantity === 0) {
     return {
-      href: "/contact",
-      label: "Être prévenu"
+      href,
+      label: "Demander la disponibilité"
     };
   }
 
   return {
-    href: "/panier",
-    label: "Ajouter au panier"
+    href,
+    label: "Commander auprès de l’atelier"
   };
 }
 

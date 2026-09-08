@@ -1,0 +1,38 @@
+[
+  {
+    "route": "/boutique",
+    "status": 200,
+    "unauthenticated": true,
+    "redirectInStream": false,
+    "privateDraftInResponse": false,
+    "customerEmailInResponse": false,
+    "internalNoteInResponse": false
+  },
+  {
+    "route": "/admin/produits",
+    "status": 200,
+    "unauthenticated": true,
+    "redirectInStream": true,
+    "privateDraftInResponse": true,
+    "customerEmailInResponse": false,
+    "internalNoteInResponse": false
+  },
+  {
+    "route": "/admin/commandes",
+    "status": 200,
+    "unauthenticated": true,
+    "redirectInStream": true,
+    "privateDraftInResponse": true,
+    "customerEmailInResponse": true,
+    "internalNoteInResponse": true
+  },
+  {
+    "route": "/admin/produits/audit-private-draft/modifier",
+    "status": 200,
+    "unauthenticated": true,
+    "redirectInStream": true,
+    "privateDraftInResponse": true,
+    "customerEmailInResponse": false,
+    "internalNoteInResponse": false
+  }
+]

@@ -1,0 +1,268 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 26015,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false,
+    "csp": "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; object-src 'none'; img-src 'self' data: blob: https://*.supabase.co; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co; upgrade-insecure-requests",
+    "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate"
+  },
+  {
+    "route": "/boutique",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 18739,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/boutique/pagaie-carbone-signature",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 18719,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/panier",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 12787,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/reparation",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 13477,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/sur-mesure",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 13433,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/contact",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 13449,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/journal",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 12854,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/savoir-faire",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 12978,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/connexion",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 15494,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": true
+  },
+  {
+    "route": "/inscription",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 15774,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": true
+  },
+  {
+    "route": "/mot-de-passe-oublie",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 15021,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": true
+  },
+  {
+    "route": "/nouveau-mot-de-passe",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 13994,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/cgv",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 12653,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/confidentialite",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 12711,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/mentions-legales",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 12692,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/manifest.webmanifest",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 286,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/sw.js",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 160,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/sitemap.xml",
+    "status": 404,
+    "location": null,
+    "htmlBytes": 13143,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/robots.txt",
+    "status": 404,
+    "location": null,
+    "htmlBytes": 13142,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/faq",
+    "status": 404,
+    "location": null,
+    "htmlBytes": 13135,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/services",
+    "status": 404,
+    "location": null,
+    "htmlBytes": 13140,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/journal/article-inexistant",
+    "status": 404,
+    "location": null,
+    "htmlBytes": 13162,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/boutique/inexistant",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 13318,
+    "hasLoginRedirectInStream": false,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/admin",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 13955,
+    "hasLoginRedirectInStream": true,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/admin/produits",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 20726,
+    "hasLoginRedirectInStream": true,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/admin/commandes",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 18362,
+    "hasLoginRedirectInStream": true,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "/admin/produits/nouveau",
+    "status": 200,
+    "location": null,
+    "htmlBytes": 14920,
+    "hasLoginRedirectInStream": true,
+    "hasCartLink": false,
+    "hasForms": false
+  },
+  {
+    "route": "POST upload-url",
+    "origin": "http://127.0.0.1:3107",
+    "status": 401,
+    "expected": 401
+  },
+  {
+    "route": "POST upload-url",
+    "origin": "https://example.invalid",
+    "status": 403,
+    "expected": 403
+  }
+]

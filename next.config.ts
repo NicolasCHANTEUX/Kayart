@@ -13,9 +13,9 @@ const nextConfig: NextConfig = {
               "frame-ancestors 'none'",
               "form-action 'self'",
               "object-src 'none'",
-              "img-src 'self' data: blob: https://*.supabase.co",
-              "font-src 'self' data:",
-              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "script-src 'self' 'unsafe-inline'",
               "connect-src 'self' https://*.supabase.co",
               "upgrade-insecure-requests"
@@ -52,7 +52,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: "80mb"
+      bodySizeLimit: "4mb"
     }
   },
   images: {

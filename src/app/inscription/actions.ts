@@ -1,7 +1,6 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { resolveAuthenticatedSession } from "@/server/auth/session";
 import {
   AuthConfigurationError,
   AuthCredentialsError,
@@ -38,8 +37,7 @@ export async function signupAction(formData: FormData) {
       throw new Error("Les deux mots de passe ne correspondent pas.");
     }
 
-    const user = await signUpWithPassword(email, password);
-    await resolveAuthenticatedSession(user);
+    await signUpWithPassword(email, password);
   } catch (error) {
     const message = getSignupErrorMessage(error);
     redirect(`/inscription?error=${encodeURIComponent(message)}&email=${encodeURIComponent(email)}`);
@@ -55,7 +53,7 @@ function readRequiredField(formData: FormData, name: string) {
     throw new Error("Tous les champs sont obligatoires.");
   }
 
-  return value.trim();
+  return name.startsWith("password") ? value : value.trim();
 }
 
 function getSignupErrorMessage(error: unknown) {

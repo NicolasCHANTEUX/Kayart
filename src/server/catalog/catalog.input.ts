@@ -1,8 +1,9 @@
 import { productAvailabilityValues, productConditionValues } from "@/lib/catalog";
 import { slugify } from "@/lib/slug";
+import { parseEuroCents } from "@/lib/money";
 import {
   isAllowedProductImageType,
-  isTrustedStoredProductImageReference
+  verifyProductImageReceipt
 } from "@/server/catalog/product-image-storage";
 import type { ProductAvailability, ProductCondition } from "@/types/catalog";
 
@@ -53,6 +54,7 @@ export type ProductCreateInput = {
 export type ProductUpdateInput = ProductCreateInput & {
   id: string;
   deletedImageIds: string[];
+  preservePrices: boolean;
 };
 
 export type ProductDeleteInput = {
@@ -196,11 +198,7 @@ export function parseProductFormData(formData: FormData): ProductCreateInput {
     issues.stockQuantity = "Le stock est obligatoire pour un produit physique.";
   }
 
-  if (condition !== "service" && availability === "available" && stockQuantity !== null && stockQuantity <= 0) {
-    issues.stockQuantity = "Un produit disponible doit avoir un stock supérieur à zéro.";
-  }
-
-  if (condition === "imperfect" && stockQuantity !== null && stockQuantity > 1) {
+  if ((condition === "imperfect" || condition === "used") && stockQuantity !== null && stockQuantity > 1) {
     issues.stockQuantity = "Un produit imparfait doit représenter une pièce unique.";
   }
 
@@ -230,6 +228,7 @@ export function parseProductFormData(formData: FormData): ProductCreateInput {
     stockQuantity,
     shortDescription: readNullableText(formData, "shortDescription"),
     description,
+    defectDescription: formData.has("defectDescription") ? readNullableText(formData, "defectDescription") : undefined,
     attributes,
     images: [],
     isFeatured: formData.get("isFeatured") === "on",
@@ -267,6 +266,10 @@ export function parseImperfectProductFormData(formData: FormData): ImperfectProd
 
   if (discountPercent <= 0) {
     issues.discountPercent = "La réduction doit être supérieure à 0%.";
+  }
+
+  if (basePriceCents !== null && Math.round(basePriceCents * (100 - discountPercent) / 100) <= 0) {
+    issues.basePrice = "Le prix remisé doit être d'au moins un centime.";
   }
 
   if (defectDescription.length < 10) {
@@ -307,7 +310,8 @@ export function parseProductUpdateFormData(formData: FormData): ProductUpdateInp
   return {
     ...input,
     id,
-    deletedImageIds
+    deletedImageIds,
+    preservePrices: formData.get("preservePrices") === "on"
   };
 }
 
@@ -494,8 +498,8 @@ export function parseProductImageFormData(formData: FormData): ProductImageUploa
       issues.images = "Seuls les fichiers JPG, PNG, WebP ou GIF sont acceptés.";
     }
 
-    if (file.size > 12 * 1024 * 1024) {
-      issues.images = "Chaque image doit faire 12 Mo maximum.";
+    if (file.size > 4 * 1024 * 1024) {
+      issues.images = "Chaque image doit faire 4 Mo maximum.";
     }
 
     return {
@@ -512,61 +516,15 @@ export function parseProductImageFormData(formData: FormData): ProductImageUploa
   return uploads;
 }
 
-export function parseStoredProductImageFormData(
-  formData: FormData,
-  productName: string
-): ProductStoredImageInput[] {
-  const issues: Record<string, string> = {};
-  const values = formData
-    .getAll("uploadedImage")
-    .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
-
-  if (values.length > 6) {
-    issues.images = "Un produit peut recevoir 6 images maximum.";
-  }
-
-  const images = values.map((value, index) => {
-    const payload = parseStoredProductImagePayload(value);
-
-    if (!payload) {
-      issues.images = "Une image envoyée est invalide.";
-      return null;
-    }
-
-    if (!isTrustedStoredProductImageReference(payload)) {
-      issues.images = "Une image envoyée est invalide.";
-    }
-
-    if (payload.sizeBytes > 12 * 1024 * 1024) {
-      issues.images = "Chaque image doit faire 12 Mo maximum.";
-    }
-
-    return {
-      bucket: payload.bucket,
-      path: payload.path,
-      originalFilename: payload.originalFilename,
-      altText: productName,
-      mimeType: payload.mimeType,
-      sizeBytes: payload.sizeBytes,
-      isPrimary: payload.isPrimary,
-      position: Number.isInteger(payload.position) ? payload.position : index
-    };
-  });
-
-  if (Object.keys(issues).length > 0) {
-    throw new ProductFormError(issues);
-  }
-
-  const validImages = images.filter((image): image is ProductStoredImageInput => Boolean(image));
-
-  if (validImages.length > 0 && !validImages.some((image) => image.isPrimary)) {
-    return validImages.map((image, index) => ({
-      ...image,
-      isPrimary: index === 0
-    }));
-  }
-
-  return validImages;
+export function parseStoredProductImageFormData(formData: FormData, productName: string, userId: string): ProductStoredImageInput[] {
+  const values = formData.getAll("uploadedImage");
+  if (values.length > 6) throw new ProductFormError({ images: "Six images maximum." });
+  const images = values.map((value) => typeof value === "string" ? verifyProductImageReceipt(value, userId) : null);
+  if (images.some((image) => !image)) throw new ProductFormError({ images: "Image invalide ou envoi expiré. Renvoyez les images." });
+  const paths = images.map((image) => image!.path);
+  if (new Set(paths).size !== paths.length) throw new ProductFormError({ images: "Une image ne peut pas être ajoutée deux fois." });
+  const primary = Math.max(0, images.findIndex((image) => image!.isPrimary));
+  return images.map((image, index) => ({ ...image!, altText: productName, isPrimary: index === primary, position: index }));
 }
 
 function readText(formData: FormData, name: string) {
@@ -606,14 +564,13 @@ function parsePriceCents(
     return null;
   }
 
-  const amount = Number(value.replace(",", "."));
-
-  if (!Number.isFinite(amount) || amount <= 0) {
+  const cents = parseEuroCents(value);
+  if (cents === null) {
     issues[fieldName] = message;
     return null;
   }
 
-  return Math.round(amount * 100);
+  return cents;
 }
 
 function parseDiscountPercent(value: string, issues: Record<string, string>) {
@@ -642,7 +599,7 @@ function parsePositiveInteger(value: string, issues: Record<string, string>, req
 
   const quantity = Number(value);
 
-  if (!Number.isInteger(quantity) || quantity < 0) {
+  if (!Number.isSafeInteger(quantity) || quantity < 0 || quantity > 2147483647) {
     issues.stockQuantity = "Le stock doit être un nombre entier positif.";
     return null;
   }
@@ -653,7 +610,7 @@ function parsePositiveInteger(value: string, issues: Record<string, string>, req
 function parseOrderQuantity(value: string, issues: Record<string, string>, fieldName: string) {
   const quantity = Number(value);
 
-  if (!Number.isInteger(quantity) || quantity <= 0) {
+  if (!Number.isSafeInteger(quantity) || quantity <= 0 || quantity > 10000) {
     issues[fieldName] = "Chaque quantité doit être un nombre entier supérieur à zéro.";
     return null;
   }
@@ -668,55 +625,6 @@ function isPositiveDecimal(value: string) {
 
 function isEmailLike(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function parseStoredProductImagePayload(value: string) {
-  const payload = parseJsonObject<Partial<ProductStoredImageInput>>(value);
-
-  if (!payload) {
-    return null;
-  }
-
-  const sizeBytes = Number(payload.sizeBytes);
-  const position = Number(payload.position);
-
-  if (
-    typeof payload.bucket !== "string" ||
-    typeof payload.path !== "string" ||
-    typeof payload.originalFilename !== "string" ||
-    typeof payload.mimeType !== "string" ||
-    !Number.isFinite(sizeBytes) ||
-    sizeBytes <= 0
-  ) {
-    return null;
-  }
-
-  const bucket = payload.bucket.trim();
-  const path = payload.path.trim();
-  const originalFilename = payload.originalFilename.trim();
-  const mimeType = payload.mimeType.trim();
-
-  if (!bucket || !path || !originalFilename || !mimeType) {
-    return null;
-  }
-
-  return {
-    bucket,
-    path,
-    originalFilename,
-    mimeType,
-    sizeBytes,
-    isPrimary: payload.isPrimary === true,
-    position
-  };
-}
-
-function parseJsonObject<T>(value: string): T | null {
-  try {
-    return JSON.parse(value) as T;
-  } catch (error) {
-    return null;
-  }
 }
 
 function parseProductAttributes(formData: FormData): ProductAttributeInput[] {

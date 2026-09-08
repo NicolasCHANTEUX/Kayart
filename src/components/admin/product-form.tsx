@@ -9,6 +9,7 @@ import {
   productConditionValues
 } from "@/lib/catalog";
 import { skuFromName, slugify } from "@/lib/slug";
+import { sanitizeMoneyInput } from "@/lib/money";
 import type { ProductFormDraft } from "@/server/catalog/product-form-draft";
 import type { Category, ProductCondition, ProductImage } from "@/types/catalog";
 
@@ -157,6 +158,9 @@ export function ProductForm({
       {errorMessage ? <p className="form-notice form-notice--error">{errorMessage}</p> : null}
       {stepError ? <p className="form-notice form-notice--error">{stepError}</p> : null}
       {productId ? <input name="id" type="hidden" value={productId} /> : null}
+      {productId && basePrice === (defaultValues?.basePrice ?? "") && discountPercent === (defaultValues?.discountPercent ?? "") ? (
+        <input name="preservePrices" type="hidden" value="on" />
+      ) : null}
       {deletedImageIds.map((imageId) => (
         <input key={imageId} name="deletedImageId" type="hidden" value={imageId} />
       ))}
@@ -265,15 +269,11 @@ export function ProductForm({
           <label>
             Prix de base TTC en euros
             <input
-              inputMode="numeric"
-              min="0"
+              inputMode="decimal"
               name="basePrice"
-              onChange={(event) => setBasePrice(sanitizeIntegerInput(event.currentTarget.value))}
-              onInput={(event) => sanitizeNumericInput(event.currentTarget, "integer")}
-              onKeyDown={(event) => blockInvalidNumericKey(event, "integer")}
-              placeholder="100"
-              step="1"
-              type="number"
+              onChange={(event) => setBasePrice(sanitizeMoneyInput(event.currentTarget.value))}
+              placeholder="100,00"
+              type="text"
               value={basePrice}
             />
           </label>
@@ -373,6 +373,12 @@ export function ProductForm({
             rows={8}
           />
         </label>
+        {defaultValues?.condition === "imperfect" || defaultValues?.condition === "used" ? (
+          <label>
+            État et défauts constatés
+            <textarea name="defectDescription" defaultValue={defaultValues.defectDescription ?? ""} rows={5} />
+          </label>
+        ) : null}
       </fieldset>
 
       <fieldset className={stageClassName(4)} id="product-step-options" inert={isStepLocked(4)}>
@@ -516,11 +522,7 @@ function validateStep(step: number, formData: FormData) {
       return "Le stock doit être un nombre entier positif.";
     }
 
-    if (condition !== "service" && availability === "available" && Number(stock) <= 0) {
-      return "Un produit disponible doit avoir un stock supérieur à zéro.";
-    }
-
-    if (condition === "imperfect" && Number(stock) > 1) {
+    if ((condition === "imperfect" || condition === "used") && Number(stock) > 1) {
       return "Un produit imparfait doit représenter une pièce unique.";
     }
 

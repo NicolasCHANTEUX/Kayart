@@ -122,7 +122,7 @@ model Product {
   publishedAt         DateTime?           @map("published_at") @db.Timestamptz(6)
   createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt           DateTime            @default(now()) @map("updated_at") @db.Timestamptz(6)
-  baseProduct         Product?            @relation("ProductImperfectBase", fields: [baseProductId], references: [id], onDelete: SetNull)
+  baseProduct         Product?            @relation("ProductImperfectBase", fields: [baseProductId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   imperfectProducts   Product[]           @relation("ProductImperfectBase")
   category            Category?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   attributes          ProductAttribute[]

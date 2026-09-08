@@ -36,7 +36,7 @@ export default async function NewAdminProductPage({ searchParams }: NewAdminProd
             action={canPersist ? createProductAction : undefined}
             canPersist={canPersist}
             categories={categories}
-            conditionOptions={["new", "service"]}
+            conditionOptions={["new", "used", "service"]}
             defaultValues={draft}
             errorMessage={params.error}
           />

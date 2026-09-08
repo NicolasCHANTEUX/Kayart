@@ -1,0 +1,150 @@
+[
+  {
+    "id": "U04",
+    "observation": {
+      "originalPriceCents": 1990,
+      "formBasePrice": "20",
+      "savedPriceCents": 2000
+    }
+  },
+  {
+    "id": "U05",
+    "observation": {
+      "originalAttributes": [
+        {
+          "label": "Poids",
+          "value": "0.5",
+          "unit": "kg"
+        },
+        {
+          "label": "Dimensions",
+          "value": "20 cm"
+        },
+        {
+          "label": "Matière",
+          "value": "Carbone"
+        }
+      ],
+      "attributesSubmitted": [
+        {
+          "label": "Poids",
+          "value": "0.5",
+          "unit": "kg"
+        },
+        {
+          "label": "Dimensions",
+          "value": "20 cm"
+        }
+      ]
+    }
+  },
+  {
+    "id": "C12",
+    "observation": {
+      "cookieValueBytesFor2000AccentedCharacters": 12032
+    }
+  },
+  {
+    "id": "U06",
+    "observation": {
+      "databaseCondition": "used",
+      "displayedCondition": "imperfect"
+    }
+  },
+  {
+    "id": "U01",
+    "observation": {
+      "existingLinkReplaced": "unverified-or-obfuscated-auth-id",
+      "returnedRole": "admin",
+      "scope": "Simulation locale de la réponse signup, aucun compte distant modifié"
+    }
+  },
+  {
+    "id": "U07",
+    "observation": {
+      "reservedProductAction": {
+        "href": "/panier",
+        "label": "Ajouter au panier"
+      }
+    }
+  },
+  {
+    "id": "U03",
+    "observation": {
+      "accepted": "/\\example.invalid",
+      "resolvedOrigin": "https://example.invalid"
+    }
+  },
+  {
+    "id": "C11",
+    "observation": {
+      "submittedLength": 14,
+      "loginPasswordLength": 11
+    }
+  },
+  {
+    "id": "C10",
+    "observation": {
+      "requestsFromSameIpWithDifferentEmailsAccepted": 20,
+      "perPairLimit": 5
+    }
+  },
+  {
+    "id": "U08",
+    "observation": {
+      "statements": [
+        [
+          "orderItem.updateMany",
+          {
+            "data": {
+              "productId": null
+            },
+            "where": {
+              "productId": "sold-product"
+            }
+          }
+        ],
+        [
+          "reservation.deleteMany",
+          {
+            "where": {
+              "productId": "sold-product"
+            }
+          }
+        ],
+        [
+          "product.delete",
+          {
+            "where": {
+              "id": "sold-product"
+            }
+          }
+        ],
+        [
+          "order.delete",
+          {
+            "where": {
+              "id": "real-order"
+            }
+          }
+        ],
+        [
+          "order.update",
+          {
+            "data": {
+              "paidAt": "2026-09-07T20:36:40.139Z",
+              "paymentStatus": "paid",
+              "updatedAt": "2026-09-07T20:36:40.139Z"
+            },
+            "include": {
+              "items": true
+            },
+            "where": {
+              "id": "real-order"
+            }
+          }
+        ]
+      ]
+    }
+  }
+]

@@ -108,58 +108,8 @@ async function getUserRole(user: AuthenticatedUser): Promise<UserRole> {
     }
   });
 
-  if (existingByAuthId) {
-    await prisma.customer.update({
-      data: {
-        email: user.email
-      },
-      where: {
-        authUserId: user.id
-      }
-    });
-
-    return normalizeRole(existingByAuthId.role);
-  }
-
-  const existingByEmail = await prisma.customer.findFirst({
-    select: {
-      id: true,
-      role: true
-    },
-    where: {
-      email: {
-        equals: user.email,
-        mode: "insensitive"
-      }
-    }
-  });
-
-  if (existingByEmail) {
-    const customer = await prisma.customer.update({
-      data: {
-        authUserId: user.id,
-        email: user.email
-      },
-      select: {
-        role: true
-      },
-      where: {
-        id: existingByEmail.id
-      }
-    });
-
-    return normalizeRole(customer.role);
-  }
-
-  await prisma.customer.create({
-    data: {
-      authUserId: user.id,
-      email: user.email,
-      role: "customer"
-    }
-  });
-
-  return "customer";
+  // Roles are bound exclusively to the verified Supabase Auth ID. Reading a session never relinks accounts.
+  return normalizeRole(existingByAuthId?.role ?? "customer");
 }
 
 function normalizeRole(role: string): UserRole {

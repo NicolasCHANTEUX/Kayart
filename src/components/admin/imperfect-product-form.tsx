@@ -4,6 +4,7 @@ import { useMemo, useState, type KeyboardEvent } from "react";
 import { ProductImageUploader } from "@/components/admin/product-image-uploader";
 import { productAvailabilityLabels } from "@/lib/catalog";
 import { formatMoneyCents } from "@/lib/format";
+import { formatEuroInput, sanitizeMoneyInput } from "@/lib/money";
 import type { Product } from "@/types/catalog";
 
 type ImperfectProductFormProps = {
@@ -100,16 +101,12 @@ export function ImperfectProductForm({
           <label>
             Prix de base TTC en euros
             <input
-              inputMode="numeric"
-              min="1"
+              inputMode="decimal"
               name="basePrice"
-              onChange={(event) => setBasePrice(sanitizeIntegerInput(event.currentTarget.value))}
-              onInput={(event) => sanitizeNumericInput(event.currentTarget)}
-              onKeyDown={blockInvalidNumericKey}
+              onChange={(event) => setBasePrice(sanitizeMoneyInput(event.currentTarget.value))}
               placeholder="100"
               required
-              step="1"
-              type="number"
+              type="text"
               value={basePrice}
             />
           </label>
@@ -176,7 +173,7 @@ export function ImperfectProductForm({
 
 function getModelPriceValue(product?: Product) {
   const priceCents = product?.compareAtPriceCents ?? product?.priceCents;
-  return priceCents ? String(Math.round(priceCents / 100)) : "";
+  return priceCents ? formatEuroInput(priceCents) : "";
 }
 
 function getSalePreview(basePriceValue: string, discountPercentValue: string) {

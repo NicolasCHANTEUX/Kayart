@@ -1,6 +1,6 @@
 import type { ProductAvailability, ProductCondition } from "@/types/catalog";
 
-export const productConditionValues: ProductCondition[] = ["new", "imperfect", "service"];
+export const productConditionValues: ProductCondition[] = ["new", "imperfect", "used", "service"];
 
 export const productAvailabilityValues: ProductAvailability[] = [
   "draft",
@@ -14,6 +14,7 @@ export const productAvailabilityValues: ProductAvailability[] = [
 export const productConditionLabels: Record<ProductCondition, string> = {
   new: "Neuf",
   imperfect: "Imparfait",
+  used: "Occasion",
   service: "Service"
 };
 

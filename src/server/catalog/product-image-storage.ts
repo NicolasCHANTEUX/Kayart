@@ -1,314 +1,88 @@
-import { randomUUID } from "node:crypto";
+import { createHmac, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
+import sharp from "sharp";
 import type { ProductImageUploadInput, ProductStoredImageInput } from "@/server/catalog/catalog.input";
 
-const localPublicBucket = "local-public";
-const defaultSupabaseBucket = "product-images";
-const allowedImageMimeTypes = new Set([
-  "image/gif",
-  "image/jpeg",
-  "image/png",
-  "image/webp"
-]);
-const allowedImageExtensions = new Set([".gif", ".jpeg", ".jpg", ".png", ".webp"]);
-
-export type ProductImageUploadTargetInput = {
-  name: string;
-  type: string;
-  size: number;
-  isPrimary: boolean;
-  position: number;
-};
-
-export type ProductImageUploadTarget = {
-  bucket: string;
-  signedUrl: string;
-  path: string;
-  publicUrl: string;
-  originalFilename: string;
-  mimeType: string;
-  sizeBytes: number;
-  isPrimary: boolean;
-  position: number;
-};
-
-export async function storeProductImages(
-  productName: string,
-  uploads: ProductImageUploadInput[]
-): Promise<ProductStoredImageInput[]> {
-  if (uploads.length === 0) {
-    return [];
-  }
-
-  if (shouldUseSupabaseStorage()) {
-    return storeProductImagesInSupabase(productName, uploads);
-  }
-
-  return storeProductImagesLocally(productName, uploads);
-}
-
-async function storeProductImagesLocally(productName: string, uploads: ProductImageUploadInput[]) {
-  const imageSetId = randomUUID();
-  const directory = join(process.cwd(), "public", "uploads", "products", imageSetId);
-  await mkdir(directory, { recursive: true });
-
-  return Promise.all(
-    uploads.map(async (upload, index) => {
-      const extension = getFileExtension(upload.file);
-      const fileName = `${randomUUID()}${extension}`;
-      const filePath = join(directory, fileName);
-      const buffer = Buffer.from(await upload.file.arrayBuffer());
-
-      await writeFile(filePath, buffer);
-
-      return {
-        bucket: localPublicBucket,
-        path: `/uploads/products/${imageSetId}/${fileName}`,
-        originalFilename: upload.file.name,
-        altText: productName,
-        mimeType: upload.file.type || "application/octet-stream",
-        sizeBytes: upload.file.size,
-        isPrimary: upload.isPrimary || (index === 0 && !uploads.some((item) => item.isPrimary)),
-        position: upload.position
-      };
-    })
-  );
-}
-
-async function storeProductImagesInSupabase(
-  productName: string,
-  uploads: ProductImageUploadInput[]
-): Promise<ProductStoredImageInput[]> {
-  const targets = await createProductImageUploadTargets(
-    uploads.map((upload) => ({
-      name: upload.file.name,
-      type: upload.file.type,
-      size: upload.file.size,
-      isPrimary: upload.isPrimary,
-      position: upload.position
-    }))
-  );
-
-  return Promise.all(
-    uploads.map(async (upload, index) => {
-      const target = targets[index];
-
-      if (!target) {
-        throw new Error("Impossible de préparer l'envoi de l'image.");
-      }
-
-      const buffer = Buffer.from(await upload.file.arrayBuffer());
-      const body = new FormData();
-
-      body.append("cacheControl", "31536000");
-      body.append("", new Blob([buffer], { type: upload.file.type || "application/octet-stream" }), upload.file.name);
-
-      const response = await fetch(target.signedUrl, {
-        body,
-        cache: "no-store",
-        headers: {
-          "x-upsert": "false"
-        },
-        method: "PUT"
-      });
-
-      if (!response.ok) {
-        const details = await response.text().catch(() => "");
-        throw new Error(
-          `Impossible d'envoyer l'image dans Supabase Storage. Verifiez le bucket "${target.bucket}". ${details}`.trim()
-        );
-      }
-
-      return {
-        bucket: target.bucket,
-        path: target.publicUrl,
-        originalFilename: upload.file.name,
-        altText: productName,
-        mimeType: upload.file.type || "application/octet-stream",
-        sizeBytes: upload.file.size,
-        isPrimary: target.isPrimary || (index === 0 && !uploads.some((item) => item.isPrimary)),
-        position: upload.position
-      };
-    })
-  );
-}
-
-export async function createProductImageUploadTargets(
-  files: ProductImageUploadTargetInput[]
-): Promise<ProductImageUploadTarget[]> {
-  const { apiKey, bucket, projectUrl } = getSupabaseStorageConfig();
-  const imageSetId = randomUUID();
-
-  return Promise.all(
-    files.map(async (file, index) => {
-      const extension = getFileExtensionFromNameOrType(file.name, file.type);
-      const fileName = `${randomUUID()}${extension}`;
-      const objectPath = `products/${imageSetId}/${fileName}`;
-      const signedUrl = await createSupabaseSignedUploadUrl(projectUrl, apiKey, bucket, objectPath);
-
-      return {
-        bucket,
-        signedUrl,
-        path: objectPath,
-        publicUrl: buildStoragePublicUrl(projectUrl, bucket, objectPath),
-        originalFilename: file.name,
-        mimeType: file.type || "application/octet-stream",
-        sizeBytes: file.size,
-        isPrimary: file.isPrimary || (index === 0 && !files.some((item) => item.isPrimary)),
-        position: file.position
-      };
-    })
-  );
-}
+export const maxImageSizeBytes = 4 * 1024 * 1024;
+const localReceiptKey = randomBytes(32);
+const allowedFormats = new Set(["jpeg", "png", "webp", "gif"]);
 
 export function isAllowedProductImageType(name: string, type: string) {
-  const normalizedType = type.trim().toLowerCase();
-  const extension = extname(name).toLowerCase();
-
-  return allowedImageMimeTypes.has(normalizedType) && allowedImageExtensions.has(extension);
+  return ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(type)
+    && [".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(extname(name).toLowerCase());
 }
 
-export function isTrustedStoredProductImageReference(image: {
-  bucket: string;
-  mimeType: string;
-  path: string;
-}) {
-  if (!allowedImageMimeTypes.has(image.mimeType.trim().toLowerCase())) {
-    return false;
+export async function normalizeProductImage(file: File): Promise<Buffer> {
+  if (!file.size || file.size > maxImageSizeBytes || !isAllowedProductImageType(file.name, file.type)) {
+    throw new Error("Image invalide : JPG, PNG, WebP ou GIF, 4 Mo maximum.");
   }
-
-  if (image.bucket === localPublicBucket) {
-    return /^\/uploads\/products\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(gif|jpe?g|png|webp)$/iu.test(image.path);
+  const source = Buffer.from(await file.arrayBuffer());
+  const decoder = sharp(source, { failOn: "warning", limitInputPixels: 24_000_000 });
+  const metadata = await decoder.metadata();
+  if (!metadata.format || !allowedFormats.has(metadata.format) || (metadata.pages ?? 1) > 1) {
+    throw new Error("Utilisez une image fixe JPG, PNG, WebP ou GIF valide.");
   }
-
-  const projectUrl = cleanSupabaseUrl(process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET ?? defaultSupabaseBucket;
-
-  if (!projectUrl || image.bucket !== bucket) {
-    return false;
-  }
-
-  const publicPrefix = `${projectUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/products/`;
-
-  return image.path.startsWith(publicPrefix) && /^https:\/\//iu.test(image.path);
+  // Decode pixels and discard metadata and trailing content before publication.
+  const normalized = await decoder.rotate().resize({ width: 2400, height: 2400, fit: "inside", withoutEnlargement: true }).webp({ quality: 88 }).toBuffer();
+  if (normalized.length > maxImageSizeBytes) throw new Error("Image convertie trop volumineuse.");
+  return normalized;
 }
 
-function shouldUseSupabaseStorage() {
-  if (process.env.KAYART_IMAGE_STORAGE === "local") {
-    return false;
+export async function storeProductImages(productName: string, uploads: ProductImageUploadInput[]): Promise<ProductStoredImageInput[]> {
+  if (uploads.length > 6) throw new Error("Six images maximum.");
+  const results: ProductStoredImageInput[] = [];
+  // Sequential decoding bounds peak memory use.
+  for (const upload of uploads) {
+    const buffer = await normalizeProductImage(upload.file);
+    const objectPath = `products/${randomUUID()}/${randomUUID()}.webp`;
+    let bucket = "local-public";
+    let publicPath = `/uploads/${objectPath}`;
+    const useSupabase = process.env.KAYART_IMAGE_STORAGE !== "local" && (process.env.KAYART_IMAGE_STORAGE === "supabase" || process.env.VERCEL === "1" || Boolean(process.env.SUPABASE_STORAGE_BUCKET));
+    if (useSupabase) {
+      const apiKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
+      const projectUrl = (process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").replace(/\/rest\/v1\/?$/u, "").replace(/\/+$/u, "");
+      bucket = process.env.SUPABASE_STORAGE_BUCKET ?? "product-images";
+      if (!apiKey || !projectUrl.startsWith("https://")) throw new Error("Stockage images non configuré.");
+      const response = await fetch(`${projectUrl}/storage/v1/object/${encodeURIComponent(bucket)}/${objectPath}`, {
+        method: "POST", cache: "no-store", body: new Uint8Array(buffer),
+        headers: { apikey: apiKey, Authorization: `Bearer ${apiKey}`, "Content-Type": "image/webp", "x-upsert": "false", "Cache-Control": "max-age=31536000" }
+      });
+      if (!response.ok) throw new Error("Impossible d'enregistrer l'image dans le stockage.");
+      publicPath = `${projectUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${objectPath}`;
+    } else {
+      if (process.env.NODE_ENV === "production") throw new Error("Le stockage Supabase est requis en production.");
+      const directory = join(process.cwd(), "public", "uploads", objectPath.substring(0, objectPath.lastIndexOf("/")));
+      await mkdir(directory, { recursive: true });
+      await writeFile(join(process.cwd(), "public", "uploads", objectPath), buffer, { flag: "wx" });
+    }
+    results.push({ bucket, path: publicPath, originalFilename: upload.file.name.slice(0, 255), altText: productName, mimeType: "image/webp", sizeBytes: buffer.length, isPrimary: upload.isPrimary, position: upload.position });
   }
-
-  return (
-    process.env.KAYART_IMAGE_STORAGE === "supabase" ||
-    process.env.VERCEL === "1" ||
-    Boolean(process.env.SUPABASE_STORAGE_BUCKET)
-  );
+  return results;
 }
 
-function getSupabaseStorageConfig() {
-  const apiKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const projectUrl = cleanSupabaseUrl(process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET ?? defaultSupabaseBucket;
-
-  if (!apiKey || !projectUrl) {
-    throw new Error(
-      "Le stockage Supabase des images n'est pas configuré. Ajoutez SUPABASE_URL, SUPABASE_SECRET_KEY et SUPABASE_STORAGE_BUCKET dans Vercel."
-    );
-  }
-
-  return {
-    apiKey,
-    bucket,
-    projectUrl
-  };
+function receiptKey() {
+  const key = process.env.PRODUCT_IMAGE_RECEIPT_SECRET || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key && process.env.NODE_ENV === "production") throw new Error("Signature des images non configurée.");
+  return key ?? localReceiptKey;
 }
 
-function cleanSupabaseUrl(value: string) {
-  return value.replace(/\/rest\/v1\/?$/u, "").replace(/\/+$/u, "");
+export function signProductImageReceipt(image: ProductStoredImageInput, userId: string): string {
+  const payload = Buffer.from(JSON.stringify({ image, userId, expiresAt: Date.now() + 60 * 60 * 1000 })).toString("base64url");
+  const signature = createHmac("sha256", receiptKey()).update(`product-image-v1:${payload}`).digest("base64url");
+  return `${payload}.${signature}`;
 }
 
-async function createSupabaseSignedUploadUrl(
-  projectUrl: string,
-  apiKey: string,
-  bucket: string,
-  objectPath: string
-) {
-  const response = await fetch(buildStorageSignedUploadUrl(projectUrl, bucket, objectPath), {
-    body: "{}",
-    cache: "no-store",
-    headers: {
-      apikey: apiKey,
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "x-upsert": "false"
-    },
-    method: "POST"
-  });
-
-  const payload = (await response.json().catch(() => ({}))) as {
-    signedUrl?: string;
-    signedURL?: string;
-    token?: string;
-    url?: string;
-  };
-
-  if (!response.ok) {
-    throw new Error("Impossible de préparer l'envoi direct vers Supabase Storage.");
-  }
-
-  const rawSignedUrl = payload.signedUrl ?? payload.signedURL ?? payload.url;
-
-  if (!rawSignedUrl) {
-    throw new Error("Supabase n'a pas renvoyé d'URL d'envoi.");
-  }
-
-  const signedUrl = rawSignedUrl.startsWith("http")
-    ? rawSignedUrl
-    : `${projectUrl}/storage/v1${rawSignedUrl}`;
-  const token = payload.token ?? new URL(signedUrl).searchParams.get("token");
-
-  if (!token) {
-    throw new Error("Supabase n'a pas renvoyé de jeton d'envoi.");
-  }
-
-  return signedUrl;
-}
-
-function buildStorageSignedUploadUrl(projectUrl: string, bucket: string, objectPath: string) {
-  return `${projectUrl}/storage/v1/object/upload/sign/${encodeURIComponent(bucket)}/${encodeStoragePath(objectPath)}`;
-}
-
-function buildStoragePublicUrl(projectUrl: string, bucket: string, objectPath: string) {
-  return `${projectUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodeStoragePath(objectPath)}`;
-}
-
-function encodeStoragePath(path: string) {
-  return path.split("/").map(encodeURIComponent).join("/");
-}
-
-function getFileExtension(file: File) {
-  return getFileExtensionFromNameOrType(file.name, file.type);
-}
-
-function getFileExtensionFromNameOrType(name: string, type: string) {
-  const fromName = extname(name).toLowerCase();
-
-  if (allowedImageExtensions.has(fromName)) {
-    return fromName;
-  }
-
-  if (type === "image/png") {
-    return ".png";
-  }
-
-  if (type === "image/webp") {
-    return ".webp";
-  }
-
-  if (type === "image/gif") {
-    return ".gif";
-  }
-
-  return ".jpg";
+export function verifyProductImageReceipt(value: string, userId: string): ProductStoredImageInput | null {
+  try {
+    if (value.length > 8192 || !userId) return null;
+    const parts = value.split(".");
+    if (parts.length !== 2) return null;
+    const expected = createHmac("sha256", receiptKey()).update(`product-image-v1:${parts[0]}`).digest();
+    const signature = Buffer.from(parts[1], "base64url");
+    if (signature.length !== expected.length || !timingSafeEqual(signature, expected)) return null;
+    const payload = JSON.parse(Buffer.from(parts[0], "base64url").toString("utf8"));
+    if (payload.userId !== userId || !Number.isFinite(payload.expiresAt) || payload.expiresAt <= Date.now()) return null;
+    return payload.image as ProductStoredImageInput;
+  } catch { return null; }
 }

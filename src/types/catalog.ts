@@ -1,4 +1,4 @@
-export type ProductCondition = "new" | "imperfect" | "service";
+export type ProductCondition = "new" | "imperfect" | "used" | "service";
 
 export type ProductAvailability =
   | "draft"

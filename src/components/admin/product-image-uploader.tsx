@@ -9,16 +9,7 @@ type PreviewImage = {
   url: string;
 };
 
-type DirectUploadTarget = {
-  bucket: string;
-  signedUrl: string;
-  publicUrl: string;
-  originalFilename: string;
-  mimeType: string;
-  sizeBytes: number;
-  isPrimary: boolean;
-  position: number;
-};
+type DirectUploadTarget = { receipt: string };
 
 type ProductImageUploaderProps = {
   disabled?: boolean;
@@ -28,13 +19,13 @@ type ProductImageUploaderProps = {
 };
 
 const maxImageCount = 6;
-const maxImageSizeBytes = 12 * 1024 * 1024;
+const maxImageSizeBytes = 4 * 1024 * 1024;
 const acceptedImageTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
 
 export function ProductImageUploader({
   disabled = false,
   emptyHint = "Aucune image sélectionnée. La première image pourra devenir la couverture.",
-  hint = "ou cliquer pour ajouter jusqu'à 6 fichiers de 12 Mo maximum",
+  hint = "ou cliquer pour ajouter jusqu'à 6 fichiers de 4 Mo maximum",
   title = "Glisser les images ici"
 }: ProductImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -72,7 +63,7 @@ export function ProductImageUploader({
     const currentForm = form;
 
     function handleSubmit(event: SubmitEvent) {
-      if (disabledRef.current || !shouldUseDirectImageUpload()) {
+      if (disabledRef.current) {
         return;
       }
 
@@ -128,7 +119,7 @@ export function ProductImageUploader({
     if (hasRejectedFile) {
       setUploadError("Seuls les fichiers JPG, PNG, WebP ou GIF sont acceptés.");
     } else if (hasOversizedFile) {
-      setUploadError("Chaque image doit faire 12 Mo maximum.");
+      setUploadError("Chaque image doit faire 4 Mo maximum.");
     } else {
       setUploadError(null);
     }
@@ -257,7 +248,7 @@ export function ProductImageUploader({
         type="button"
       >
         <span>{isUploading ? "Envoi des images..." : title}</span>
-        <small>{isUploading ? "Merci de patienter pendant le transfert vers Supabase." : hint}</small>
+        <small>{isUploading ? "Merci de patienter pendant le traitement des images." : hint}</small>
       </button>
 
       {uploadError ? <p className="form-notice form-notice--error">{uploadError}</p> : null}
@@ -306,61 +297,19 @@ function isSameFile(firstFile: File, secondFile: File) {
   );
 }
 
-function shouldUseDirectImageUpload() {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
-}
-
 async function uploadImagesToSupabase(images: PreviewImage[], coverIndex: number) {
-  const response = await fetch("/api/admin/product-images/upload-url", {
-    body: JSON.stringify({
-      files: images.map((image, index) => ({
-        name: image.name,
-        type: image.file.type,
-        size: image.size,
-        isPrimary: index === coverIndex,
-        position: index
-      }))
-    }),
-    headers: {
-      "Content-Type": "application/json"
-    },
-    method: "POST"
-  });
-  const payload = (await response.json().catch(() => ({}))) as {
-    error?: string;
-    uploads?: DirectUploadTarget[];
-  };
-
-  if (!response.ok) {
-    throw new Error(payload.error ?? "Impossible de préparer l'envoi des images.");
+  const results: DirectUploadTarget[] = [];
+  for (const [index, image] of images.entries()) {
+    const body = new FormData();
+    body.set("image", image.file);
+    body.set("position", String(index));
+    body.set("isPrimary", String(index === coverIndex));
+    const response = await fetch("/api/admin/product-images/upload", { method: "POST", body });
+    const payload = await response.json().catch(() => ({})) as { receipt?: string; error?: string };
+    if (!response.ok || !payload.receipt) throw new Error(payload.error ?? "Envoi impossible.");
+    results.push({ receipt: payload.receipt });
   }
-
-  if (!payload.uploads || payload.uploads.length !== images.length) {
-    throw new Error("La préparation des images est incomplète.");
-  }
-
-  await Promise.all(
-    payload.uploads.map(async (target, index) => {
-      const body = new FormData();
-
-      body.append("cacheControl", "31536000");
-      body.append("", images[index].file);
-
-      const uploadResponse = await fetch(target.signedUrl, {
-        body,
-        headers: {
-          "x-upsert": "false"
-        },
-        method: "PUT"
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error("Impossible d'envoyer une image vers Supabase.");
-      }
-    })
-  );
-
-  return payload.uploads;
+  return results;
 }
 
 function attachUploadedImageFields(form: HTMLFormElement, uploadedImages: DirectUploadTarget[]) {
@@ -374,15 +323,7 @@ function attachUploadedImageFields(form: HTMLFormElement, uploadedImages: Direct
     field.dataset.directUploadField = "true";
     field.name = "uploadedImage";
     field.type = "hidden";
-    field.value = JSON.stringify({
-      bucket: image.bucket,
-      path: image.publicUrl,
-      originalFilename: image.originalFilename,
-      mimeType: image.mimeType,
-      sizeBytes: image.sizeBytes,
-      isPrimary: image.isPrimary,
-      position: image.position
-    });
+    field.value = image.receipt;
 
     form.appendChild(field);
   });

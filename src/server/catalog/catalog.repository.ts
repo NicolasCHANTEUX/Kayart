@@ -17,11 +17,13 @@ import {
   mapAppConditionForPrisma,
   mapPrismaAdminOrder,
   mapPrismaCategory,
-  mapPrismaProduct
+  mapPrismaProduct,
+  mapPublicPrismaProduct
 } from "@/server/catalog/catalog.mapper";
 import { getPrismaClient } from "@/server/db/prisma";
 import type { Category, Product } from "@/types/catalog";
 import type { AdminOrder } from "@/types/orders";
+import { isFictiveAdminOrder, requireOrderSimulator } from "@/server/catalog/order-safety";
 
 export type CatalogRepository = {
   listCategories(): Promise<Category[]>;
@@ -228,7 +230,7 @@ export const prismaCatalogRepository: CatalogRepository = {
       }
     });
 
-    return rows.map(mapPrismaProduct);
+    return rows.map(mapPublicPrismaProduct);
   },
 
   async listAdminOrders() {
@@ -269,7 +271,7 @@ export const prismaCatalogRepository: CatalogRepository = {
       }
     });
 
-    return row ? mapPrismaProduct(row) : null;
+    return row ? mapPublicPrismaProduct(row) : null;
   },
 
   async createProduct(input) {
@@ -349,9 +351,12 @@ export const prismaCatalogRepository: CatalogRepository = {
       }
 
       const imagesToDelete = existing.images.filter((image) => input.deletedImageIds.includes(image.id));
-      const mediaAssetIdsToDelete = imagesToDelete.map((image) => image.mediaAssetId);
+
       const remainingImages = existing.images.filter((image) => !input.deletedImageIds.includes(image.id));
       const hasPrimaryImage = remainingImages.some((image) => image.isPrimary);
+      if (remainingImages.length + input.images.length > 6) {
+        throw new Error("Un produit peut recevoir 6 images maximum, images conservées comprises.");
+      }
 
       if (imagesToDelete.length > 0) {
         await tx.productImage.deleteMany({
@@ -363,19 +368,13 @@ export const prismaCatalogRepository: CatalogRepository = {
           }
         });
 
-        await tx.mediaAsset.deleteMany({
-          where: {
-            id: {
-              in: mediaAssetIdsToDelete
-            }
-          }
-        });
+        // Keep media metadata: it can still be referenced by another product or request.
       }
 
       const row = await tx.product.update({
         data: {
           attributes: {
-            deleteMany: {},
+            deleteMany: { label: { in: ["Poids", "Dimensions"] } },
             create: input.attributes.map((attribute, index) => ({
               label: attribute.label,
               position: index,
@@ -386,7 +385,7 @@ export const prismaCatalogRepository: CatalogRepository = {
           availability: mapAppAvailabilityForPrisma(input.availability),
           baseProductId: input.baseProductId === undefined ? undefined : input.baseProductId,
           categoryId: input.categoryId,
-          compareAtPriceCents: input.compareAtPriceCents,
+          compareAtPriceCents: input.preservePrices ? existing.compareAtPriceCents : input.compareAtPriceCents,
           condition: mapAppConditionForPrisma(input.condition),
           defectDescription:
             input.defectDescription === undefined ? undefined : input.defectDescription,
@@ -415,17 +414,19 @@ export const prismaCatalogRepository: CatalogRepository = {
           isFeatured: input.isFeatured,
           isReservable: input.isReservable,
           name: input.name,
-          priceCents: input.priceCents,
+          priceCents: input.preservePrices ? existing.priceCents : input.priceCents,
           publishedAt:
             input.availability === "draft" ||
             input.availability === "unavailable" ||
             input.availability === "archived"
               ? null
-              : existing.publishedAt ?? new Date(),
+              : ["draft", "unavailable", "archived"].includes(existing.availability)
+                ? new Date() : existing.publishedAt,
           shortDescription: input.shortDescription,
           sku: input.sku,
           slug: input.slug,
-          stockQuantity: input.stockQuantity
+          stockQuantity: input.stockQuantity,
+          updatedAt: new Date()
         },
         include: productInclude,
         where: {
@@ -461,7 +462,7 @@ export const prismaCatalogRepository: CatalogRepository = {
       }
 
       return mapPrismaProduct(row);
-    });
+    }, { isolationLevel: "Serializable" });
   },
 
   async updateProductStock(input) {
@@ -489,7 +490,8 @@ export const prismaCatalogRepository: CatalogRepository = {
 
     const row = await prisma.product.update({
       data: {
-        stockQuantity: input.stockQuantity
+        stockQuantity: input.stockQuantity,
+        updatedAt: new Date()
       },
       include: productInclude,
       where: {
@@ -502,10 +504,15 @@ export const prismaCatalogRepository: CatalogRepository = {
 
   async updateProductVisibility(input) {
     const prisma = getPrismaClient();
+    const existing = await prisma.product.findUnique({ where: { id: input.id } });
+    if (!existing) throw new Error("Produit introuvable.");
+    if (["draft", "unavailable", "archived"].includes(existing.availability)) {
+      throw new Error("Modifiez la fiche et choisissez son statut avant de la publier.");
+    }
     const row = await prisma.product.update({
       data: {
-        availability: mapAppAvailabilityForPrisma(input.availability),
-        publishedAt: input.availability === "available" ? new Date() : null
+        publishedAt: input.availability === "available" ? new Date() : null,
+        updatedAt: new Date()
       },
       include: productInclude,
       where: {
@@ -518,32 +525,14 @@ export const prismaCatalogRepository: CatalogRepository = {
 
   async deleteProduct(input) {
     const prisma = getPrismaClient();
-
-    await prisma.$transaction(async (tx) => {
-      await tx.orderItem.updateMany({
-        data: {
-          productId: null
-        },
-        where: {
-          productId: input.id
-        }
-      });
-
-      await tx.reservation.deleteMany({
-        where: {
-          productId: input.id
-        }
-      });
-
-      await tx.product.delete({
-        where: {
-          id: input.id
-        }
-      });
+    await prisma.product.update({
+      where: { id: input.id },
+      data: { availability: "archived", publishedAt: null, updatedAt: new Date() }
     });
   },
 
   async createAdminOrder(input) {
+    requireOrderSimulator();
     const prisma = getPrismaClient();
 
     return prisma.$transaction(async (tx) => {
@@ -570,7 +559,10 @@ export const prismaCatalogRepository: CatalogRepository = {
           throw new Error("Un produit de la commande est introuvable.");
         }
 
-        const unitPriceCents = product.priceCents ?? 0;
+        const unitPriceCents = product.priceCents;
+        if (unitPriceCents === null || unitPriceCents <= 0 || !Number.isSafeInteger(item.quantity) || item.quantity <= 0 || item.quantity > 10000) {
+          throw new Error("Prix ou quantité invalide pour cette simulation.");
+        }
 
         return {
           productId: product.id,
@@ -583,6 +575,9 @@ export const prismaCatalogRepository: CatalogRepository = {
       });
 
       const subtotalCents = orderItems.reduce((total, item) => total + item.totalCents, 0);
+      if (!Number.isSafeInteger(subtotalCents) || subtotalCents > 2147483647) {
+        throw new Error("Le montant total dépasse la limite autorisée.");
+      }
       const row = await tx.order.create({
         data: {
           currency: "EUR",
@@ -614,28 +609,41 @@ export const prismaCatalogRepository: CatalogRepository = {
   },
 
   async markAdminOrderPaid(input) {
+    requireOrderSimulator();
     const prisma = getPrismaClient();
-    const row = await prisma.order.update({
+    const existing = await prisma.order.findUnique({ where: { id: input.id }, include: orderInclude });
+    if (!existing || !isFictiveAdminOrder(existing)) throw new Error("Cette action est réservée aux commandes de test sans paiement externe.");
+    if (existing.paymentStatus === "paid") return mapPrismaAdminOrder(existing);
+    if (existing.status !== "pending" || existing.paymentStatus !== "pending") throw new Error("Cette commande ne peut plus être payée.");
+    await prisma.order.updateMany({
       data: {
         paidAt: new Date(),
         paymentStatus: "paid",
+        status: "paid",
         updatedAt: new Date()
       },
-      include: orderInclude,
       where: {
-        id: input.id
+        id: input.id, status: "pending", paymentStatus: "pending",
+        orderNumber: existing.orderNumber, customerNote: existing.customerNote,
+        stripeCheckoutSessionId: null, stripePaymentIntentId: null
       }
     });
-
+    const row = await prisma.order.findUniqueOrThrow({ where: { id: input.id }, include: orderInclude });
     return mapPrismaAdminOrder(row);
   },
 
   async deleteAdminOrder(input) {
+    requireOrderSimulator();
     const prisma = getPrismaClient();
-
-    await prisma.order.delete({
+    const existing = await prisma.order.findUnique({ where: { id: input.id } });
+    if (!existing || !isFictiveAdminOrder(existing)) throw new Error("Cette action est réservée aux commandes de test sans paiement externe.");
+    if (existing.paymentStatus !== "pending" || existing.status !== "pending") throw new Error("Seules les simulations en attente peuvent être annulées.");
+    await prisma.order.updateMany({
+      data: { status: "cancelled", paymentStatus: "cancelled", updatedAt: new Date() },
       where: {
-        id: input.id
+        id: input.id, status: "pending", paymentStatus: "pending",
+        orderNumber: existing.orderNumber, customerNote: existing.customerNote,
+        stripeCheckoutSessionId: null, stripePaymentIntentId: null
       }
     });
   }

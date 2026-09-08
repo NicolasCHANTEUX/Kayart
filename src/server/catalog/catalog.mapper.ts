@@ -15,6 +15,7 @@ import type {
   ProductCondition
 } from "@/types/catalog";
 import type { AdminOrder } from "@/types/orders";
+import { isFictiveAdminOrder } from "@/server/catalog/order-safety";
 
 type PrismaProductBaseRelations = PrismaProduct & {
   category: PrismaCategory | null;
@@ -73,6 +74,12 @@ export function mapPrismaProduct(product: PrismaProductWithCatalogRelations): Pr
   };
 }
 
+export function mapPublicPrismaProduct(product: PrismaProductWithCatalogRelations): Product {
+  const base = product.baseProduct;
+  const canPublishBase = base?.publishedAt && !["draft", "unavailable", "archived"].includes(base.availability);
+  return mapPrismaProduct({ ...product, baseProduct: canPublishBase ? base : null, baseProductId: canPublishBase ? product.baseProductId : null });
+}
+
 export function mapPrismaAdminOrder(order: PrismaOrderWithItems): AdminOrder {
   return {
     id: order.id,
@@ -98,15 +105,6 @@ export function mapPrismaAdminOrder(order: PrismaOrderWithItems): AdminOrder {
       totalCents: item.totalCents
     }))
   };
-}
-
-function isFictiveAdminOrder(order: PrismaOrderWithItems) {
-  return (
-    order.orderNumber.startsWith("TEST-") ||
-    order.orderNumber.startsWith("ADM-") ||
-    order.customerNote?.startsWith("Commande factice admin") === true ||
-    order.customerNote?.startsWith("Vente directe admin") === true
-  );
 }
 
 function mapPrismaBaseProduct(product: PrismaProductBaseRelations): ProductBaseModel {
@@ -153,10 +151,6 @@ function mapPrismaAttributes(attributes: PrismaProductAttribute[]) {
 }
 
 function mapPrismaCondition(condition: PrismaProduct["condition"]): ProductCondition {
-  if (condition === "used") {
-    return "imperfect";
-  }
-
   return condition as ProductCondition;
 }
 

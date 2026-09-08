@@ -1,0 +1,90 @@
+[
+  {
+    "path": "/admin",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/commandes",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/commandes",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits/regression-private-draft/modifier",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits/regression-private-draft/modifier",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique/regression-private-draft",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique/regression-private-draft",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/api/admin/product-images/upload",
+    "origin": "http://localhost:3107",
+    "status": 401
+  },
+  {
+    "path": "/api/admin/product-images/upload",
+    "origin": "https://evil.invalid",
+    "status": 403
+  },
+  {
+    "path": "/contact",
+    "status": 200,
+    "contextualContact": true,
+    "cspResourcesAllowed": true
+  }
+]

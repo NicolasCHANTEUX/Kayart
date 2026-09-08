@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { sanitizeRedirectPath } from "@/lib/safe-redirect";
 import {
   clearPasswordSession,
   persistPasswordSession,
@@ -35,9 +36,8 @@ export async function loginAction(formData: FormData) {
 
     const password = readRequiredField(formData, "password");
     const passwordSession = await signInWithPassword(email, password);
-    await persistPasswordSession(passwordSession);
-
     const session = await resolveAuthenticatedSession(passwordSession.user);
+    await persistPasswordSession(passwordSession);
     redirectPath = getPostLoginRedirectPath(session.role, requestedRedirect);
   } catch (error) {
     const message = getLoginErrorMessage(error);
@@ -48,6 +48,7 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function logoutAction() {
+  await requireSameOriginAction();
   await clearPasswordSession();
   redirect("/");
 }
@@ -59,20 +60,12 @@ function readRequiredField(formData: FormData, name: string) {
     throw new Error("Champ manquant.");
   }
 
-  return value.trim();
+  return name === "password" ? value : value.trim();
 }
 
 function readOptionalField(formData: FormData, name: string) {
   const value = formData.get(name);
   return typeof value === "string" ? value : "";
-}
-
-function sanitizeRedirectPath(path: string) {
-  if (!path || !path.startsWith("/") || path.startsWith("//")) {
-    return "";
-  }
-
-  return path;
 }
 
 function getPostLoginRedirectPath(role: string, requestedRedirect: string) {

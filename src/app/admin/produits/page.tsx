@@ -71,7 +71,7 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
             <p className="form-notice form-notice--success">Produit modifié.</p>
           ) : null}
           {params.updated === "deleted" ? (
-            <p className="form-notice form-notice--success">Produit supprimé.</p>
+            <p className="form-notice form-notice--success">Produit archivé. Historique et réservations conservés.</p>
           ) : null}
           {params.updated === "imperfect" ? (
             <p className="form-notice form-notice--success">Produit imparfait créé.</p>

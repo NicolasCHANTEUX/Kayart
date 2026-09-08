@@ -1,0 +1,2189 @@
+{
+  "stats": {
+    "trackedFiles": 169,
+    "byGroup": {
+      "Configuration projet": 10,
+      "Base de données": 8,
+      "Cadrage et documentation": 9,
+      "Assets publics": 3,
+      "Scripts opératoires": 2,
+      "Application active": 68,
+      "Prototype Figma séparé": 66,
+      "Cache/outillage sans fonctionnalité": 3
+    },
+    "applicationLines": 11551
+  },
+  "files": [
+    {
+      "file": ".env.example",
+      "group": "Configuration projet",
+      "bytes": 808,
+      "lines": 32,
+      "sha256": "93123a1d18f0b16d30af064df316503e61c2ee571f846a506fee96b6882e3430",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": ".gitattributes",
+      "group": "Configuration projet",
+      "bytes": 134,
+      "lines": 10,
+      "sha256": "860cc2ccc0285558da416d0197e48ff6d06f1da699ddcd8cda5ad9aea0e01c21",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": ".gitignore",
+      "group": "Configuration projet",
+      "bytes": 338,
+      "lines": 31,
+      "sha256": "683b1c241413ec5ac6b45813c3ea8adc7a2c83e4a84d265a9916d45c3749ac42",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "README.md",
+      "group": "Configuration projet",
+      "bytes": 1141,
+      "lines": 47,
+      "sha256": "b4bbfc10f3d1865bf303b7aa63a1502ba71409e06b9b7cc1dc59846f71127278",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "database/README.md",
+      "group": "Base de données",
+      "bytes": 1282,
+      "lines": 32,
+      "sha256": "e2e41b6c1f5f1c88b33a8323dc571c92c40cd0d97ace47a813e197b6c8ff5379",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "database/admin-auth-role.sql",
+      "group": "Base de données",
+      "bytes": 687,
+      "lines": 22,
+      "sha256": "ed16146da2fd2119fb70c00b0cbad44d006cb79f1c44206f723223d3362d2f76",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "database/imperfect-products.sql",
+      "group": "Base de données",
+      "bytes": 440,
+      "lines": 12,
+      "sha256": "fc45bef85d1d50770dca9e451903a6ab9fc746ba09697ad1b18948248537e6d0",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "database/schema-v1.sql",
+      "group": "Base de données",
+      "bytes": 9220,
+      "lines": 253,
+      "sha256": "289897080421a391434e5700bdd4a330ea91fa1d29d0c4934440eacb3717a2b6",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "database/seed-demo-products.sql",
+      "group": "Base de données",
+      "bytes": 7537,
+      "lines": 257,
+      "sha256": "e0df1e1995bc10d0613671c4b381a8070a80598c9748affd50ce96f9d475873c",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "database/supabase-prisma-user.sql",
+      "group": "Base de données",
+      "bytes": 955,
+      "lines": 21,
+      "sha256": "87983308179e17017134d35091747ee1b557fed5a6270d018df3152191099b7d",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "next-env.d.ts",
+      "group": "Configuration projet",
+      "bytes": 262,
+      "lines": 7,
+      "sha256": "85ae5aee75f011967cf2d25cbc342f62d69314e9d925f7f4aa3456fc2cffcca6",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "next.config.ts",
+      "group": "Configuration projet",
+      "bytes": 1615,
+      "lines": 64,
+      "sha256": "6bfaf70ae1100701a4bff8966e4708a140293d831b638cd8c2960c53d4a39173",
+      "imports": [
+        "next"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/cahier-des-charges-kayart.md",
+      "group": "Cadrage et documentation",
+      "bytes": 23351,
+      "lines": 884,
+      "sha256": "d7f73df09be4f1c0f5c38823791a96c87a1119359fcc6eb68f7f744f344bd525",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/charte-graphique-kayart.md",
+      "group": "Cadrage et documentation",
+      "bytes": 1359,
+      "lines": 41,
+      "sha256": "718176c0a5dc0db1342d58018f0af70872abd8a583b2ed5110ce590ba94af995",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/configuration-supabase-kayart.md",
+      "group": "Cadrage et documentation",
+      "bytes": 1965,
+      "lines": 92,
+      "sha256": "d78c6c88f446fd6c5607bcd20f9b774c6444f8dc74b255ecc55d93173d894793",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/decisions-admin-stock-kayart.md",
+      "group": "Cadrage et documentation",
+      "bytes": 2944,
+      "lines": 63,
+      "sha256": "53169a0e47ebc067299f50a203794f150a9332335a4d9c472183cd3ee7fddd1f",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/decisions-techniques-kayart.md",
+      "group": "Cadrage et documentation",
+      "bytes": 9284,
+      "lines": 448,
+      "sha256": "43796945b6cd2dc247022ebde666cb7e5277140c0bcc6d905183a82e0ef22377",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/feuille-de-route-v1-et-suite.md",
+      "group": "Cadrage et documentation",
+      "bytes": 7814,
+      "lines": 315,
+      "sha256": "f3938d628cd4266e9ce1f4a62838489671c049feee0930de46310e9dd5b88dc5",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/gestion-images-produits-v1.md",
+      "group": "Cadrage et documentation",
+      "bytes": 1070,
+      "lines": 29,
+      "sha256": "11b743205f4127436a3cc4251701e6fd777e66223de8dff26c9db84f29cdd332",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/installation-npm-windows.md",
+      "group": "Cadrage et documentation",
+      "bytes": 2265,
+      "lines": 109,
+      "sha256": "2d62d783e845a20d570e77d554b9a5c72ac56a68075a03896cb0eff3f270f958",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "outputs/progression-technique.md",
+      "group": "Cadrage et documentation",
+      "bytes": 5340,
+      "lines": 159,
+      "sha256": "529c1f4ecd7af1d8e670a101e787e35e02d9484a723a1bc819e304e1cab60b23",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "package-lock.json",
+      "group": "Configuration projet",
+      "bytes": 82733,
+      "lines": 2372,
+      "sha256": "421ea306dc0c7a08d5b6e5e4ed50167bc9dbc2757dbedae1505417b0f4cda9ad",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Versions et graphe vérifiés avec npm audit / npm ls"
+    },
+    {
+      "file": "package.json",
+      "group": "Configuration projet",
+      "bytes": 1018,
+      "lines": 42,
+      "sha256": "6dc60d4c1cbe9f4cc9f99b13b7856ce398c93768b42cd6a26a78dae2195a8dfc",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "prisma.config.ts",
+      "group": "Configuration projet",
+      "bytes": 1570,
+      "lines": 67,
+      "sha256": "b13522610cb8a661aa63e6ec02f9fd1825edec7a5e5d312511acae4a50e3eba6",
+      "imports": [
+        "node:fs",
+        "node:path",
+        "prisma/config"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "prisma/README.md",
+      "group": "Base de données",
+      "bytes": 3037,
+      "lines": 115,
+      "sha256": "7749996e4c10d1f92037e15c212fc1264ff1488306859aa2b21a450a2c6827eb",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "prisma/schema.prisma",
+      "group": "Base de données",
+      "bytes": 13002,
+      "lines": 365,
+      "sha256": "e6a502d8b05fc685012b400affc220d244c988aecf3fcdbe837c28e9ebf937ea",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "public/icon.svg",
+      "group": "Assets publics",
+      "bytes": 319,
+      "lines": 6,
+      "sha256": "f43fc581db24d7a97c52c43fdcf04be038ff20187d7adc2b637827bbe97ee3cc",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "public/sw.js",
+      "group": "Assets publics",
+      "bytes": 160,
+      "lines": 8,
+      "sha256": "7b410671a1b97c3338d912fa489dc7e6bf6c615af507c05e80209b27b7769e45",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "public/uploads/products/.gitkeep",
+      "group": "Assets publics",
+      "bytes": 0,
+      "lines": 1,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "scripts/clean-next.mjs",
+      "group": "Scripts opératoires",
+      "bytes": 123,
+      "lines": 5,
+      "sha256": "0b6deff79917d4395646e2ec1574790de0827d5c5c455abfc24b99ac895f6fda",
+      "imports": [
+        "node:fs/promises"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "scripts/seed-catalog.mjs",
+      "group": "Scripts opératoires",
+      "bytes": 5674,
+      "lines": 219,
+      "sha256": "ff3adbf7b1c9b03175b1a57caa82fe891d6ec0c18502ecca4e68bb73d5ddfa55",
+      "imports": [
+        "node:fs",
+        "node:path",
+        "@prisma/adapter-pg",
+        "@prisma/client"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/commandes/actions.ts",
+      "group": "Application active",
+      "bytes": 2096,
+      "lines": 73,
+      "sha256": "f103656e66be8bd0e75f9c507e6c947b7f50afd1a6e679599ad4059b9eda01c8",
+      "imports": [
+        "next/navigation",
+        "@/server/catalog/catalog.service",
+        "@/server/catalog/catalog.input",
+        "@/server/auth/session",
+        "@/server/security/request-guards"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/commandes/page.tsx",
+      "group": "Application active",
+      "bytes": 5837,
+      "lines": 173,
+      "sha256": "ef61b44184a6d04e8fb4abbf43b710c8f4da6ee5c4095d9bc343b7cb6507fb7a",
+      "imports": [
+        "next/link",
+        "@/components/admin/admin-order-actions",
+        "@/components/admin/admin-order-creator",
+        "@/lib/format",
+        "@/server/catalog/catalog.service",
+        "@/types/orders"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/layout.tsx",
+      "group": "Application active",
+      "bytes": 284,
+      "lines": 13,
+      "sha256": "9bd0c84c07f8427dd231328c70472230165256ca6df8d1b2b826e34a30ae3164",
+      "imports": [
+        "react",
+        "@/server/auth/session"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/page.tsx",
+      "group": "Application active",
+      "bytes": 1545,
+      "lines": 41,
+      "sha256": "e73c308ffa302c8979aa86371032d5460831118969caccf2749d51faa58325ff",
+      "imports": [
+        "next/link",
+        "@/server/catalog/catalog.service"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/produits/[id]/modifier/page.tsx",
+      "group": "Application active",
+      "bytes": 1808,
+      "lines": 59,
+      "sha256": "1b97197cd451398693d9096c31854738a3bafa4cdcd73bce219fdfb2fb26ab3f",
+      "imports": [
+        "next/navigation",
+        "@/app/admin/produits/actions",
+        "@/components/admin/product-form",
+        "@/server/catalog/product-form-draft",
+        "@/server/catalog/catalog.service"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/produits/actions.ts",
+      "group": "Application active",
+      "bytes": 10860,
+      "lines": 378,
+      "sha256": "421942f90250d06fc347af3e391735cda6eb1a9d2a8d5045ac2c8668ef0f19f8",
+      "imports": [
+        "next/headers",
+        "next/navigation",
+        "@/server/catalog/catalog.input",
+        "@/server/catalog/product-form-draft",
+        "@/server/catalog/product-image-storage",
+        "@/server/catalog/catalog.service",
+        "@/server/auth/session",
+        "@/lib/slug",
+        "@/server/security/request-guards"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/produits/imparfait/nouveau/page.tsx",
+      "group": "Application active",
+      "bytes": 1369,
+      "lines": 45,
+      "sha256": "629064bb9e60df15dc5d178bfa63e52f41d07c1dd042f88d00bf4ffdec4cca0a",
+      "imports": [
+        "@/app/admin/produits/actions",
+        "@/components/admin/imperfect-product-form",
+        "@/server/catalog/catalog.service"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/produits/nouveau/page.tsx",
+      "group": "Application active",
+      "bytes": 1548,
+      "lines": 48,
+      "sha256": "f19d8ec871ed707d4df01de7d67e00ade589f52022632405c0f1dbb7afa78d6e",
+      "imports": [
+        "next/headers",
+        "@/app/admin/produits/actions",
+        "@/components/admin/product-form",
+        "@/server/catalog/product-form-draft",
+        "@/server/catalog/catalog.service"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/admin/produits/page.tsx",
+      "group": "Application active",
+      "bytes": 7154,
+      "lines": 212,
+      "sha256": "ef59a8ec98cc565eedc03bf20a9853058354a620d33c02e6c4c60f0ae1e69473",
+      "imports": [
+        "next/link",
+        "@/components/admin/category-manager",
+        "@/components/admin/product-table",
+        "@/lib/catalog",
+        "@/server/catalog/catalog.service",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/api/admin/product-images/upload-url/route.ts",
+      "group": "Application active",
+      "bytes": 3127,
+      "lines": 103,
+      "sha256": "d1aa2d72339cb3965ae6bbb4ba4bdc357a004945c34bdc98dbff91308bc6ba6d",
+      "imports": [
+        "next/server",
+        "@/server/auth/session",
+        "@/server/catalog/product-image-storage",
+        "@/server/security/request-guards"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/boutique/[slug]/page.tsx",
+      "group": "Application active",
+      "bytes": 8039,
+      "lines": 237,
+      "sha256": "20d4dfcefe713c0687bed2943fcd9c1110b5c31cab38f26514a471bff324e08f",
+      "imports": [
+        "next/link",
+        "next/navigation",
+        "@/components/catalog/product-gallery",
+        "@/components/catalog/product-price",
+        "@/lib/catalog",
+        "@/lib/format",
+        "@/server/catalog/catalog.service",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/boutique/page.tsx",
+      "group": "Application active",
+      "bytes": 990,
+      "lines": 33,
+      "sha256": "d3ab0540de7a4a825032704124d530503370e3ab85153dca4147525377e48545",
+      "imports": [
+        "@/components/catalog/product-card",
+        "@/server/catalog/catalog.service"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/cgv/page.tsx",
+      "group": "Application active",
+      "bytes": 300,
+      "lines": 11,
+      "sha256": "07b7165d66306a112c2fd493449af883ed17d2cd36df5cfa51acf4eec2d46f56",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/confidentialite/page.tsx",
+      "group": "Application active",
+      "bytes": 313,
+      "lines": 11,
+      "sha256": "b193bcfcf353f568c3b2eedec95294dc3a5d73aba1c41aac8db9904b9881fc82",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/connexion/actions.ts",
+      "group": "Application active",
+      "bytes": 2581,
+      "lines": 101,
+      "sha256": "9367814fdc69908d8b06b5752580cdf0f85be0a241fad4bd051ac6e6dfc0621b",
+      "imports": [
+        "next/navigation",
+        "@/server/auth/session",
+        "@/server/auth/supabase-auth",
+        "@/server/security/request-guards"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/connexion/page.tsx",
+      "group": "Application active",
+      "bytes": 3238,
+      "lines": 104,
+      "sha256": "6cb02540db86bc9c1165a620b05f8f3b6da5fbcc030cea83817cf5054978a5d7",
+      "imports": [
+        "next/link",
+        "next/navigation",
+        "@/app/connexion/actions",
+        "@/components/auth/auth-submit-button",
+        "@/server/auth/session"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/contact/page.tsx",
+      "group": "Application active",
+      "bytes": 898,
+      "lines": 27,
+      "sha256": "2d94153ef52d25d1a2d1495e77df4b86da13da7e3ab06ebce0c9f6e863d96692",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/globals.css",
+      "group": "Application active",
+      "bytes": 60584,
+      "lines": 3243,
+      "sha256": "89b145c71296d7ad07101549247ae6f25eaea3a7d60c9ce18dcd9f249e9c6108",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Styles et responsive inspectés ; audit visuel restant"
+    },
+    {
+      "file": "src/app/inscription/actions.ts",
+      "group": "Application active",
+      "bytes": 2019,
+      "lines": 72,
+      "sha256": "12a11a81abda908564371d4cb67eeb5d8403d9d74178ab9e7d26335c208e3d1c",
+      "imports": [
+        "next/navigation",
+        "@/server/auth/session",
+        "@/server/auth/supabase-auth",
+        "@/server/security/request-guards"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/inscription/page.tsx",
+      "group": "Application active",
+      "bytes": 2933,
+      "lines": 98,
+      "sha256": "e5fc7856cd1a475d556253c0bd87fea63bb939d8ce481accce4906aaa6e0060b",
+      "imports": [
+        "next/link",
+        "next/navigation",
+        "@/app/inscription/actions",
+        "@/components/auth/auth-submit-button",
+        "@/server/auth/session"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/journal/page.tsx",
+      "group": "Application active",
+      "bytes": 595,
+      "lines": 20,
+      "sha256": "c123af223acf559977cf31628cc4822ff182682b9df6d8564fba827268c7f6e0",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "group": "Application active",
+      "bytes": 1408,
+      "lines": 52,
+      "sha256": "cf2d07d2fd59070a86f6e95491fa134fb3dcd732f3c700099131e529fc2e27b3",
+      "imports": [
+        "next",
+        "react",
+        "@/components/layout/site-footer",
+        "@/components/layout/site-header",
+        "@/components/layout/route-loading-indicator",
+        "@/config/site",
+        "./globals.css"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/loading.tsx",
+      "group": "Application active",
+      "bytes": 272,
+      "lines": 9,
+      "sha256": "0f6c3aff8e2bd658bddaca1ba388472a920382cfeaf187bcb15c5e8febae6bbc",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/manifest.ts",
+      "group": "Application active",
+      "bytes": 490,
+      "lines": 22,
+      "sha256": "9cee3a997350077e2207de80ff83964802b2f4186e7544b055ad2ba980cdf959",
+      "imports": [
+        "next"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/mentions-legales/page.tsx",
+      "group": "Application active",
+      "bytes": 306,
+      "lines": 11,
+      "sha256": "6ce4205d4b50d13f523600b183e944a288083fb353c3480556aec67585aa567a",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/mot-de-passe-oublie/actions.ts",
+      "group": "Application active",
+      "bytes": 1558,
+      "lines": 59,
+      "sha256": "cbda51b0cc83e99cd2448a2392d6a2222f21a8a35010a4db033ec53b9b9e2597",
+      "imports": [
+        "next/navigation",
+        "@/server/auth/supabase-auth",
+        "@/server/security/request-guards"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/mot-de-passe-oublie/page.tsx",
+      "group": "Application active",
+      "bytes": 2306,
+      "lines": 69,
+      "sha256": "6da90530c1de99be511bf54fcc0154079ac60e7d71dc05c2f5fcb2cf1df8bdb3",
+      "imports": [
+        "next/link",
+        "@/app/mot-de-passe-oublie/actions",
+        "@/components/auth/auth-submit-button"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/not-found.tsx",
+      "group": "Application active",
+      "bytes": 527,
+      "lines": 19,
+      "sha256": "275a9f134a54de5b3f24c439bb7f475854e2a5f451e4fa60e1ac344a58e2bb9d",
+      "imports": [
+        "next/link"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/nouveau-mot-de-passe/page.tsx",
+      "group": "Application active",
+      "bytes": 1413,
+      "lines": 42,
+      "sha256": "f22da24a76e6146136073c44150780bcf8c1c7922a01591f2dbf63e5f8c1fd72",
+      "imports": [
+        "@/app/nouveau-mot-de-passe/password-reset-form"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/nouveau-mot-de-passe/password-reset-form.tsx",
+      "group": "Application active",
+      "bytes": 4364,
+      "lines": 150,
+      "sha256": "0c0ca47f0575a30b4f8ec17bb4ae7abd8e7c3f3d4d252fd64e63fc8d33ce525b",
+      "imports": [
+        "next/link",
+        "react"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "group": "Application active",
+      "bytes": 4816,
+      "lines": 131,
+      "sha256": "228f800ffa8449b2121ceeb6423376ac955378c600db5903742d3d2ba392a525",
+      "imports": [
+        "next/link",
+        "@/components/catalog/product-card",
+        "@/server/catalog/catalog.service"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/panier/page.tsx",
+      "group": "Application active",
+      "bytes": 560,
+      "lines": 20,
+      "sha256": "492a5e7373bbd687b6e81296e5d05b331f2076321c5b8ae0a99fbf585e37080f",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/reparation/page.tsx",
+      "group": "Application active",
+      "bytes": 904,
+      "lines": 27,
+      "sha256": "33125069b831537222c69a41c1192f1e5dbfdf19b8040d33494185e0b566d9c7",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/savoir-faire/page.tsx",
+      "group": "Application active",
+      "bytes": 645,
+      "lines": 20,
+      "sha256": "ab848547315c59ca590133c456e21c853aae68986c8394613431496170494489",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/app/sur-mesure/page.tsx",
+      "group": "Application active",
+      "bytes": 882,
+      "lines": 27,
+      "sha256": "3877e254d7b295c141ff9488ea97ea813e3197bf753104a03495d06b92e2f157",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/admin-order-actions.tsx",
+      "group": "Application active",
+      "bytes": 2376,
+      "lines": 82,
+      "sha256": "100f3665ef77bcfc7cd8874242339821a555d9b049a106d31deeaa82d87c5984",
+      "imports": [
+        "react",
+        "react-dom",
+        "@/app/admin/commandes/actions",
+        "@/types/orders"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/admin-order-creator.tsx",
+      "group": "Application active",
+      "bytes": 7787,
+      "lines": 229,
+      "sha256": "4efb0ca963f0f96cbff0a065d31125caaa1bebb967713e5f2ae51668049efb4e",
+      "imports": [
+        "react",
+        "react-dom",
+        "@/app/admin/commandes/actions",
+        "@/lib/format",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/category-manager.tsx",
+      "group": "Application active",
+      "bytes": 6475,
+      "lines": 170,
+      "sha256": "f99576cc579244e6892f674fff00f8b571aa77af271b84099ab1b5a2659e61ae",
+      "imports": [
+        "react",
+        "@/app/admin/produits/actions",
+        "@/lib/slug",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/imperfect-product-form.tsx",
+      "group": "Application active",
+      "bytes": 7941,
+      "lines": 251,
+      "sha256": "a25c72670e370a0496482005dcb4494fa5879666da4f51e9ae62797f88ab177b",
+      "imports": [
+        "react",
+        "@/components/admin/product-image-uploader",
+        "@/lib/catalog",
+        "@/lib/format",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/product-form.tsx",
+      "group": "Application active",
+      "bytes": 21497,
+      "lines": 678,
+      "sha256": "ccfa70833523d7998eb03d199da3976b49914fe8a8bf38aa27eaa74e354649c6",
+      "imports": [
+        "react",
+        "@/components/admin/product-image-uploader",
+        "@/lib/catalog",
+        "@/lib/slug",
+        "@/server/catalog/product-form-draft",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/product-image-uploader.tsx",
+      "group": "Application active",
+      "bytes": 10999,
+      "lines": 396,
+      "sha256": "1e5271f1578440d527df8e4d8c6772de565c34e6ea608802227f8eb63ef7d8bc",
+      "imports": [
+        "react"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/product-row-actions.tsx",
+      "group": "Application active",
+      "bytes": 9109,
+      "lines": 268,
+      "sha256": "7dde8ed5a42b49804a0358c5298fb1adb8f190ec16a3cced7455039443f3e9ba",
+      "imports": [
+        "next/link",
+        "react",
+        "react-dom",
+        "@/app/admin/produits/actions",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/admin/product-table.tsx",
+      "group": "Application active",
+      "bytes": 5781,
+      "lines": 184,
+      "sha256": "de1c5421379cdea5812b7461a0328e9943f8b20fc0ff4118b90f616b7342a7c9",
+      "imports": [
+        "react",
+        "@/components/catalog/product-price",
+        "@/lib/catalog",
+        "@/lib/format",
+        "@/types/catalog",
+        "./product-row-actions"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/auth/auth-submit-button.tsx",
+      "group": "Application active",
+      "bytes": 569,
+      "lines": 26,
+      "sha256": "27f98b42406dd47237009afe8dfc54c06e24c3d39e1879c3df56ca6d1345a490",
+      "imports": [
+        "react-dom"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/catalog/product-card.tsx",
+      "group": "Application active",
+      "bytes": 1342,
+      "lines": 45,
+      "sha256": "c65d805bdb4eab8fee1bee38cc1cf05cb57292f22fdae461462437ed57472f50",
+      "imports": [
+        "next/link",
+        "@/components/catalog/product-price",
+        "@/lib/catalog",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/catalog/product-gallery.tsx",
+      "group": "Application active",
+      "bytes": 2529,
+      "lines": 84,
+      "sha256": "d017739741de27fe95d929801d4d06ce1f7728bda81d01875b559c2973a2e1f0",
+      "imports": [
+        "react",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/catalog/product-price.tsx",
+      "group": "Application active",
+      "bytes": 1004,
+      "lines": 28,
+      "sha256": "24c8b34d8ecd5ffd6253e3c1d28bd3fe3565e4dd3ff4bfc44255cb33b91376df",
+      "imports": [
+        "@/lib/format",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/layout/route-loading-indicator.tsx",
+      "group": "Application active",
+      "bytes": 3694,
+      "lines": 140,
+      "sha256": "3c7e72353a5175f62fd6bcfea629e74dcc17550e71c02f0fd9cdbba0d711b606",
+      "imports": [
+        "next/navigation",
+        "react"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/layout/site-footer.tsx",
+      "group": "Application active",
+      "bytes": 706,
+      "lines": 29,
+      "sha256": "0c87485e582244decedec19ee027cb3ddd00940254e3970c282ce0a1f1abe7af",
+      "imports": [
+        "next/link",
+        "@/config/site"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/components/layout/site-header.tsx",
+      "group": "Application active",
+      "bytes": 1630,
+      "lines": 51,
+      "sha256": "41ea16680c2b3c4436a45fea072b2c1c3a4a81cd720423fa89ca1a213d6e0ec3",
+      "imports": [
+        "next/link",
+        "@/app/connexion/actions",
+        "@/config/site",
+        "@/server/auth/session"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/config/site.ts",
+      "group": "Application active",
+      "bytes": 1261,
+      "lines": 43,
+      "sha256": "910682e8b791db5cec79107c6459a17c153c0ceb8b2021307d632aef19df3c68",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/data/products.ts",
+      "group": "Application active",
+      "bytes": 3884,
+      "lines": 126,
+      "sha256": "136895757a477ff7bc94fbda1faca9107eb777782a2b3ad85354f6a929054dcf",
+      "imports": [
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/lib/catalog.ts",
+      "group": "Application active",
+      "bytes": 716,
+      "lines": 28,
+      "sha256": "f670adcd42ac564d1dfad245fe21cc2d37360ac656d5f7fba2da7efb68a503e5",
+      "imports": [
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/lib/format.ts",
+      "group": "Application active",
+      "bytes": 1332,
+      "lines": 57,
+      "sha256": "46d921e29c56de12300cfcb603500bb67b6a2940c3965f84fab7da42ebed4269",
+      "imports": [
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/lib/slug.ts",
+      "group": "Application active",
+      "bytes": 463,
+      "lines": 22,
+      "sha256": "e0f2985611f1ef597a20d7d2fb5cf9d25341895cfd7bad3dcb04a755376b5212",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/auth/session.ts",
+      "group": "Application active",
+      "bytes": 3637,
+      "lines": 168,
+      "sha256": "d2620af38ff0a9f72f53c5a1c93f92fd50f2887ab3f9b2394bd931e4bd467378",
+      "imports": [
+        "next/headers",
+        "next/navigation",
+        "@/server/db/prisma",
+        "@/types/auth",
+        "./supabase-auth"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/auth/supabase-auth.ts",
+      "group": "Application active",
+      "bytes": 6744,
+      "lines": 225,
+      "sha256": "3ad599a71fb9dd5b2b91c052a6d18b7481559b618268e30ecf450e76d9b18d23",
+      "imports": [
+        "@/types/auth",
+        "@/config/site"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/catalog/catalog.input.ts",
+      "group": "Application active",
+      "bytes": 20612,
+      "lines": 788,
+      "sha256": "2a3fbc880df3a47509114aa2f52cbc270d04ebafef2fa8bdc3b6ccdb0f74fae6",
+      "imports": [
+        "@/lib/catalog",
+        "@/lib/slug",
+        "@/server/catalog/product-image-storage",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/catalog/catalog.mapper.ts",
+      "group": "Application active",
+      "bytes": 5707,
+      "lines": 188,
+      "sha256": "02bc168682d9264207137f661ed8a238c15b89ea669d2d7dfbce671a666a7b31",
+      "imports": [
+        "@prisma/client",
+        "@/types/catalog",
+        "@/types/orders"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/catalog/catalog.repository.ts",
+      "group": "Application active",
+      "bytes": 18534,
+      "lines": 669,
+      "sha256": "6466648e879cc77b4d1b59db249af031c2a2e6aec2e9a4eae3c46766a1266e5f",
+      "imports": [
+        "@/data/products",
+        "@/server/catalog/catalog.input",
+        "@prisma/client",
+        "@/server/catalog/catalog.mapper",
+        "@/server/db/prisma",
+        "@/types/catalog",
+        "@/types/orders"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/catalog/catalog.service.ts",
+      "group": "Application active",
+      "bytes": 2883,
+      "lines": 96,
+      "sha256": "36265a08ba3515f90936ae3ee20f423bc9cfc68bc9f5902a1ec7eafc9c658f95",
+      "imports": [
+        "@/server/catalog/catalog.repository",
+        "@/server/catalog/catalog.input"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/catalog/product-form-draft.ts",
+      "group": "Application active",
+      "bytes": 2879,
+      "lines": 105,
+      "sha256": "78318e3ddbfa23660bc559e6fd1f10d818753301afc69a1b5c3a44bfa01960ba",
+      "imports": [
+        "@/lib/format",
+        "@/types/catalog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/catalog/product-image-storage.ts",
+      "group": "Application active",
+      "bytes": 9329,
+      "lines": 315,
+      "sha256": "2dc8c4a40edc2a6769ff339572e2ff46241c165c5c18985baec5ca8042e6da47",
+      "imports": [
+        "node:crypto",
+        "node:fs/promises",
+        "node:path",
+        "@/server/catalog/catalog.input"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/db/prisma.ts",
+      "group": "Application active",
+      "bytes": 623,
+      "lines": 22,
+      "sha256": "7e2c0d714d28f54f1098dbb11dc46437d6457c130e5055c6bb24b433db001790",
+      "imports": [
+        "@prisma/adapter-pg",
+        "@prisma/client"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/server/security/request-guards.ts",
+      "group": "Application active",
+      "bytes": 3784,
+      "lines": 151,
+      "sha256": "f26cebe75a4976e0022737d88e64fc0fb79ff0198394ab758236c547878733af",
+      "imports": [
+        "next/headers"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/types/auth.ts",
+      "group": "Application active",
+      "bytes": 200,
+      "lines": 12,
+      "sha256": "2c49cdf801403e8e3d23ef429225583500bacf3a032a74c831caaa5ac9244d7f",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/types/catalog.ts",
+      "group": "Application active",
+      "bytes": 1573,
+      "lines": 76,
+      "sha256": "775bb34f773a6b9b8f3f86504c4744cce6f50ae13612782385879337ef190805",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "src/types/orders.ts",
+      "group": "Application active",
+      "bytes": 787,
+      "lines": 39,
+      "sha256": "fdeff510e0a1fb0f9e0f0c4b3a6dcb4c9ec64137f8135c5de0748a3789ba7b88",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "tsconfig.json",
+      "group": "Configuration projet",
+      "bytes": 631,
+      "lines": 29,
+      "sha256": "861d1a25a92722c5bfb0703f57f48ef1676c090c281898a08a990a25d2eac6a6",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Lu et rapproché des usages, configurations ou exigences du projet"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/ATTRIBUTIONS.md",
+      "group": "Prototype Figma séparé",
+      "bytes": 290,
+      "lines": 4,
+      "sha256": "7eef0ed2b6fb8a4d85c6217fbcbebfdedc8e4ac286d55920ea8de35167baa89f",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/README.md",
+      "group": "Prototype Figma séparé",
+      "bytes": 305,
+      "lines": 11,
+      "sha256": "a3471016f7553dc3a278262ffba69ce0f1ee18f8d30111bec2cc46cff5039efa",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/default_shadcn_theme.css",
+      "group": "Prototype Figma séparé",
+      "bytes": 4319,
+      "lines": 121,
+      "sha256": "54729cdf634fadd501e3c92429ebfabb3f80553157f35051338cbda1337c1bda",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/guidelines/Guidelines.md",
+      "group": "Prototype Figma séparé",
+      "bytes": 2559,
+      "lines": 62,
+      "sha256": "8a4a52a8fac382f8b44d2f6b713e9643153bd1c732d34ed323d88cb290829257",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/index.html",
+      "group": "Prototype Figma séparé",
+      "bytes": 685,
+      "lines": 22,
+      "sha256": "7353a77628be0adaff38268a69b4319cb77578d9e46fe30a05074466750688fb",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/package.json",
+      "group": "Prototype Figma séparé",
+      "bytes": 2571,
+      "lines": 90,
+      "sha256": "52d15119e7988184efbc5aba936fa5f893c146937ccbf04023923583415c3e0d",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/pnpm-workspace.yaml",
+      "group": "Prototype Figma séparé",
+      "bytes": 109,
+      "lines": 11,
+      "sha256": "1927321dae9a61f07c9e2d2dfe62342594f7d30e5dbc9faab9d39e5dc93112ee",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/postcss.config.mjs",
+      "group": "Prototype Figma séparé",
+      "bytes": 460,
+      "lines": 16,
+      "sha256": "3bd292996c6442cf7bb3a766e7d512d0aef81d9db108933d68d17c9cd715632c",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/App.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 131623,
+      "lines": 2293,
+      "sha256": "880bce25377ab0e3b36eaee20823fef6f835b4a308240d4bb680c1556c951b26",
+      "imports": [
+        "react",
+        "lucide-react",
+        "@radix-ui/react-accordion"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/figma/ImageWithFallback.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1153,
+      "lines": 28,
+      "sha256": "79caaf9d1736698c090823383f7b18a9496e9c1309a40f925c8aeb37e496bd8e",
+      "imports": [
+        "react"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/accordion.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2060,
+      "lines": 67,
+      "sha256": "0ff6fadd3560c21aa67911d817f89d206188fd07bd57244ba59a117bd4ff9cb4",
+      "imports": [
+        "react",
+        "@radix-ui/react-accordion",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/alert-dialog.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 3866,
+      "lines": 158,
+      "sha256": "16f0bf95de446a8579cba6e75557fd83eb4aa0dbbc77ee936fbb59451e9390e9",
+      "imports": [
+        "react",
+        "@radix-ui/react-alert-dialog",
+        "./utils",
+        "./button"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/alert.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1621,
+      "lines": 67,
+      "sha256": "19835c5f03b78e8915b5e8900a0681ddfb83e3bcc0c9930e62f31c01e4dfb129",
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/aspect-ratio.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 284,
+      "lines": 12,
+      "sha256": "7706745e217bebbc2d7bdf6697e9c6d484061146ae771755c9b6f240762c7217",
+      "imports": [
+        "@radix-ui/react-aspect-ratio"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/avatar.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1104,
+      "lines": 54,
+      "sha256": "d40b1cbabe71c094c6bcf089ac5702ec77623dbc75c770ca9f86530e03d6fea1",
+      "imports": [
+        "react",
+        "@radix-ui/react-avatar",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/badge.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1636,
+      "lines": 47,
+      "sha256": "8329a0b50f818665f1aca05ab93c16b103178b463f2949234ee4416bbc7d3fe2",
+      "imports": [
+        "react",
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/breadcrumb.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2368,
+      "lines": 110,
+      "sha256": "c9fcf4df692c80c06ccc38c32f7045d1f389197c503edac32941cde64bada62e",
+      "imports": [
+        "react",
+        "@radix-ui/react-slot",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/button.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2106,
+      "lines": 59,
+      "sha256": "a3f96150fdf0c929eec3759673cc34b2cf5538fc088b25a54c00e0a3ed1c3f60",
+      "imports": [
+        "react",
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/calendar.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2913,
+      "lines": 76,
+      "sha256": "280ba2b6416bb46259762fbb0068c61e93f186242516a10c2f319d484b09485d",
+      "imports": [
+        "react",
+        "lucide-react",
+        "react-day-picker",
+        "./utils",
+        "./button"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/card.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1988,
+      "lines": 93,
+      "sha256": "afc99cfa090791e394e68766095a4a86f5f6140521546b32d4b298061d72473f",
+      "imports": [
+        "react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/carousel.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 5606,
+      "lines": 242,
+      "sha256": "5ffdde6336f0ee479c11255f3b951b230a1771f0080323f4dd0def03d677f50c",
+      "imports": [
+        "react",
+        "embla-carousel-react",
+        "lucide-react",
+        "./utils",
+        "./button"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/chart.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 9852,
+      "lines": 354,
+      "sha256": "e3e14ac980ce857edda5414ceaf8d7e504b5be37a4d99c28ff67c4c2535f51ff",
+      "imports": [
+        "react",
+        "recharts",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/checkbox.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1244,
+      "lines": 33,
+      "sha256": "894eb30992723a15e3ae75c46a3bf8808a526f5b3bff2c61c78f4d3e8d521cb8",
+      "imports": [
+        "react",
+        "@radix-ui/react-checkbox",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/collapsible.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 806,
+      "lines": 34,
+      "sha256": "b763764ebced561c04e2e6ada9dc53375bb90b9f4bcb91b0f3d5de7381aaf0cb",
+      "imports": [
+        "@radix-ui/react-collapsible"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/command.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 4662,
+      "lines": 178,
+      "sha256": "17ae21889928aeb0c042911153b7f0715bf537b190da31f16fc5798b9439aa2f",
+      "imports": [
+        "react",
+        "cmdk",
+        "lucide-react",
+        "./utils",
+        "./dialog"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/context-menu.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 8251,
+      "lines": 253,
+      "sha256": "e17a7028f18669ddd104e0f40fbb0110ebab0cfc89ad6910a43d2dc8539e7c22",
+      "imports": [
+        "react",
+        "@radix-ui/react-context-menu",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/dialog.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 3828,
+      "lines": 136,
+      "sha256": "f4adc0065a7f795b5d99b8afe095a443d2d03b523cf5f958bc36ee7fbe0d3e45",
+      "imports": [
+        "react",
+        "@radix-ui/react-dialog",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/drawer.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 4085,
+      "lines": 133,
+      "sha256": "5a99d073185e0ef6d984436547dce1f99c333dde7c1d7f33a2155dce05216514",
+      "imports": [
+        "react",
+        "vaul",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/dropdown-menu.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 8313,
+      "lines": 258,
+      "sha256": "798b5337dc147d88c65de01f7221e0bfa04272968a1fce6acc1ec0bef7d9ddb9",
+      "imports": [
+        "react",
+        "@radix-ui/react-dropdown-menu",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/form.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 3785,
+      "lines": 169,
+      "sha256": "b181a640358bd91b827f7e3ba610036f24a976994d4d88b480471a167770a508",
+      "imports": [
+        "react",
+        "@radix-ui/react-label",
+        "@radix-ui/react-slot",
+        "react-hook-form",
+        "./utils",
+        "./label"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/hover-card.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1537,
+      "lines": 45,
+      "sha256": "6ec1ef98aef3898ef3f8eb35e52c10add150d76cd041132d2520fe3016ecfe60",
+      "imports": [
+        "react",
+        "@radix-ui/react-hover-card",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/input-otp.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2282,
+      "lines": 78,
+      "sha256": "b15b03f71841b176baa6e0294a0790eea1ffe9264c55003fbbc9039d8457057b",
+      "imports": [
+        "react",
+        "input-otp",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/input.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 963,
+      "lines": 22,
+      "sha256": "cb82ffcd1a9accdf9b07edc8e976f43ad1c9cf91968ffd7639df5df14b7ad407",
+      "imports": [
+        "react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/label.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 614,
+      "lines": 25,
+      "sha256": "5ed157f039340cedaa59a888931db608667827170ae9538513a50ccf2ca65a9f",
+      "imports": [
+        "react",
+        "@radix-ui/react-label",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/menubar.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 8426,
+      "lines": 277,
+      "sha256": "1f0173397dac560a4748782bb595c956155a9360755667bee3d18c4a0f1179b1",
+      "imports": [
+        "react",
+        "@radix-ui/react-menubar",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/navigation-menu.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 6684,
+      "lines": 169,
+      "sha256": "df9f6e0c1d3fb1b265f8561ef00c98412f24a360a00cb7935b7c6f9a0d7513e6",
+      "imports": [
+        "react",
+        "@radix-ui/react-navigation-menu",
+        "class-variance-authority",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/pagination.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2709,
+      "lines": 128,
+      "sha256": "10bad2279ea5120ade645a1a834ed74f2471cde0fe7f3e9457fcb4918b7d0bc3",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./utils",
+        "./button"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/popover.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1641,
+      "lines": 49,
+      "sha256": "f14e16bebcfb1b605f6336d52153e43b76456c419930faea216d0ce2e3b1d3b7",
+      "imports": [
+        "react",
+        "@radix-ui/react-popover",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/progress.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 743,
+      "lines": 32,
+      "sha256": "956cf4b485bcf57684caac10df2aa2a72387d0736d8f4cd1315c49ebd2da4615",
+      "imports": [
+        "react",
+        "@radix-ui/react-progress",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/radio-group.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1471,
+      "lines": 46,
+      "sha256": "ecaeebb62d064893c23e7242b796ff5834e2b430676b3eecb1b3d4bc413283c8",
+      "imports": [
+        "react",
+        "@radix-ui/react-radio-group",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/resizable.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2036,
+      "lines": 57,
+      "sha256": "7930ed39d1095de95193bb72ef046b8198647e1114d9a437aa1cd04c0975c5a8",
+      "imports": [
+        "react",
+        "lucide-react",
+        "react-resizable-panels",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/scroll-area.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1649,
+      "lines": 59,
+      "sha256": "5bd9bb1d6909467b431283e96d2a9c83003bca1aa043d149dcfed8e81de51986",
+      "imports": [
+        "react",
+        "@radix-ui/react-scroll-area",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/select.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 6275,
+      "lines": 190,
+      "sha256": "6aaf2111952394fbb8c64a505af02d08da28cc25726d61a991daebe400772480",
+      "imports": [
+        "react",
+        "@radix-ui/react-select",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/separator.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 707,
+      "lines": 29,
+      "sha256": "54cc34fc3ef7e445948c5bccf7307efbb2c8f9e63db0fc68dd3fa8ee54dc9812",
+      "imports": [
+        "react",
+        "@radix-ui/react-separator",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/sheet.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 4105,
+      "lines": 140,
+      "sha256": "8e1e064f92e2463bc7b8bb227a7c4d68d7464837c02d48ff75a87585d864c54c",
+      "imports": [
+        "react",
+        "@radix-ui/react-dialog",
+        "lucide-react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/sidebar.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 21663,
+      "lines": 727,
+      "sha256": "24e197a06698ac0606e99b3ab9e7c31e9544e759eb929d22f37ea15391cae1c1",
+      "imports": [
+        "react",
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "lucide-react",
+        "./use-mobile",
+        "./utils",
+        "./button",
+        "./input",
+        "./separator",
+        "./sheet",
+        "./skeleton",
+        "./tooltip"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/skeleton.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 275,
+      "lines": 14,
+      "sha256": "7fd5d7f3ea479c3c1ae7be79bdbaf84c87647333768f70d396cd84580535d485",
+      "imports": [
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/slider.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2006,
+      "lines": 64,
+      "sha256": "19dd9d8b758f41fa61967d1a0540ea34ed989727258d23eef9a50cdebcab805b",
+      "imports": [
+        "react",
+        "@radix-ui/react-slider",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/sonner.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 571,
+      "lines": 26,
+      "sha256": "c5853f16cc11cb69e0115bab13eeabe7be5dad16fafd77b35cdfe4dbc64f0256",
+      "imports": [
+        "next-themes",
+        "sonner"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/switch.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1182,
+      "lines": 32,
+      "sha256": "d4c744131c6161300510909aafe2c2cb6d819f2c7a8c2aeb75d4317004c7eff7",
+      "imports": [
+        "react",
+        "@radix-ui/react-switch",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/table.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 2460,
+      "lines": 117,
+      "sha256": "e4ec7d3be042efd0fa363a57dd0e649a7831b86f975d4ec5192ebbfdd66e0f95",
+      "imports": [
+        "react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/tabs.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1945,
+      "lines": 67,
+      "sha256": "933b8f421bd84b21a22e3fd11cd62fbf4fd8b6fb7252f42ea706b9cd29255051",
+      "imports": [
+        "react",
+        "@radix-ui/react-tabs",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/textarea.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 767,
+      "lines": 19,
+      "sha256": "6c3127c28ba1dda0428ba286a9e291c52ad95bfc8acd10518b262b71e470f3e7",
+      "imports": [
+        "react",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/toggle-group.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1920,
+      "lines": 74,
+      "sha256": "43e56c5487ed93a2e0d418dcf944a646c716b8c8c55d050fcda1d5cd1248cce6",
+      "imports": [
+        "react",
+        "@radix-ui/react-toggle-group",
+        "class-variance-authority",
+        "./utils",
+        "./toggle"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/toggle.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1565,
+      "lines": 48,
+      "sha256": "31f91bca26bed6bc884e3dbebe095046d4cf925b9d7676094721ac287d0b2135",
+      "imports": [
+        "react",
+        "@radix-ui/react-toggle",
+        "class-variance-authority",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/tooltip.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 1897,
+      "lines": 62,
+      "sha256": "2f3a8720fb4b75c6911450be73d0407e2a84bb5ea1ded28ccdbf955be62a0155",
+      "imports": [
+        "react",
+        "@radix-ui/react-tooltip",
+        "./utils"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/use-mobile.ts",
+      "group": "Prototype Figma séparé",
+      "bytes": 585,
+      "lines": 22,
+      "sha256": "738d8e4520edeca7caa2ca56a4923839e30be14a00fc32b5a770f5d5b451a63e",
+      "imports": [
+        "react"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/app/components/ui/utils.ts",
+      "group": "Prototype Figma séparé",
+      "bytes": 169,
+      "lines": 7,
+      "sha256": "d1f1e0d62cb8d8d1e04c26e14de842d8a151f75812d81b046c65b5d1fe8e4b27",
+      "imports": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/imports/pasted_text/projet-analyse.md",
+      "group": "Prototype Figma séparé",
+      "bytes": 54300,
+      "lines": 2250,
+      "sha256": "eb1109f3f0b7d9a47b16561413c67f5557d1956662d68a42b620bfc7b24d1383",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/main.tsx",
+      "group": "Prototype Figma séparé",
+      "bytes": 183,
+      "lines": 7,
+      "sha256": "31534914ad17a147a266479b0b43fa771e6b8b9e79c8d099333dbec3f73e547c",
+      "imports": [
+        "react-dom/client",
+        "./app/App.tsx",
+        "./styles/index.css"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/styles/fonts.css",
+      "group": "Prototype Figma séparé",
+      "bytes": 300,
+      "lines": 2,
+      "sha256": "d5e9dc83eb3f9a12c94ab4189133d21df6838a8e335e62b2d98ff557dd40b3db",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/styles/globals.css",
+      "group": "Prototype Figma séparé",
+      "bytes": 0,
+      "lines": 1,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/styles/index.css",
+      "group": "Prototype Figma séparé",
+      "bytes": 72,
+      "lines": 4,
+      "sha256": "9cf0c73c5a7251c9e1f087665c7936fb39a0ee7641cae20cd4b18955a32ed099",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/styles/tailwind.css",
+      "group": "Prototype Figma séparé",
+      "bytes": 98,
+      "lines": 5,
+      "sha256": "c7dddb734b0c9e3cfaa6698cd725f018b8a5e41f847ae42fd9b0269d44ee9ff4",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/src/styles/theme.css",
+      "group": "Prototype Figma séparé",
+      "bytes": 5793,
+      "lines": 200,
+      "sha256": "81d016ee348c2581c5c4f29b65b36487b79af25821e1c1d2ea50cc94a1bf07c5",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/figma-implement-features-20260714/vite.config.ts",
+      "group": "Prototype Figma séparé",
+      "bytes": 926,
+      "lines": 37,
+      "sha256": "ee76dd1dd0bf18ccc1ef456cd6fdedf3280aaeb5c15633d0104c2601dff732e7",
+      "imports": [
+        "vite",
+        "path",
+        "@tailwindcss/vite",
+        "@vitejs/plugin-react"
+      ],
+      "parseDiagnostics": 0,
+      "note": "Référence uniquement ; exclu du build Next.js et du périmètre livré"
+    },
+    {
+      "file": "work/npm-cache/_logs/2026-07-13T20_21_35_525Z-debug-0.log",
+      "group": "Cache/outillage sans fonctionnalité",
+      "bytes": 6157,
+      "lines": 88,
+      "sha256": "c2916a6a975777ec7de84e3ca18e724c7df004bf9810d5985f8aea93756039c2",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Inventorié ; aucun code métier à auditer"
+    },
+    {
+      "file": "work/npm-cache/_update-notifier-last-checked",
+      "group": "Cache/outillage sans fonctionnalité",
+      "bytes": 0,
+      "lines": 1,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Inventorié ; aucun code métier à auditer"
+    },
+    {
+      "file": "work/pnpm-store/v11/index.db",
+      "group": "Cache/outillage sans fonctionnalité",
+      "bytes": 8192,
+      "lines": null,
+      "sha256": "cd7dcaaff3237bf367c869a8d46abec8342638105eb326e176582e91559c2d81",
+      "imports": [],
+      "parseDiagnostics": 0,
+      "note": "Inventorié ; aucun code métier à auditer"
+    }
+  ]
+}

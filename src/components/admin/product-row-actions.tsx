@@ -26,8 +26,9 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [stockQuantity, setStockQuantity] = useState(String(product.stockQuantity ?? 0));
   const canEditStock = canPersist && product.condition !== "service";
-  const canShowProduct = product.availability === "draft" || product.availability === "unavailable";
-  const maxStockQuantity = product.condition === "imperfect" ? 1 : Number.POSITIVE_INFINITY;
+  const canShowProduct = !product.publishedAt;
+  const canToggleVisibility = canPersist && !["draft", "unavailable", "archived"].includes(product.availability);
+  const maxStockQuantity = (product.condition === "imperfect" || product.condition === "used") ? 1 : Number.POSITIVE_INFINITY;
   const canUsePortal = typeof document !== "undefined";
 
   useEffect(() => {
@@ -133,7 +134,7 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
                 <input name="id" type="hidden" value={product.id} />
                 <button
                   className="row-actions__item"
-                  disabled={!canPersist}
+                  disabled={!canToggleVisibility}
                   type={canPersist ? "submit" : "button"}
                 >
                   Afficher
@@ -146,7 +147,7 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
                 <input name="id" type="hidden" value={product.id} />
                 <button
                   className="row-actions__item"
-                  disabled={!canPersist}
+                  disabled={!canToggleVisibility}
                   type={canPersist ? "submit" : "button"}
                 >
                   Masquer
@@ -162,7 +163,7 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
               }}
               type="button"
             >
-              Supprimer
+              Archiver
             </button>
           </div>,
           document.body
@@ -224,9 +225,9 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
           <div className="modal-backdrop" role="presentation">
             <div aria-modal="true" className="admin-modal admin-modal--danger" role="dialog">
               <div>
-                <span className="modal-eyebrow">Suppression définitive</span>
+                <span className="modal-eyebrow">Archivage</span>
                 <h2>{product.name}</h2>
-                <p>Ce produit sera supprimé de la base de données. Cette action ne peut pas être annulée.</p>
+                <p>Le produit sera archivé et masqué. Les commandes et réservations seront conservées. Vous pourrez le réactiver depuis sa fiche.</p>
               </div>
               <form action={deleteProductAction} className="modal-form">
                 <input name="id" type="hidden" value={product.id} />
@@ -235,7 +236,7 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
                     Annuler
                   </button>
                   <button className="button button--primary" type="submit">
-                    Supprimer
+                    Archiver
                   </button>
                 </div>
               </form>

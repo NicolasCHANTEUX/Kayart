@@ -69,7 +69,7 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
           </thead>
           <tbody>
             {visibleProducts.map((product) => {
-              const isHidden = product.availability === "unavailable" || product.availability === "archived";
+              const isHidden = !product.publishedAt || product.availability === "unavailable" || product.availability === "archived";
 
               return (
                 <tr

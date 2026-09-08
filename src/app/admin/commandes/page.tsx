@@ -43,7 +43,7 @@ const paymentStatusLabels: Record<PaymentStatus, string> = {
 export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageProps) {
   const [products, orders] = await Promise.all([listAdminProducts(), listAdminOrders()]);
   const params = searchParams ? await searchParams : {};
-  const canPersist = isCatalogPersistenceEnabled();
+  const canPersist = isCatalogPersistenceEnabled() && process.env.KAYART_ENABLE_ORDER_SIMULATOR === "true";
 
   return (
     <section className="section admin-page">
@@ -70,7 +70,7 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
             <p className="form-notice form-notice--success">Paiement marqué comme payé.</p>
           ) : null}
           {params.updated === "deleted" ? (
-            <p className="form-notice form-notice--success">Commande supprimée.</p>
+            <p className="form-notice form-notice--success">Simulation annulée, historique conservé.</p>
           ) : null}
 
           <div className="admin-panel__header">

@@ -1,0 +1,216 @@
+﻿{
+  "mode": "read-only-check",
+  "conflicts": {
+    "invalid_products": 0,
+    "invalid_orders": 0,
+    "invalid_order_items": 0,
+    "invalid_media": 0,
+    "invalid_image_positions": 0,
+    "duplicate_emails": 0,
+    "duplicate_covers": 0
+  },
+  "databaseApplied": false,
+  "storageApplied": false,
+  "alreadyApplied": true,
+  "runtimeRole": {
+    "rolbypassrls": true,
+    "rolcreatedb": true,
+    "rolsuper": false
+  },
+  "tables": [
+    {
+      "name": "audit_logs",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "blog_posts",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "categories",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "contact_requests",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "custom_requests",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "customers",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "media_assets",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "order_items",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "orders",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "product_attributes",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "product_images",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "products",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "repair_requests",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "request_media",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "reservations",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    },
+    {
+      "name": "stock_alerts",
+      "rls": true,
+      "anon_access": false,
+      "authenticated_access": false
+    }
+  ],
+  "constraints": [
+    {
+      "conname": "media_size_positive",
+      "convalidated": true,
+      "definition": "CHECK ((size_bytes > 0))"
+    },
+    {
+      "conname": "order_items_amounts_consistent",
+      "convalidated": true,
+      "definition": "CHECK (((quantity > 0) AND (unit_price_cents >= 0) AND ((total_cents)::bigint = ((quantity)::bigint * (unit_price_cents)::bigint))))"
+    },
+    {
+      "conname": "orders_amounts_consistent",
+      "convalidated": true,
+      "definition": "CHECK (((subtotal_cents >= 0) AND (shipping_cents >= 0) AND ((total_cents)::bigint = ((subtotal_cents)::bigint + (shipping_cents)::bigint))))"
+    },
+    {
+      "conname": "product_images_position_nonnegative",
+      "convalidated": true,
+      "definition": "CHECK ((\"position\" >= 0))"
+    },
+    {
+      "conname": "products_base_product_id_fkey",
+      "convalidated": true,
+      "definition": "FOREIGN KEY (base_product_id) REFERENCES products(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "products_compare_price",
+      "convalidated": true,
+      "definition": "CHECK (((compare_at_price_cents IS NULL) OR ((price_cents IS NOT NULL) AND (compare_at_price_cents >= price_cents))))"
+    },
+    {
+      "conname": "products_not_own_base",
+      "convalidated": true,
+      "definition": "CHECK (((base_product_id IS NULL) OR (base_product_id <> id)))"
+    },
+    {
+      "conname": "products_price_positive",
+      "convalidated": true,
+      "definition": "CHECK (((price_cents IS NULL) OR (price_cents > 0)))"
+    },
+    {
+      "conname": "products_stock_nonnegative",
+      "convalidated": true,
+      "definition": "CHECK (((stock_quantity IS NULL) OR (stock_quantity >= 0)))"
+    },
+    {
+      "conname": "products_unique_piece_stock",
+      "convalidated": true,
+      "definition": "CHECK (((condition <> ALL (ARRAY['imperfect'::product_condition, 'used'::product_condition])) OR (stock_quantity IS NULL) OR (stock_quantity <= 1)))"
+    }
+  ],
+  "triggers": [
+    {
+      "event_object_table": "blog_posts",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "categories",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "contact_requests",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "custom_requests",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "customers",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "orders",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "products",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "repair_requests",
+      "trigger_name": "kayart_updated_at"
+    },
+    {
+      "event_object_table": "reservations",
+      "trigger_name": "kayart_updated_at"
+    }
+  ],
+  "bucket": {
+    "name": "product-images",
+    "public": true,
+    "file_size_limit": 4194304,
+    "allowed_mime_types": [
+      "image/webp"
+    ]
+  }
+}
