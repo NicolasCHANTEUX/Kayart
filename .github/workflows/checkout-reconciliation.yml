@@ -1,0 +1,25 @@
+name: Checkout test - expiration and monitoring
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '2-57/5 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: checkout-test-reconciliation
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    if: vars.KAYART_CHECKOUT_CRON_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Reconcile and report failures
+        env:
+          KAYART_TEST_SITE_URL: ${{ vars.KAYART_TEST_SITE_URL }}
+          KAYART_TEST_CRON_SECRET: ${{ secrets.KAYART_TEST_CRON_SECRET }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: node scripts/run-checkout-reconciliation.mjs

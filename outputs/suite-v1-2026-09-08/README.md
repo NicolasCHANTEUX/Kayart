@@ -2,6 +2,8 @@
 
 Travaux commencés le 8 et vérifiés le 9 septembre 2026. Ce suivi complète l’audit du 7 septembre et le premier lot de sécurité. Il tient compte des règles de livraison, légales et Stripe communiquées par le propriétaire. Il ne constitue pas une déclaration de complétude à 100 %.
 
+**Suivi du 9 septembre :** le déploiement Production `v11.2` est désormais confirmé réussi ; sa recette HTTP est bloquée par le SSO Vercel. Le workflow d’expiration et trois tests supplémentaires sont préparés (42 tests passent), mais le workflow nécessite encore les réglages et secrets du compte de test. Le rôle PostgreSQL reste absent faute de `CREATEROLE`. Voir le [suivi d’activation des priorités](../../docs/activation-priorites.md) pour l’état le plus récent.
+
 ## Réalisé
 
 | Domaine | Résultat |
