@@ -15,6 +15,7 @@ export async function startTestCheckout(input: CheckoutInput) {
   const { checkoutKey, ...content } = input;
   const fingerprint = createHash("sha256").update(JSON.stringify(content)).digest("hex");
   const order = await checkoutTransaction(async tx => {
+    if (await tx.stripeEvent.findUnique({ where: { id: `cancel-before-create:${checkoutKey}` } })) throw new Error("Cette tentative a été annulée. Revenez au panier.");
     const existing = await tx.order.findUnique({ where: { checkoutKey }, include: { items: true, checkoutHolds: true } });
     if (existing) {
       if (existing.checkoutFingerprint !== fingerprint || existing.paymentStatus !== "pending") throw new Error("Cette tentative a changé ou est terminée. Revenez au panier.");
@@ -42,7 +43,7 @@ export async function startTestCheckout(input: CheckoutInput) {
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
     return tx.order.create({ data: {
       orderNumber: `KT-TEST-${randomUUID()}`, checkoutKey, checkoutFingerprint: fingerprint, isTest: true,
-      guestEmail: input.email, fulfillmentMethod: input.method, shippingZoneId: input.shippingZoneId,
+      guestEmail: input.email, customerName: input.name, fulfillmentMethod: input.method, shippingZoneId: input.shippingZoneId,
       shippingAddress: input.address ?? undefined, customerNote: input.method === "pickup" ? "Retrait gratuit à l’atelier, sur rendez-vous." : "Livraison selon la zone sélectionnée.",
       subtotalCents, shippingCents, totalCents: subtotalCents + shippingCents,
       items: { create: items.map(item => ({ productId: item.product.id, productName: item.product.name, productSku: item.product.sku, quantity: item.quantity, unitPriceCents: item.product.priceCents!, totalCents: item.totalCents })) },
@@ -52,10 +53,11 @@ export async function startTestCheckout(input: CheckoutInput) {
   const stripe = getTestStripe();
   if (order.stripeCheckoutSessionId) {
     const session = await stripe.checkout.sessions.retrieve(order.stripeCheckoutSessionId);
-    if (session.livemode || session.status !== "open" || !session.url) throw new Error("Cette session est terminée. Revenez au panier.");
+    if (session.livemode || session.status !== "open" || !session.url || !session.url.startsWith("https://checkout.stripe.com/")) throw new Error("Cette session est terminée. Revenez au panier.");
     return { url: session.url };
   }
-  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = order.items.map(item => ({ price_data: { currency: "eur", unit_amount: item.unitPriceCents, product_data: { name: item.productName } }, quantity: item.quantity }));
+  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [...order.items].sort((a, b) => (a.productId ?? "").localeCompare(b.productId ?? "")).map(item => ({ price_data: { currency: "eur", unit_amount: item.unitPriceCents, product_data: { name: item.productName } }, quantity: item.quantity }));
+  if (order.checkoutHolds[0].expiresAt.getTime() <= Date.now() + 29 * 60 * 1000) throw new Error("Cette tentative doit être vérifiée avant de recommencer. Contactez l’atelier.");
   if (order.shippingCents > 0) lineItems.push({ price_data: { currency: "eur", unit_amount: order.shippingCents, product_data: { name: "Livraison" } }, quantity: 1 });
   let session: Stripe.Checkout.Session;
   try {
@@ -72,7 +74,7 @@ export async function startTestCheckout(input: CheckoutInput) {
     if (typeof error === "object" && error && "type" in error && error.type === "StripeInvalidRequestError") await releaseRejectedCheckout(order.id);
     throw new Error("Le paiement de test n’a pas pu être ouvert. Réessayez la même tentative ou contactez l’atelier.");
   }
-  if (session.livemode || !session.url || new URL(session.url).hostname !== "checkout.stripe.com") throw new Error("Session Stripe de test invalide.");
+  if (session.livemode || !session.url || !session.url.startsWith("https://checkout.stripe.com/")) throw new Error("Session Stripe de test invalide.");
   await getPrismaClient().order.updateMany({ where: { id: order.id, OR: [{ stripeCheckoutSessionId: null }, { stripeCheckoutSessionId: session.id }] }, data: { stripeCheckoutSessionId: session.id, updatedAt: new Date() } });
   return { url: session.url };
 }

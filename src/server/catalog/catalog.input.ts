@@ -31,6 +31,7 @@ export type ProductImageUploadInput = {
 };
 
 export type ProductCreateInput = {
+  deliveryMode?: "shippable" | "pickupOnly" | "quote";
   name: string;
   slug: string;
   sku: string;
@@ -138,6 +139,7 @@ export function parseProductFormData(formData: FormData): ProductCreateInput {
   const weight = readText(formData, "weight");
   const slug = slugify(readText(formData, "slug") || name);
   const condition = readEnum(formData, "condition", productConditionValues, "Type", issues);
+  const deliveryMode = formData.has("deliveryMode") ? readEnum(formData, "deliveryMode", ["shippable", "pickupOnly", "quote"] as const, "Transport", issues) : undefined;
   const availability = readEnum(
     formData,
     "availability",
@@ -222,6 +224,7 @@ export function parseProductFormData(formData: FormData): ProductCreateInput {
     sku,
     categoryId,
     condition,
+    deliveryMode,
     availability,
     priceCents,
     compareAtPriceCents,

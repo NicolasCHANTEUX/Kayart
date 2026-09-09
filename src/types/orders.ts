@@ -34,5 +34,9 @@ export type AdminOrder = {
   paidAt: string | null;
   createdAt: string;
   isFictive: boolean;
+  isTest?: boolean;
+  customerName?: string | null;
+  fulfillmentMethod?: string | null;
+  shippingAddressLines?: string[];
   items: AdminOrderItem[];
 };

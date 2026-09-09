@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   deleteAdminOrderAction,
+  advanceTestOrderAction,
   markAdminOrderPaidAction
 } from "@/app/admin/commandes/actions";
 import type { AdminOrder } from "@/types/orders";
@@ -16,6 +17,11 @@ type AdminOrderActionsProps = {
 export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const canMarkPaid = canPersist && order.isFictive && order.paymentStatus === "pending" && order.status === "pending";
+
+  if (order.isTest) {
+    const label = order.status === "paid" ? "Préparer le test" : order.status === "preparing" ? (order.fulfillmentMethod === "pickup" ? "Marquer prête" : "Marquer expédiée") : ["ready", "shipped"].includes(order.status) ? "Terminer le test" : null;
+    return order.paymentStatus === "paid" && label ? <form action={advanceTestOrderAction}><input type="hidden" name="id" value={order.id} /><input type="hidden" name="status" value={order.status} /><ActionButton label={label} /></form> : <span>Confirmation Stripe automatique</span>;
+  }
 
   return (
     <>

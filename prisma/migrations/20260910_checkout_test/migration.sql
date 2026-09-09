@@ -1,6 +1,7 @@
 -- AlterTable
 ALTER TABLE "orders" ADD COLUMN     "checkout_fingerprint" TEXT,
 ADD COLUMN     "checkout_key" UUID,
+ADD COLUMN     "customer_name" TEXT,
 ADD COLUMN     "fulfillment_method" TEXT,
 ADD COLUMN     "is_test" BOOLEAN NOT NULL DEFAULT false,
 ADD COLUMN     "shipping_zone_id" UUID;
@@ -59,3 +60,19 @@ ALTER TABLE "checkout_holds" ADD CONSTRAINT "checkout_holds_order_id_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "checkout_holds" ADD CONSTRAINT "checkout_holds_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE public.shipping_zones ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.checkout_holds ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.stripe_events ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.shipping_zones, public.checkout_holds, public.stripe_events FROM anon, authenticated;
+ALTER TABLE public.shipping_zones ADD CONSTRAINT shipping_zones_valid_price CHECK (price_cents IS NULL OR price_cents > 0);
+ALTER TABLE public.shipping_zones ADD CONSTRAINT shipping_zones_active_price CHECK (NOT enabled OR price_cents IS NOT NULL);
+ALTER TABLE public.shipping_zones ALTER COLUMN country_codes SET NOT NULL;
+ALTER TABLE public.shipping_zones ALTER COLUMN postal_prefixes SET NOT NULL;
+ALTER TABLE public.shipping_zones ALTER COLUMN excluded_postal_prefixes SET NOT NULL;
+ALTER TABLE public.checkout_holds ADD CONSTRAINT checkout_holds_quantity CHECK (quantity > 0);
+ALTER TABLE public.checkout_holds ADD CONSTRAINT checkout_holds_status CHECK (status IN ('active','committed','released'));
+ALTER TABLE public.products ADD CONSTRAINT products_delivery_mode CHECK (delivery_mode IN ('quote','pickupOnly','shippable'));
+-- A configured zone is not an invented rate: France starts disabled with no price.
+INSERT INTO public.shipping_zones (name,country_codes,excluded_postal_prefixes,enabled)
+VALUES ('France métropolitaine',ARRAY['FR'],ARRAY['20','97','98'],false);

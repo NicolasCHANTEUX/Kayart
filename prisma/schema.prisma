@@ -214,6 +214,7 @@ model Order {
   orderNumber             String        @unique @map("order_number")
   customerId              String?       @map("customer_id") @db.Uuid
   guestEmail              String        @map("guest_email")
+  customerName            String?       @map("customer_name")
   status                  OrderStatus   @default(pending)
   paymentStatus           PaymentStatus @default(pending) @map("payment_status")
   currency                String        @default("EUR") @db.Char(3)

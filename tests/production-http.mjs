@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const base='http://localhost:3107';
 const results=[];
 const privateMarkers=['PRIVATE_DRAFT_7391','PRIVATE_DESCRIPTION_7391','PRIVATE_NOTE_7391','private-7391@example.invalid'];
-for(const path of ['/admin','/admin/produits','/admin/commandes','/admin/produits/regression-private-draft/modifier','/boutique','/boutique/regression-private-draft']) {
+for(const path of ['/admin','/admin/produits','/admin/commandes','/admin/demandes','/admin/livraison','/admin/produits/regression-private-draft/modifier','/boutique','/boutique/regression-private-draft']) {
   for(const rsc of [false,true]) {
     const response=await fetch(base+path,{redirect:'manual',headers:rsc?{RSC:'1'}:{}});
     const body=await response.text();
@@ -25,6 +25,19 @@ assert.ok(contactBody.includes('mailto:'));assert.ok(contactBody.includes('REF-1
 const csp=contact.headers.get('content-security-policy');
 for(const domain of ['https://images.unsplash.com','https://fonts.googleapis.com','https://fonts.gstatic.com']) assert.ok(csp.includes(domain));
 results.push({path:'/contact',status:contact.status,contextualContact:true,cspResourcesAllowed:true});
-fs.mkdirSync('outputs/corrections-2026-09-08',{recursive:true});
-fs.writeFileSync('outputs/corrections-2026-09-08/http-verification.json',JSON.stringify(results,null,2));
+for(const path of ['/mentions-legales','/cgv','/confidentialite']) {
+ const response=await fetch(base+path);assert.equal(response.status,404);
+ const body=await response.text();for(const fake of ['KayArt SARL','12 Route des Coudrais','000 000 000 00000']) assert.equal(body.includes(fake),false);
+ results.push({path,status:response.status,legalPublicationBlocked:true});
+}
+for(const path of ['/contact','/reparation','/sur-mesure']){
+ const response=await fetch(base+path),body=await response.text();assert.equal(response.status,200);assert.ok(body.includes('submissionKey'));assert.ok(body.includes('privacyAcknowledged'));results.push({path,status:response.status,formPresent:true});
+}
+for(const [path,method,status] of [['/api/checkout','POST',503],['/api/stripe/webhook','POST',400],['/api/cron/checkouts','GET',401],['/api/admin/request-images/11111111-1111-4111-8111-111111111111','GET',401]]){
+ const response=await fetch(base+path,{method,headers:{origin:base}});assert.equal(response.status,status);results.push({path,status});
+}
+const quote=await fetch(base+'/api/cart/quote',{method:'POST',headers:{origin:base,'Content-Type':'application/json'},body:JSON.stringify({items:[]})});
+assert.equal(quote.status,200);const payload=await quote.json();assert.equal(payload.testCheckoutEnabled,false);assert.equal(payload.shippingZones.length,0);results.push({path:'/api/cart/quote',status:quote.status,paymentDisabled:true,noInventedRate:true});
+fs.mkdirSync('outputs/suite-v1-2026-09-08',{recursive:true});
+fs.writeFileSync('outputs/suite-v1-2026-09-08/http-verification.json',JSON.stringify(results,null,2));
 console.log('Production HTTP checks passed:',results.length,'checks plus retired endpoint (410).');

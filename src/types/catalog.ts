@@ -48,6 +48,7 @@ export type ProductBaseModel = {
 };
 
 export type Product = {
+  deliveryMode?: "shippable" | "pickupOnly" | "quote";
   id: string;
   slug: string;
   sku: string;

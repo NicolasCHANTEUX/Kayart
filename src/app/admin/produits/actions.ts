@@ -183,6 +183,7 @@ export async function createImperfectProductAction(formData: FormData) {
       baseProductId: baseProduct.id,
       categoryId: baseProduct.categoryId,
       condition: "imperfect",
+      deliveryMode: baseProduct.deliveryMode ?? "quote",
       availability: imperfectInput.availability,
       priceCents: finalPriceCents,
       compareAtPriceCents: imperfectInput.basePriceCents,

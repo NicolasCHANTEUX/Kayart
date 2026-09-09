@@ -7,6 +7,7 @@ export type ProductFormDraft = {
   basePrice?: string;
   categoryId?: string;
   condition?: string;
+  deliveryMode?: string;
   description?: string;
   defectDescription?: string;
   dimensions?: string;
@@ -29,6 +30,7 @@ const textFields = [
   "basePrice",
   "categoryId",
   "condition",
+  "deliveryMode",
   "description",
   "defectDescription",
   "dimensions",
@@ -91,6 +93,7 @@ export function createProductFormDraftFromProduct(product: Product): ProductForm
     basePrice: basePriceCents !== null ? formatEuroInput(basePriceCents) : undefined,
     categoryId: product.categoryId,
     condition: product.condition,
+    deliveryMode: product.deliveryMode ?? "quote",
     description: product.description,
     defectDescription: product.defectDescription ?? undefined,
     dimensions: dimensions?.value,

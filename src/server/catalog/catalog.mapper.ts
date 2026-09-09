@@ -54,6 +54,7 @@ export function mapPrismaProduct(product: PrismaProductWithCatalogRelations): Pr
     categoryId: product.categoryId ?? "",
     categoryName: product.category?.name ?? "Sans catégorie",
     condition: mapPrismaCondition(product.condition),
+    deliveryMode: product.deliveryMode === "shippable" || product.deliveryMode === "pickupOnly" ? product.deliveryMode : "quote",
     availability: mapPrismaAvailability(product.availability),
     priceCents: product.priceCents,
     compareAtPriceCents: product.compareAtPriceCents,
@@ -95,6 +96,14 @@ export function mapPrismaAdminOrder(order: PrismaOrderWithItems): AdminOrder {
     paidAt: order.paidAt?.toISOString() ?? null,
     createdAt: order.createdAt.toISOString(),
     isFictive: isFictiveAdminOrder(order),
+    isTest: order.isTest,
+    customerName: order.customerName,
+    fulfillmentMethod: order.fulfillmentMethod,
+    shippingAddressLines: order.shippingAddress && typeof order.shippingAddress === "object" && !Array.isArray(order.shippingAddress)
+      ? ["name", "line1", "line2", "postalCode", "city", "country"].flatMap(key => {
+          const value = (order.shippingAddress as Record<string, unknown>)[key];
+          return typeof value === "string" && value ? [value] : [];
+        }) : [],
     items: order.items.map((item) => ({
       id: item.id,
       productId: item.productId,

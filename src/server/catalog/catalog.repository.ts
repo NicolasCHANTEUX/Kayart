@@ -294,6 +294,7 @@ export const prismaCatalogRepository: CatalogRepository = {
         categoryId: input.categoryId,
         compareAtPriceCents: input.compareAtPriceCents,
         condition: mapAppConditionForPrisma(input.condition),
+        deliveryMode: input.deliveryMode ?? "quote",
         defectDescription: input.defectDescription,
         description: input.description,
         isCustomizable: input.isCustomizable,
@@ -339,7 +340,8 @@ export const prismaCatalogRepository: CatalogRepository = {
     return prisma.$transaction(async (tx) => {
       const existing = await tx.product.findUnique({
         include: {
-          images: true
+          images: true,
+          checkoutHolds: { where: { status: "active" } }
         },
         where: {
           id: input.id
@@ -348,6 +350,9 @@ export const prismaCatalogRepository: CatalogRepository = {
 
       if (!existing) {
         throw new Error("Produit introuvable.");
+      }
+      if (existing.checkoutHolds?.length && (input.stockQuantity !== existing.stockQuantity || input.condition !== existing.condition)) {
+        throw new Error("Une tentative de paiement réserve ce produit. Le stock et le type ne peuvent pas être modifiés maintenant.");
       }
 
       const imagesToDelete = existing.images.filter((image) => input.deletedImageIds.includes(image.id));
@@ -387,6 +392,7 @@ export const prismaCatalogRepository: CatalogRepository = {
           categoryId: input.categoryId,
           compareAtPriceCents: input.preservePrices ? existing.compareAtPriceCents : input.compareAtPriceCents,
           condition: mapAppConditionForPrisma(input.condition),
+          deliveryMode: input.deliveryMode,
           defectDescription:
             input.defectDescription === undefined ? undefined : input.defectDescription,
           description: input.description,
@@ -488,16 +494,19 @@ export const prismaCatalogRepository: CatalogRepository = {
       throw new Error("Un produit imparfait doit rester une pièce unique.");
     }
 
-    const row = await prisma.product.update({
+    const changed = await prisma.product.updateMany({
       data: {
         stockQuantity: input.stockQuantity,
         updatedAt: new Date()
       },
-      include: productInclude,
       where: {
-        id: input.id
+        id: input.id,
+        condition: existing.condition,
+        checkoutHolds: { none: { status: "active" } }
       }
     });
+    if (!changed.count) throw new Error("Le produit a changé ou son stock est réservé par un paiement en cours.");
+    const row = await prisma.product.findUniqueOrThrow({ where: { id: input.id }, include: productInclude });
 
     return mapPrismaProduct(row);
   },

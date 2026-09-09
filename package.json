@@ -20,7 +20,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "next": "15.5.22",
+    "next": "15.5.25",
     "pg": "^8.22.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",

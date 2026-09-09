@@ -1,0 +1,154 @@
+{
+  "database": {
+    "tables": [
+      {
+        "relname": "audit_logs",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "blog_posts",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "categories",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "checkout_holds",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "contact_requests",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "custom_requests",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "customers",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "media_assets",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "order_items",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "orders",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "product_attributes",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "product_images",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "products",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "repair_requests",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "request_media",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "request_rate_limits",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "reservations",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "shipping_zones",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "stock_alerts",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      },
+      {
+        "relname": "stripe_events",
+        "relrowsecurity": true,
+        "anon_access": false,
+        "authenticated_access": false
+      }
+    ],
+    "migrations": [
+      {
+        "migration_name": "0_baseline",
+        "applied": true
+      },
+      {
+        "migration_name": "20260908_security_integrity",
+        "applied": true
+      },
+      {
+        "migration_name": "20260909_requests",
+        "applied": true
+      },
+      {
+        "migration_name": "20260910_checkout_test",
+        "applied": true
+      }
+    ],
+    "invalidEnabledRateRejected": true,
+    "atomicLimitVerified": true,
+    "fixtureWritesRolledBack": true
+  },
+  "storage": {
+    "privateBucket": true,
+    "syntheticImageRoundtrip": true,
+    "publicAccessDenied": true,
+    "anonymousAccessDenied": true,
+    "syntheticImageRemoved": true
+  }
+}

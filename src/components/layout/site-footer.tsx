@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { getLegalConfig } from "@/config/legal";
 
 export function SiteFooter() {
   return (
@@ -15,13 +16,13 @@ export function SiteFooter() {
           <div>{siteConfig.phone}</div>
         </div>
 
-        <div>
+        {getLegalConfig().approved ? <div>
           <Link href="/mentions-legales">Mentions légales</Link>
           {" / "}
           <Link href="/confidentialite">Confidentialité</Link>
           {" / "}
           <Link href="/cgv">CGV</Link>
-        </div>
+        </div> : null}
       </div>
     </footer>
   );

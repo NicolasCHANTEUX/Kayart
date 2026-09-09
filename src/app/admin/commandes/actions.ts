@@ -13,6 +13,17 @@ import {
 } from "@/server/catalog/catalog.input";
 import { requireAdminSession } from "@/server/auth/session";
 import { requireSameOriginAction } from "@/server/security/request-guards";
+import { advanceTestOrder } from "@/server/checkout/admin-orders";
+import { revalidatePath } from "next/cache";
+
+export async function advanceTestOrderAction(formData: FormData) {
+  await requireSameOriginAction();
+  await requireAdminSession();
+  try { await advanceTestOrder(String(formData.get("id") || ""), String(formData.get("status") || "")); }
+  catch { redirect("/admin/commandes?error=" + encodeURIComponent("La commande a changé ou son paiement n’est pas confirmé. Actualisez la liste.")); }
+  revalidatePath("/admin/commandes");
+  redirect("/admin/commandes?updated=fulfillment");
+}
 
 export async function createAdminOrderAction(formData: FormData) {
   await requireSameOriginAction();

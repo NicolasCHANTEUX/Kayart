@@ -21,6 +21,7 @@ export async function releaseRejectedCheckout(orderId: string) {
 export async function settleVerifiedSession(session: Stripe.Checkout.Session, eventId: string, outcome: "paid" | "expired" | "failed") {
   if (session.livemode || session.mode !== "payment" || !session.metadata?.orderId || !session.metadata.fingerprint) throw new Error("Unexpected Stripe session.");
   if (outcome === "paid" && session.payment_status !== "paid") return;
+  if (outcome !== "paid" && session.payment_status === "paid") throw new Error("A paid session cannot release stock.");
   if (outcome === "expired" && session.status !== "expired") throw new Error("Stripe expiration is not confirmed.");
   try {
     await checkoutTransaction(async tx => {

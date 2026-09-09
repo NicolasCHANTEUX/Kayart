@@ -158,6 +158,7 @@ export function ProductForm({
       {errorMessage ? <p className="form-notice form-notice--error">{errorMessage}</p> : null}
       {stepError ? <p className="form-notice form-notice--error">{stepError}</p> : null}
       {productId ? <input name="id" type="hidden" value={productId} /> : null}
+      <label>Transport du produit<select name="deliveryMode" defaultValue={defaultValues?.deliveryMode ?? "quote"}><option value="quote">Transport sur devis / retrait atelier</option><option value="pickupOnly">Retrait atelier uniquement</option><option value="shippable">Expédiable avec les tarifs configurés</option></select></label>
       {productId && basePrice === (defaultValues?.basePrice ?? "") && discountPercent === (defaultValues?.discountPercent ?? "") ? (
         <input name="preservePrices" type="hidden" value="on" />
       ) : null}

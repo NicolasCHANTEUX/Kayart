@@ -75,8 +75,8 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
 
           <div className="admin-panel__header">
             <div>
-              <strong>Commandes factices</strong>
-              <p>Créez une commande de test pour préparer ou simuler un panier sans modifier le stock.</p>
+              <strong>Suivi des commandes</strong>
+              <p>Les commandes Stripe de test réservent le stock. Leur paiement est confirmé automatiquement par Stripe. Les simulations internes restent sans effet sur le stock.</p>
             </div>
           </div>
 
@@ -105,6 +105,10 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
                       <div className="order-number-cell">
                         <strong>{order.orderNumber}</strong>
                         <span>{formatOrderDate(order.createdAt)}</span>
+                        {order.isTest ? <span>Stripe TEST — aucun achat réel</span> : null}
+                        <span>{order.customerName} {order.guestEmail}</span>
+                        <span>{order.fulfillmentMethod === "pickup" ? "Retrait atelier sur rendez-vous" : order.fulfillmentMethod === "shipping" ? "Livraison" : ""}</span>
+                        {order.shippingAddressLines?.map((line, index) => <span key={index}>{line}</span>)}
                       </div>
                     </td>
                     <td data-label="Produits">
@@ -140,7 +144,7 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
 
           {!canPersist ? (
             <p className="admin-panel__note">
-              La création de commande sera active après passage en mode Prisma.
+              Le simulateur interne est désactivé. Le suivi des commandes Stripe est indépendant de ce simulateur.
             </p>
           ) : null}
         </div>

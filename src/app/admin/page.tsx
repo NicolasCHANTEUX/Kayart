@@ -18,6 +18,7 @@ export default async function AdminPage() {
           réservé aux comptes administrateurs.
         </p>
         <div className="admin-grid">
+          <Link className="feature-card" href="/admin/livraison"><div className="meta">Configuration</div><h3>Livraison et lancement</h3><p>Zones, tarifs, retrait atelier et informations légales à valider.</p></Link>
           <Link className="feature-card" href="/admin/produits">
             <div className="meta">Catalogue</div>
             <h3>Produits</h3>

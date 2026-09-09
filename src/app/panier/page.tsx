@@ -1,20 +1,24 @@
 import Link from "next/link";
+import { CartPage as Cart } from "@/components/cart/cart-page";
 export const metadata = {
   title: "Panier",
   description: "Panier KayArt."
 };
 
-export default function CartPage() {
+export default async function CartPage({ searchParams }: { searchParams?: Promise<{ checkout?: string }> }) {
+  const params = searchParams ? await searchParams : {};
+  const pendingCheckout = typeof params.checkout === "string" && /^[0-9a-f-]{36}$/i.test(params.checkout) ? params.checkout : undefined;
   return (
     <section className="section section--light">
       <div className="container">
         <div className="eyebrow">Commandes</div>
-        <h1 className="page-title">Commander auprès de l’atelier</h1>
+        <h1 className="page-title">Votre panier</h1>
         <p className="lead">
-          Le paiement en ligne n’est pas encore disponible. Contactez l’atelier pour confirmer
-          votre commande, sa disponibilité et les modalités de livraison.
+          Retrait gratuit à l’atelier sur rendez-vous. La livraison est proposée uniquement lorsque
+          le produit est expédiable et qu’un tarif est disponible pour votre destination.
         </p>
-        <Link className="button button--primary" href="/contact">Contacter l’atelier</Link>
+        <Cart pendingCheckout={pendingCheckout} />
+        <Link className="button button--ghost" href="/contact">Une demande réelle ? Contacter l’atelier</Link>
       </div>
     </section>
   );

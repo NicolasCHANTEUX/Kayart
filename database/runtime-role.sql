@@ -4,11 +4,13 @@ GRANT SELECT, INSERT, UPDATE ON public.products, public.orders, public.contact_r
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.categories, public.product_attributes, public.product_images, public.request_rate_limits TO kayart_app;
 GRANT SELECT, INSERT ON public.media_assets, public.order_items, public.request_media TO kayart_app;
 GRANT SELECT (id, auth_user_id, role) ON public.customers TO kayart_app;
+GRANT SELECT, INSERT, UPDATE ON public.shipping_zones, public.checkout_holds TO kayart_app;
+GRANT SELECT, INSERT ON public.stripe_events TO kayart_app;
 
 DO $policies$
 DECLARE table_name text;
 BEGIN
-  FOREACH table_name IN ARRAY ARRAY['products','orders','contact_requests','repair_requests','custom_requests','categories','product_attributes','product_images','request_rate_limits','media_assets','order_items','request_media'] LOOP
+  FOREACH table_name IN ARRAY ARRAY['products','orders','contact_requests','repair_requests','custom_requests','categories','product_attributes','product_images','request_rate_limits','media_assets','order_items','request_media','shipping_zones','checkout_holds','stripe_events'] LOOP
     EXECUTE format('DROP POLICY IF EXISTS kayart_server ON public.%I', table_name);
     EXECUTE format('CREATE POLICY kayart_server ON public.%I TO kayart_app USING (true) WITH CHECK (true)', table_name);
   END LOOP;

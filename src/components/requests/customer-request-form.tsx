@@ -31,7 +31,7 @@ export function CustomerRequestForm({ kind, submissionKey, subject = "", enabled
       <p className="form-hint">Décrivez votre besoin en au moins 20 caractères.</p>
       {kind === "custom" ? <>{field("constraints", "Dimensions, contraintes et délai souhaité", { multiline: true, max: 2000 })}{field("budgetHint", "Budget indicatif (facultatif)")}</> : null}
       {kind === "repair" ? <label htmlFor="request-photos">Photos (facultatives)<input id="request-photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple /><small>Jusqu’à 3 images fixes de 1 Mo chacune. Les photos restent privées et accessibles à l’atelier.</small>{state.errors?.photos ? <span className="field-error">{state.errors.photos}</span> : null}</label> : null}
-      <p className="form-hint">Les coordonnées et informations transmises servent à traiter votre demande et à vous répondre. N’envoyez aucune donnée bancaire. <a href="/confidentialite">Information sur vos données</a>.</p>
+      <p className="form-hint">Les coordonnées et informations transmises servent à traiter votre demande et à vous répondre. Les champs marqués * sont nécessaires à ce traitement. Les photos restent privées. Pour toute question sur vos données, contactez contact.kayart@gmail.com. N’envoyez aucune donnée bancaire.</p>
       <label className="request-consent"><input name="privacyAcknowledged" type="checkbox" required />J’ai pris connaissance de l’information sur l’utilisation de mes données. *</label>
       {state.errors?.privacyAcknowledged ? <p className="field-error">{state.errors.privacyAcknowledged}</p> : null}
       <button className="button button--primary" type="submit">{pending ? "Envoi en cours…" : "Envoyer ma demande"}</button>

@@ -1,10 +1,3 @@
-export default function TermsPage() {
-  return (
-    <section className="section">
-      <div className="container">
-        <h1 className="page-title">CGV</h1>
-        <p className="lead">Conditions générales de vente à compléter avant mise en production.</p>
-      </div>
-    </section>
-  );
-}
+import { LegalPage } from "@/components/legal/legal-page";
+export const dynamic = "force-dynamic";
+export default function TermsPage() { return <LegalPage kind="terms" />; }

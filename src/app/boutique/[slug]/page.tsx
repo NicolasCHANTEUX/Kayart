@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AddToCart } from "@/components/cart/add-to-cart";
 import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductPrice } from "@/components/catalog/product-price";
@@ -103,9 +104,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </dl>
 
           <div className="actions-row product-actions">
-            <Link className="button button--primary" href={primaryAction.href}>
-              {primaryAction.label}
-            </Link>
+            {product.availability === "available" && product.condition !== "service" && !product.isCustomizable && product.priceCents !== null && (product.stockQuantity ?? 0) > 0 ? <AddToCart productId={product.id} maxQuantity={product.stockQuantity!} /> : <Link className="button button--primary" href={primaryAction.href}>{primaryAction.label}</Link>}
             <Link className="button button--ghost" href="/contact">
               Poser une question
             </Link>
