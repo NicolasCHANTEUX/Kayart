@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getPrismaClient } from "@/server/db/prisma";
 import type { AuthenticatedSession, AuthenticatedUser, UserRole } from "@/types/auth";
 import { getSupabaseAuthUser, revokePasswordSession } from "./supabase-auth";
+import { accessTokenCookieName, refreshTokenCookieName, accessCookieLifetime, sessionCookieOptions } from "./session-cookies";
 
 type PasswordSessionCookieInput = {
   accessToken: string;
@@ -10,28 +11,10 @@ type PasswordSessionCookieInput = {
   refreshToken: string;
 };
 
-const accessTokenCookieName = "kayart_access_token";
-const refreshTokenCookieName = "kayart_refresh_token";
-
 export async function persistPasswordSession(session: PasswordSessionCookieInput) {
   const cookieStore = await cookies();
-  const secure = process.env.NODE_ENV === "production";
-
-  cookieStore.set(accessTokenCookieName, session.accessToken, {
-    httpOnly: true,
-    maxAge: Math.max(session.expiresIn - 30, 60),
-    path: "/",
-    sameSite: "lax",
-    secure
-  });
-
-  cookieStore.set(refreshTokenCookieName, session.refreshToken, {
-    httpOnly: true,
-    maxAge: 60 * 60 * 24 * 30,
-    path: "/",
-    sameSite: "lax",
-    secure
-  });
+  cookieStore.set(accessTokenCookieName, session.accessToken, sessionCookieOptions(accessCookieLifetime(session.expiresIn)));
+  cookieStore.set(refreshTokenCookieName, session.refreshToken, sessionCookieOptions(60 * 60 * 24 * 30));
 }
 
 export async function clearPasswordSession() {

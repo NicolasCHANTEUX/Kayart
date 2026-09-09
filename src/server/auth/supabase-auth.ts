@@ -33,6 +33,23 @@ type SupabaseErrorResponse = {
 export class AuthConfigurationError extends Error {}
 export class AuthCredentialsError extends Error {}
 
+export async function refreshPasswordSession(refreshToken: string): Promise<SupabasePasswordSession | null> {
+  const { apiKey, authUrl } = getSupabaseAuthConfig();
+  const response = await fetch(`${authUrl}/token?grant_type=refresh_token`, {
+    method: "POST", cache: "no-store", redirect: "error", signal: AbortSignal.timeout(5000),
+    headers: { apikey: apiKey, "Content-Type": "application/json" },
+    body: JSON.stringify({ refresh_token: refreshToken })
+  });
+  const payload = await response.json().catch(() => null) as (SupabasePasswordResponse & { error_code?: string }) | null;
+  // Only explicit credential failures discard cookies; outages/rate limits must remain retryable.
+  if ([400, 401, 403].includes(response.status) && ["refresh_token_not_found", "refresh_token_already_used", "session_not_found", "session_expired", "user_not_found", "user_banned"].includes(payload?.error_code ?? "")) return null;
+  if (!response.ok || !payload || typeof payload.access_token !== "string" || !payload.access_token || typeof payload.refresh_token !== "string" || !payload.refresh_token ||
+    !Number.isSafeInteger(payload.expires_in) || payload.expires_in! <= 0 || !payload.user?.id || !payload.user.email) {
+    throw new Error("Session refresh unavailable.");
+  }
+  return { accessToken: payload.access_token, refreshToken: payload.refresh_token, expiresIn: payload.expires_in!, user: { id: payload.user.id, email: payload.user.email } };
+}
+
 export async function revokePasswordSession(accessToken: string) {
   const { apiKey, authUrl } = getSupabaseAuthConfig();
   const response = await fetch(`${authUrl}/logout?scope=local`, {
@@ -136,6 +153,7 @@ export async function getSupabaseAuthUser(accessToken: string): Promise<Authenti
   const { apiKey, authUrl } = getSupabaseAuthConfig();
   const response = await fetch(`${authUrl}/user`, {
     cache: "no-store",
+    signal: AbortSignal.timeout(5000),
     headers: {
       apikey: apiKey,
       Authorization: `Bearer ${accessToken}`

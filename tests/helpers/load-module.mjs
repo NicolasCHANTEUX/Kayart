@@ -24,7 +24,7 @@ export function load(file, mocks = {}, env = {}, extra = '') {
     };
     vm.runInNewContext('(function(require,module,exports){' + compiled + '\n})', {
       process: { env: { KAYART_DATA_SOURCE: 'prisma', NODE_ENV: 'test', ...env }, cwd: () => root },
-      URL, URLSearchParams, FormData, File, Blob, Buffer, Headers, Request, Response, AbortSignal, console, Date, Math, setTimeout, clearTimeout,
+      URL, URLSearchParams, FormData, File, Blob, Buffer, Headers, Request, Response, AbortSignal, atob, console, Date, Math, setTimeout, clearTimeout,
       fetch: mocks.fetch ?? (() => { throw new Error('Unexpected network access in regression test'); })
     })(req, module, module.exports);
     return module.exports;
