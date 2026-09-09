@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ProductImage } from "@/types/catalog";
+import { ProductImageView } from "./product-image";
 
 type ProductGalleryProps = {
   images: ProductImage[];
@@ -10,26 +11,28 @@ type ProductGalleryProps = {
 
 export function ProductGallery({ images, title }: ProductGalleryProps) {
   const sortedImages = useMemo(
-    () => [...images].sort((first, second) => first.position - second.position),
+    () => [...images].sort((first, second) => Number(second.isPrimary) - Number(first.isPrimary) || first.position - second.position),
     [images]
   );
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const currentIndex = Math.max(0, sortedImages.findIndex(image => image.id === selectedId));
+  const setCurrentIndex = (index: number) => setSelectedId(sortedImages[index]?.id ?? null);
   const currentImage = sortedImages[currentIndex];
   const hasMultipleImages = sortedImages.length > 1;
 
   function showPreviousImage() {
-    setCurrentIndex((index) => (index === 0 ? sortedImages.length - 1 : index - 1));
+    setCurrentIndex(currentIndex === 0 ? sortedImages.length - 1 : currentIndex - 1);
   }
 
   function showNextImage() {
-    setCurrentIndex((index) => (index === sortedImages.length - 1 ? 0 : index + 1));
+    setCurrentIndex(currentIndex === sortedImages.length - 1 ? 0 : currentIndex + 1);
   }
 
   return (
     <div className="product-gallery">
       <div className="product-gallery__stage">
         {currentImage ? (
-          <img alt={currentImage.altText ?? title} src={currentImage.url} />
+          <ProductImageView eager alt={currentImage.altText ?? title} src={currentImage.url} />
         ) : (
           <div className="product-gallery__empty">
             <span>Visuel à venir</span>
@@ -73,7 +76,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               onClick={() => setCurrentIndex(index)}
               type="button"
             >
-              <img alt="" src={image.url} />
+              <ProductImageView thumbnail alt="" src={image.url} />
             </button>
           ))}
         </div>

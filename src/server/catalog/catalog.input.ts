@@ -56,6 +56,8 @@ export type ProductUpdateInput = ProductCreateInput & {
   id: string;
   deletedImageIds: string[];
   preservePrices: boolean;
+  imageOrder?: string[];
+  coverImageId?: string;
 };
 
 export type ProductDeleteInput = {
@@ -168,6 +170,10 @@ export function parseProductFormData(formData: FormData): ProductCreateInput {
 
   if (description.length < 10) {
     issues.description = "La description complète doit contenir au moins 10 caractères.";
+  }
+
+  if (condition === "imperfect" && formData.has("defectDescription") && readText(formData, "defectDescription").length < 10) {
+    issues.defectDescription = "Décrivez le défaut en au moins 10 caractères.";
   }
 
   const basePriceCents = parsePriceCents(
@@ -314,6 +320,8 @@ export function parseProductUpdateFormData(formData: FormData): ProductUpdateInp
     ...input,
     id,
     deletedImageIds,
+    imageOrder: formData.has("imageOrderPresent") ? formData.getAll("imageOrder").map(value => typeof value === "string" ? value.trim() : "") : undefined,
+    coverImageId: readText(formData, "coverImageId") || undefined,
     preservePrices: formData.get("preservePrices") === "on"
   };
 }

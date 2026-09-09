@@ -49,6 +49,7 @@ export default async function EditAdminProductPage({
             errorMessage={paramsValue.error}
             existingImages={product.images}
             productId={product.id}
+            baseModelName={product.baseProduct?.name}
             submitLabel="Enregistrer les modifications"
           />
         </div>

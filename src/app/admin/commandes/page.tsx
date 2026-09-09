@@ -4,10 +4,11 @@ import { AdminOrderCreator } from "@/components/admin/admin-order-creator";
 import { formatMoneyCents } from "@/lib/format";
 import {
   isCatalogPersistenceEnabled,
-  listAdminOrders,
   listAdminProducts
 } from "@/server/catalog/catalog.service";
 import type { AdminOrder, OrderStatus, PaymentStatus } from "@/types/orders";
+import { searchAdminOrders } from "@/server/catalog/search";
+import { Pagination } from "@/components/catalog/pagination";
 
 export const metadata = {
   title: "Admin - Commandes"
@@ -18,6 +19,9 @@ type AdminOrdersPageProps = {
     created?: string;
     error?: string;
     updated?: string;
+    q?: string;
+    status?: string;
+    page?: string;
   }>;
 };
 
@@ -41,9 +45,10 @@ const paymentStatusLabels: Record<PaymentStatus, string> = {
 };
 
 export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageProps) {
-  const [products, orders] = await Promise.all([listAdminProducts(), listAdminOrders()]);
   const params = searchParams ? await searchParams : {};
   const canPersist = isCatalogPersistenceEnabled() && process.env.KAYART_ENABLE_ORDER_SIMULATOR === "true";
+  const [products, result] = await Promise.all([canPersist ? listAdminProducts() : Promise.resolve([]), searchAdminOrders(params)]);
+  const { orders } = result;
 
   return (
     <section className="section admin-page">
@@ -80,12 +85,15 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
             </div>
           </div>
 
-          {products.length === 0 ? (
+          {canPersist && products.length === 0 ? (
             <p className="admin-panel__note">
               Aucun produit n'est disponible pour créer une commande factice.
             </p>
           ) : null}
 
+          <form action="/admin/commandes" className="catalog-filters" role="search"><label>Commande, nom ou email<input name="q" type="search" maxLength={120} defaultValue={result.filters.q} /></label><label>Statut<select name="status" defaultValue={result.filters.status}><option value="">Tous</option>{Object.entries(orderStatusLabels).map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select></label><button className="button button--primary">Rechercher</button><Link href="/admin/commandes">Réinitialiser</Link></form>
+          <p>{result.total} commande(s) trouvée(s)</p>
+          <Pagination path="/admin/commandes" {...result} />
           <div className="table-wrap">
             <table className="data-table admin-orders-table">
               <thead>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ProductPrice } from "@/components/catalog/product-price";
 import { productConditionLabels } from "@/lib/catalog";
 import type { Product } from "@/types/catalog";
+import { ProductImageView } from "./product-image";
 
 type ProductCardProps = {
   product: Product;
@@ -16,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <article className={`product-card product-card--${product.condition}`}>
       <div className="product-card__visual">
-        {imageUrl ? <img alt={product.name} src={imageUrl} /> : null}
+        {imageUrl ? <ProductImageView alt={product.name} src={imageUrl} /> : <span className="image-unavailable">Visuel à venir</span>}
       </div>
 
       <div>

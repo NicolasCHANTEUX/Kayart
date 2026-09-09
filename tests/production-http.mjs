@@ -38,6 +38,21 @@ for(const [path,method,status] of [['/api/checkout','POST',503],['/api/stripe/we
 }
 const quote=await fetch(base+'/api/cart/quote',{method:'POST',headers:{origin:base,'Content-Type':'application/json'},body:JSON.stringify({items:[]})});
 assert.equal(quote.status,200);const payload=await quote.json();assert.equal(payload.testCheckoutEnabled,false);assert.equal(payload.shippingZones.length,0);results.push({path:'/api/cart/quote',status:quote.status,paymentDisabled:true,noInventedRate:true});
-fs.mkdirSync('outputs/suite-v1-2026-09-08',{recursive:true});
-fs.writeFileSync('outputs/suite-v1-2026-09-08/http-verification.json',JSON.stringify(results,null,2));
+for (const path of ['/boutique?q=aucun-resultat-fixture-62948','/boutique?q=regression-private-draft']) {
+ const response=await fetch(base+path),body=await response.text();assert.equal(response.status,200);assert.ok(body.includes('Aucun produit ne correspond'));assert.equal(body.includes('PRIVATE_DRAFT_7391'),false);results.push({path,status:response.status,emptySearchSafe:true});
+}
+const filtered=await fetch(base+'/boutique?sort=price-asc&stock=1&page=9999');
+const filteredBody=await filtered.text();assert.equal(filtered.status,200);assert.ok(filteredBody.includes('name="sort"'));assert.ok(filteredBody.includes('Aller au contenu'));results.push({path:'/boutique?sort=price-asc&stock=1&page=9999',status:filtered.status,filtersPresent:true});
+const outputDir=process.env.KAYART_HTTP_REPORT_DIR || 'outputs/suite-v1-2026-09-08';
+const robots=await fetch(base+'/robots.txt'),robotsBody=await robots.text();
+assert.equal(robots.status,200);assert.ok(robotsBody.includes('Disallow: /'));assert.equal(robotsBody.includes('Sitemap:'),false);
+results.push({path:'/robots.txt',status:robots.status,indexingDisabled:true});
+const sitemap=await fetch(base+'/sitemap.xml'),sitemapBody=await sitemap.text();
+assert.equal(sitemap.status,200);assert.equal(sitemapBody.includes('<loc>'),false);
+for(const marker of privateMarkers) assert.equal(sitemapBody.includes(marker),false);
+results.push({path:'/sitemap.xml',status:sitemap.status,noMockOrPrivateUrls:true});
+assert.ok(/name="robots" content="noindex, nofollow"/.test(filteredBody));
+results.push({path:'/boutique',previewNoindexMetadata:true});
+fs.mkdirSync(outputDir,{recursive:true});
+fs.writeFileSync(outputDir+'/http-verification.json',JSON.stringify(results,null,2));
 console.log('Production HTTP checks passed:',results.length,'checks plus retired endpoint (410).');

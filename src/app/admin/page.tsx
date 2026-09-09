@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { listAdminOrders, listAdminProducts } from "@/server/catalog/catalog.service";
+import { getAdminOverview } from "@/server/catalog/overview";
 
 export const metadata = {
   title: "Administration"
 };
 
 export default async function AdminPage() {
-  const [products, orders] = await Promise.all([listAdminProducts(), listAdminOrders()]);
+  const overview = await getAdminOverview();
 
   return (
     <section className="section admin-page">
@@ -22,17 +22,17 @@ export default async function AdminPage() {
           <Link className="feature-card" href="/admin/produits">
             <div className="meta">Catalogue</div>
             <h3>Produits</h3>
-            <p>{products.length} éléments disponibles dans la source catalogue actuelle.</p>
+            <p>{overview.products} éléments disponibles dans la source catalogue actuelle.</p>
           </Link>
           <Link className="feature-card" href="/admin/commandes">
             <div className="meta">Commandes</div>
             <h3>Commandes</h3>
-            <p>{orders.length} commandes affichées. Les simulations de test ne modifient pas le stock.</p>
+            <p>{overview.orders} commandes au total, dont {overview.testOrders} en mode test. Le checkout de test réserve le stock.</p>
           </Link>
           <Link className="feature-card" href="/admin/demandes">
             <div className="meta">Demandes</div>
             <h3>Demandes clients</h3>
-            <p>Consultez les messages, diagnostics de réparation et projets sur mesure, puis suivez leur traitement.</p>
+            <p>{overview.openRequests} demandes nouvelles ou en cours : messages, réparations et projets sur mesure.</p>
           </Link>
         </div>
       </div>

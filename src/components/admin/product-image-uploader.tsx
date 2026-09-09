@@ -16,6 +16,7 @@ type ProductImageUploaderProps = {
   emptyHint?: string;
   hint?: string;
   title?: string;
+  maxFiles?: number;
 };
 
 const maxImageCount = 6;
@@ -24,6 +25,7 @@ const acceptedImageTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"
 
 export function ProductImageUploader({
   disabled = false,
+  maxFiles = 6,
   emptyHint = "Aucune image sélectionnée. La première image pourra devenir la couverture.",
   hint = "ou cliquer pour ajouter jusqu'à 6 fichiers de 4 Mo maximum",
   title = "Glisser les images ici"
@@ -32,6 +34,7 @@ export function ProductImageUploader({
   const imagesRef = useRef<PreviewImage[]>([]);
   const coverIndexRef = useRef(0);
   const disabledRef = useRef(disabled);
+  const maxFilesRef = useRef(maxFiles);
   const isDirectUploadReadyRef = useRef(false);
   const isUploadingRef = useRef(false);
   const [images, setImages] = useState<PreviewImage[]>([]);
@@ -53,6 +56,8 @@ export function ProductImageUploader({
     disabledRef.current = disabled;
   }, [disabled]);
 
+  useEffect(() => { maxFilesRef.current = maxFiles; }, [maxFiles]);
+
   useEffect(() => {
     const form = inputRef.current?.form;
 
@@ -73,6 +78,13 @@ export function ProductImageUploader({
       }
 
       const currentImages = imagesRef.current;
+
+      if (currentImages.length > maxFilesRef.current) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        setUploadError("Six images maximum au total. Retirez une image avant d’enregistrer.");
+        return;
+      }
 
       if (currentImages.length === 0) {
         return;
@@ -107,7 +119,7 @@ export function ProductImageUploader({
   }, []);
 
   function addFiles(files: File[]) {
-    const availableSlots = Math.max(maxImageCount - images.length, 0);
+    const availableSlots = Math.max(Math.min(maxImageCount, maxFiles) - images.length, 0);
     const imageFiles = files.filter((file) => acceptedImageTypes.includes(file.type));
     const hasRejectedFile = files.some((file) => !acceptedImageTypes.includes(file.type));
     const hasOversizedFile = imageFiles.some((file) => file.size > maxImageSizeBytes);
@@ -120,6 +132,8 @@ export function ProductImageUploader({
       setUploadError("Seuls les fichiers JPG, PNG, WebP ou GIF sont acceptés.");
     } else if (hasOversizedFile) {
       setUploadError("Chaque image doit faire 4 Mo maximum.");
+    } else if (imageFiles.length > availableSlots) {
+      setUploadError("Six images maximum au total, images déjà enregistrées comprises.");
     } else {
       setUploadError(null);
     }
@@ -189,6 +203,16 @@ export function ProductImageUploader({
 
       return current;
     });
+  }
+
+  function moveImage(index: number, direction: number) {
+    const target = index + direction;
+    if (target < 0 || target >= images.length) return;
+    const reordered = [...images];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    syncInputFiles(reordered);
+    setImages(reordered);
+    setCoverIndex(current => current === index ? target : current === target ? index : current);
   }
 
   function syncInputFiles(nextImages: PreviewImage[]) {
@@ -279,6 +303,10 @@ export function ProductImageUploader({
                 <span>Retirer l'image</span>
               </button>
               <p>{image.name}</p>
+              <div className="actions-row">
+                <button type="button" disabled={isDisabled || index === 0} aria-label={`Avancer ${image.name}`} onClick={() => moveImage(index, -1)}>Avancer</button>
+                <button type="button" disabled={isDisabled || index === images.length - 1} aria-label={`Reculer ${image.name}`} onClick={() => moveImage(index, 1)}>Reculer</button>
+              </div>
             </div>
           ))}
         </div>

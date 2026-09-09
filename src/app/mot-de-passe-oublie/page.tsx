@@ -3,6 +3,7 @@ import { passwordRecoveryAction } from "@/app/mot-de-passe-oublie/actions";
 import { AuthSubmitButton } from "@/components/auth/auth-submit-button";
 
 export const metadata = {
+  robots: { index: false, follow: false },
   title: "Mot de passe oublié"
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 type PasswordResetFormProps = {
   supabasePublishableKey: string;
@@ -13,11 +13,16 @@ export function PasswordResetForm({ supabasePublishableKey, supabaseUrl }: Passw
   const [errorMessage, setErrorMessage] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const recoveryRead = useRef(false);
 
   useEffect(() => {
+    if (recoveryRead.current) return;
+    recoveryRead.current = true;
     const params = new URLSearchParams(window.location.hash.replace(/^#/u, "") || window.location.search);
     const urlError = params.get("error_description") ?? params.get("error");
     const token = params.get("access_token") ?? "";
+    // Remove recovery credentials from browser history immediately, including error paths.
+    window.history.replaceState({}, document.title, "/nouveau-mot-de-passe");
 
     if (urlError) {
       setErrorMessage(urlError);
@@ -46,7 +51,7 @@ export function PasswordResetForm({ supabasePublishableKey, supabaseUrl }: Passw
       return;
     }
 
-    if (password.length < 8) {
+    if (password.length < 8 || !password.trim()) {
       setErrorMessage("Le mot de passe doit contenir au moins 8 caractères.");
       return;
     }
@@ -75,6 +80,7 @@ export function PasswordResetForm({ supabasePublishableKey, supabaseUrl }: Passw
       }
 
       setIsSuccess(true);
+      setAccessToken("");
       window.history.replaceState({}, document.title, "/nouveau-mot-de-passe");
     } catch (error) {
       setErrorMessage("Impossible de modifier le mot de passe pour le moment.");

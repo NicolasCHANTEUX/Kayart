@@ -22,6 +22,7 @@ type ProductFormProps = {
   errorMessage?: string;
   existingImages?: ProductImage[];
   productId?: string;
+  baseModelName?: string;
   submitLabel?: string;
 };
 
@@ -43,6 +44,7 @@ export function ProductForm({
   errorMessage,
   existingImages = [],
   productId,
+  baseModelName,
   submitLabel = "Enregistrer"
 }: ProductFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -57,12 +59,24 @@ export function ProductForm({
   const [autoSku, setAutoSku] = useState(
     !defaultValues?.sku || defaultValues.sku === skuFromName(defaultValues.name ?? "")
   );
+  const [condition, setCondition] = useState(defaultValues?.condition ?? "");
+  const [imageOrder, setImageOrder] = useState(() => [...existingImages].sort((a, b) => a.position - b.position).map(image => image.id));
+  const [selectedCover, setSelectedCover] = useState(existingImages.find(image => image.isPrimary)?.id ?? "");
   const [deletedImageIds, setDeletedImageIds] = useState<string[]>([]);
   const [unlockedStep, setUnlockedStep] = useState(0);
   const [stepError, setStepError] = useState<string | null>(null);
   const isReadyToSubmit = canPersist && unlockedStep === steps.length - 1;
   const salePreview = getSalePreview(basePrice, discountPercent);
-  const visibleExistingImages = existingImages.filter((image) => !deletedImageIds.includes(image.id));
+  const visibleExistingImages = imageOrder.flatMap(id => { const image = existingImages.find(image => image.id === id); return image && !deletedImageIds.includes(id) ? [image] : []; });
+  const coverImageId = selectedCover === "new" || visibleExistingImages.some(image => image.id === selectedCover) ? selectedCover : visibleExistingImages[0]?.id ?? "";
+
+  function moveImage(id: string, direction: number) {
+    const ids = visibleExistingImages.map(image => image.id);
+    const index = ids.indexOf(id), target = index + direction;
+    if (target < 0 || target >= ids.length) return;
+    [ids[index], ids[target]] = [ids[target], ids[index]];
+    setImageOrder([...ids, ...imageOrder.filter(value => !ids.includes(value))]);
+  }
 
   useEffect(() => {
     refreshUnlockState();
@@ -158,6 +172,8 @@ export function ProductForm({
       {errorMessage ? <p className="form-notice form-notice--error">{errorMessage}</p> : null}
       {stepError ? <p className="form-notice form-notice--error">{stepError}</p> : null}
       {productId ? <input name="id" type="hidden" value={productId} /> : null}
+      {baseModelName ? <p>Modèle d’origine : <strong>{baseModelName}</strong></p> : null}
+      {productId ? <><input name="imageOrderPresent" type="hidden" value="1" /><input name="coverImageId" type="hidden" value={coverImageId} />{visibleExistingImages.map(image => <input key={image.id} name="imageOrder" type="hidden" value={image.id} />)}</> : null}
       <label>Transport du produit<select name="deliveryMode" defaultValue={defaultValues?.deliveryMode ?? "quote"}><option value="quote">Transport sur devis / retrait atelier</option><option value="pickupOnly">Retrait atelier uniquement</option><option value="shippable">Expédiable avec les tarifs configurés</option></select></label>
       {productId && basePrice === (defaultValues?.basePrice ?? "") && discountPercent === (defaultValues?.discountPercent ?? "") ? (
         <input name="preservePrices" type="hidden" value="on" />
@@ -243,7 +259,7 @@ export function ProductForm({
         <div className="form-grid">
           <label>
             Type
-            <select name="condition" defaultValue={defaultValues?.condition ?? ""} required>
+            <select name="condition" value={condition} onChange={event => setCondition(event.currentTarget.value)} required>
               <option value="">
                 Choisir un type
               </option>
@@ -374,10 +390,10 @@ export function ProductForm({
             rows={8}
           />
         </label>
-        {defaultValues?.condition === "imperfect" || defaultValues?.condition === "used" ? (
+        {condition === "imperfect" || condition === "used" ? (
           <label>
             État et défauts constatés
-            <textarea name="defectDescription" defaultValue={defaultValues.defectDescription ?? ""} rows={5} />
+            <textarea name="defectDescription" defaultValue={defaultValues?.defectDescription ?? ""} minLength={condition === "imperfect" ? 10 : undefined} required={condition === "imperfect"} rows={5} />
           </label>
         ) : null}
       </fieldset>
@@ -404,8 +420,8 @@ export function ProductForm({
         <legend>Images produit</legend>
         {visibleExistingImages.length > 0 ? (
           <div className="existing-images" aria-label="Images actuelles du produit">
-            {visibleExistingImages.map((image) => (
-              <figure className={image.isPrimary ? "existing-image existing-image--primary" : "existing-image"} key={image.id}>
+            {visibleExistingImages.map((image, index) => (
+              <figure className={coverImageId === image.id ? "existing-image existing-image--primary" : "existing-image"} key={image.id}>
                 <button
                   aria-label="Supprimer cette image"
                   className="existing-image__remove"
@@ -415,12 +431,21 @@ export function ProductForm({
                   {"\u00d7"}
                 </button>
                 <img alt={image.altText ?? ""} src={image.url} />
-                <figcaption>{image.isPrimary ? "Couverture actuelle" : "Image existante"}</figcaption>
+                <figcaption>
+                  <button type="button" className="button button--ghost" aria-pressed={coverImageId === image.id} onClick={() => setSelectedCover(image.id)}>{coverImageId === image.id ? "Couverture" : "Choisir comme couverture"}</button>
+                  <div className="actions-row">
+                    <button type="button" aria-label={`Avancer l'image ${index + 1}`} disabled={index === 0} onClick={() => moveImage(image.id, -1)}>Avancer</button>
+                    <button type="button" aria-label={`Reculer l'image ${index + 1}`} disabled={index === visibleExistingImages.length - 1} onClick={() => moveImage(image.id, 1)}>Reculer</button>
+                  </div>
+                </figcaption>
               </figure>
             ))}
           </div>
         ) : null}
-        <ProductImageUploader disabled={isStepLocked(5)} />
+        {deletedImageIds.length ? <button type="button" className="button button--ghost" onClick={() => setDeletedImageIds([])}>Annuler les retraits d'images</button> : null}
+        {productId ? <label><input type="checkbox" checked={coverImageId === "new"} onChange={event => setSelectedCover(event.currentTarget.checked ? "new" : visibleExistingImages[0]?.id ?? "")} />Utiliser une nouvelle image comme couverture (choisir son étoile ci-dessous)</label> : null}
+        <p>{visibleExistingImages.length} image(s) conservée(s), six images maximum au total. Les changements seront appliqués à l'enregistrement.</p>
+        <ProductImageUploader disabled={isStepLocked(5)} maxFiles={6 - visibleExistingImages.length} />
       </fieldset>
 
       <div className="form-actions">

@@ -33,6 +33,15 @@ type SupabaseErrorResponse = {
 export class AuthConfigurationError extends Error {}
 export class AuthCredentialsError extends Error {}
 
+export async function revokePasswordSession(accessToken: string) {
+  const { apiKey, authUrl } = getSupabaseAuthConfig();
+  const response = await fetch(`${authUrl}/logout?scope=local`, {
+    method: "POST", cache: "no-store", signal: AbortSignal.timeout(5000),
+    headers: { apikey: apiKey, Authorization: `Bearer ${accessToken}` }
+  });
+  if (!response.ok && response.status !== 401 && response.status !== 403) throw new Error("Session revocation unavailable.");
+}
+
 export async function signUpWithPassword(email: string, password: string): Promise<AuthenticatedUser> {
   const { apiKey, authUrl } = getSupabaseAuthConfig();
   const response = await fetch(`${authUrl}/signup`, {

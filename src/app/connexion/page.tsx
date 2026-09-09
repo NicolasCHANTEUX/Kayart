@@ -6,6 +6,7 @@ import { AuthSubmitButton } from "@/components/auth/auth-submit-button";
 import { getCurrentAuthSession } from "@/server/auth/session";
 
 export const metadata = {
+  robots: { index: false, follow: false },
   title: "Connexion"
 };
 

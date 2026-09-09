@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { getIndexableOrigin } from "@/config/seo";
 import { AddToCart } from "@/components/cart/add-to-cart";
 import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/catalog/product-gallery";
@@ -15,7 +17,7 @@ type ProductPageProps = {
 // Visibility, reservations and stock must be checked on every request.
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: ProductPageProps) {
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await findProductBySlug(slug);
 
@@ -23,9 +25,18 @@ export async function generateMetadata({ params }: ProductPageProps) {
     return {};
   }
 
+  const origin = getIndexableOrigin();
+  const url = origin ? `${origin}/boutique/${encodeURIComponent(product.slug)}` : undefined;
+  const description = product.shortDescription || product.description;
   return {
     title: product.name,
-    description: product.shortDescription || product.description
+    description,
+    ...(url ? { alternates: { canonical: url } } : {}),
+    openGraph: {
+      title: product.name, description, siteName: "KayArt", type: "website", locale: "fr_FR",
+      ...(url ? { url } : {}),
+      ...(product.primaryImageUrl ? { images: [{ url: product.primaryImageUrl, alt: product.name }] } : {})
+    }
   };
 }
 
@@ -41,15 +52,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const model = product.baseProduct;
   const modelImages = model?.images ?? [];
   const defectImages = isImperfect ? product.images : [];
-  const galleryImages = isImperfect && modelImages.length > 0 ? modelImages : product.images;
-  const description = isImperfect && model ? model.description : product.description;
+  const galleryImages = product.images.length > 0 ? product.images : modelImages;
+  const description = product.description || model?.description || "";
   const discountPercent = getDiscountPercent(product);
   const primaryAction = getPrimaryAction(product);
 
   return (
     <section className="section product-detail-section">
       <div className="container product-detail-layout">
-        <ProductGallery images={galleryImages} title={isImperfect && model ? model.name : product.name} />
+        <ProductGallery images={galleryImages} title={product.name} />
 
         <article className="product-summary-card">
           <div className="product-badges" aria-label="Informations rapides">

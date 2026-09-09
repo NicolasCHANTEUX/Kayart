@@ -24,6 +24,8 @@ import { getPrismaClient } from "@/server/db/prisma";
 import type { Category, Product } from "@/types/catalog";
 import type { AdminOrder } from "@/types/orders";
 import { isFictiveAdminOrder, requireOrderSimulator } from "@/server/catalog/order-safety";
+import { planProductImages } from "./product-image-plan";
+import { ProductFormError } from "./catalog.input";
 
 export type CatalogRepository = {
   listCategories(): Promise<Category[]>;
@@ -55,7 +57,7 @@ const productCoreInclude = {
   }
 } satisfies Prisma.ProductInclude;
 
-const productInclude = {
+export const productInclude = {
   ...productCoreInclude,
   baseProduct: {
     include: productCoreInclude
@@ -356,11 +358,23 @@ export const prismaCatalogRepository: CatalogRepository = {
       }
 
       const imagesToDelete = existing.images.filter((image) => input.deletedImageIds.includes(image.id));
+      const imagePlan = planProductImages(existing.images, input);
+      if (existing.condition === "imperfect" || input.condition === "imperfect") {
+        if (existing.condition !== input.condition || (input.baseProductId !== undefined && input.baseProductId !== existing.baseProductId)) {
+          throw new ProductFormError({ condition: "Le type et le modèle d’origine d’un imparfait doivent être conservés." });
+        }
+        const defect = input.defectDescription === undefined ? existing.defectDescription : input.defectDescription;
+        if (!defect || defect.trim().length < 10) throw new ProductFormError({ defectDescription: "Décrivez le défaut en au moins 10 caractères." });
+        if (!imagePlan.existing.length && !imagePlan.added.length) throw new ProductFormError({ images: "Conservez au moins une photo du défaut constaté." });
+        const price = input.preservePrices ? existing.priceCents : input.priceCents;
+        const reference = input.preservePrices ? existing.compareAtPriceCents : input.compareAtPriceCents;
+        if (price === null || reference === null || price <= 0 || price >= reference) throw new ProductFormError({ basePrice: "Un imparfait doit conserver un prix positif inférieur à son prix de référence." });
+      }
 
-      const remainingImages = existing.images.filter((image) => !input.deletedImageIds.includes(image.id));
-      const hasPrimaryImage = remainingImages.some((image) => image.isPrimary);
-      if (remainingImages.length + input.images.length > 6) {
-        throw new Error("Un produit peut recevoir 6 images maximum, images conservées comprises.");
+      // Demote before promotion to respect the unique primary-image index.
+      if (existing.images.length) await tx.productImage.updateMany({ where: { productId: input.id }, data: { isPrimary: false } });
+      for (const image of imagePlan.existing) {
+        await tx.productImage.updateMany({ where: { id: image.id, productId: input.id }, data: { position: image.position, isPrimary: image.isPrimary } });
       }
 
       if (imagesToDelete.length > 0) {
@@ -399,9 +413,9 @@ export const prismaCatalogRepository: CatalogRepository = {
           images:
             input.images.length > 0
               ? {
-                  create: input.images.map((image, index) => ({
-                    isPrimary: hasPrimaryImage ? false : image.isPrimary,
-                    position: remainingImages.length + index,
+                  create: imagePlan.added.map((image) => ({
+                    isPrimary: image.isPrimary,
+                    position: image.position,
                     mediaAsset: {
                       create: {
                         altText: image.altText,

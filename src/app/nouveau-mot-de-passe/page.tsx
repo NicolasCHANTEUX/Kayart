@@ -1,6 +1,7 @@
 import { PasswordResetForm } from "@/app/nouveau-mot-de-passe/password-reset-form";
 
 export const metadata = {
+  robots: { index: false, follow: false },
   title: "Nouveau mot de passe"
 };
 

@@ -1,14 +1,11 @@
-"use client";
-
-import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductPrice } from "@/components/catalog/product-price";
 import { productAvailabilityLabels, productConditionLabels } from "@/lib/catalog";
 import { formatStock } from "@/lib/format";
 import type { Product } from "@/types/catalog";
 import { ProductRowActions } from "./product-row-actions";
 
-const PAGE_SIZE = 10;
-const LOAD_MORE_DELAY_MS = 180;
+import { stockCategory } from "@/lib/product-stock";
+import { ProductImageView } from "@/components/catalog/product-image";
 
 type ProductTableProps = {
   canPersist: boolean;
@@ -16,42 +13,6 @@ type ProductTableProps = {
 };
 
 export function ProductTable({ canPersist, products }: ProductTableProps) {
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const timeoutRef = useRef<number | null>(null);
-  const productsKey = useMemo(() => products.map((product) => product.id).join("|"), [products]);
-  const visibleProducts = products.slice(0, visibleCount);
-  const visibleTotal = Math.min(visibleCount, products.length);
-  const hasMoreProducts = visibleTotal < products.length;
-
-  useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-    setIsLoadingMore(false);
-
-    if (timeoutRef.current) {
-      window.clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-  }, [productsKey]);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  function handleLoadMore() {
-    setIsLoadingMore(true);
-
-    timeoutRef.current = window.setTimeout(() => {
-      setVisibleCount((currentCount) => Math.min(currentCount + PAGE_SIZE, products.length));
-      setIsLoadingMore(false);
-      timeoutRef.current = null;
-    }, LOAD_MORE_DELAY_MS);
-  }
-
   return (
     <>
       <div className="table-wrap">
@@ -68,7 +29,7 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
             </tr>
           </thead>
           <tbody>
-            {visibleProducts.map((product) => {
+            {products.map((product) => {
               const isHidden = !product.publishedAt || product.availability === "unavailable" || product.availability === "archived";
 
               return (
@@ -79,7 +40,7 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
                   <td data-label="Produit">
                     <div className="admin-product-cell">
                       <div className="admin-product-thumb">
-                        {product.primaryImageUrl ? <img alt="" src={product.primaryImageUrl} /> : <span>Sans image</span>}
+                        <ProductImageView alt={product.name} src={product.primaryImageUrl} />
                       </div>
                       <div>
                         <strong>{product.name}</strong>
@@ -121,31 +82,13 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
         </table>
       </div>
 
-      {products.length > PAGE_SIZE ? (
-        <div className="product-pagination" aria-live="polite">
-          <span>
-            {visibleTotal} sur {products.length} produits affichés
-          </span>
-          {hasMoreProducts ? (
-            <button className="button button--ghost product-pagination__button" disabled={isLoadingMore} onClick={handleLoadMore} type="button">
-              {isLoadingMore ? (
-                <>
-                  <span className="loading-spinner" aria-hidden="true" />
-                  Chargement...
-                </>
-              ) : (
-                "Afficher 10 de plus"
-              )}
-            </button>
-          ) : null}
-        </div>
-      ) : null}
+
     </>
   );
 }
 
 function getStockTone(product: Product) {
-  const filter = getStockFilter(product);
+  const filter = stockCategory(product);
 
   if (filter === "out") {
     return "out";
@@ -160,24 +103,4 @@ function getStockTone(product: Product) {
   }
 
   return "neutral";
-}
-
-function getStockFilter(product: Product) {
-  if (product.condition === "service") {
-    return "service";
-  }
-
-  if (product.availability === "made-to-order" || product.stockQuantity === null) {
-    return "made-to-order";
-  }
-
-  if (product.stockQuantity === 0) {
-    return "out";
-  }
-
-  if (product.stockQuantity <= 5) {
-    return "low";
-  }
-
-  return "available";
 }

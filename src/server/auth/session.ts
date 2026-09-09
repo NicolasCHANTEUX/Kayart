@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getPrismaClient } from "@/server/db/prisma";
 import type { AuthenticatedSession, AuthenticatedUser, UserRole } from "@/types/auth";
-import { getSupabaseAuthUser } from "./supabase-auth";
+import { getSupabaseAuthUser, revokePasswordSession } from "./supabase-auth";
 
 type PasswordSessionCookieInput = {
   accessToken: string;
@@ -37,8 +37,12 @@ export async function persistPasswordSession(session: PasswordSessionCookieInput
 export async function clearPasswordSession() {
   const cookieStore = await cookies();
   const secure = process.env.NODE_ENV === "production";
+  const token = cookieStore.get(accessTokenCookieName)?.value;
+  try { if (token) await revokePasswordSession(token); }
+  catch { console.warn("Supabase session revocation unavailable; local cookies will still be cleared."); }
 
   cookieStore.set(accessTokenCookieName, "", {
+    httpOnly: true,
     maxAge: 0,
     path: "/",
     sameSite: "lax",
@@ -46,6 +50,7 @@ export async function clearPasswordSession() {
   });
 
   cookieStore.set(refreshTokenCookieName, "", {
+    httpOnly: true,
     maxAge: 0,
     path: "/",
     sameSite: "lax",

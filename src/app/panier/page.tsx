@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CartPage as Cart } from "@/components/cart/cart-page";
 export const metadata = {
+  robots: { index: false, follow: false },
   title: "Panier",
   description: "Panier KayArt."
 };
