@@ -15,7 +15,7 @@
 @media(max-width:540px) {
  .shell:has(.home-page)::before { filter:blur(18px); }
 }
-.atelier-hero { border-bottom:1px solid var(--line); overflow:hidden; background:var(--paper); }
+.atelier-hero { overflow:hidden; background:var(--paper); }
 .atelier-hero__grid { display:grid; grid-template-columns:1.1fr 1fr; min-height:clamp(480px,64svh,640px); }
 .atelier-hero__copy { padding:48px 32px 40px 0; justify-content:center; display:flex; flex-direction:column; align-items:flex-start; position:relative; z-index:1; color:#fff; }
 .atelier-hero__copy .eyebrow { color:#fff; }
