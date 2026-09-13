@@ -1,0 +1,1178 @@
+[
+  {
+    "width": 320,
+    "query": "",
+    "scrollWidth": 320,
+    "rows": [
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signatureKAY-PAG-SIGNATURE",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pagaies",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Neuf",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Sur devis",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-0/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 125.375,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signature - ImparfaitKAY-PAG-IMP-001",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Imparfaits",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 125.375,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Diagnostic réparation carboneKAY-SRV-REPAIR",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Réparation",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Demande en ligne",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-2/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 320,
+    "query": "?stress=1",
+    "scrollWidth": 320,
+    "rows": [
+      {
+        "height": 208.0625,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie de comp?tition carbone avec manche ergonomique renforc?REFERENCE-PRODUIT-EXCEPTIONNELLEMENT-LONGUE-12345678901234567890",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pi?ces de r?paration et accessoires",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 320,
+    "query": "?empty=1",
+    "scrollWidth": 320,
+    "rows": [],
+    "empty": "Aucun produit ne correspond aux filtres.",
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 360,
+    "query": "",
+    "scrollWidth": 360,
+    "rows": [
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signatureKAY-PAG-SIGNATURE",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pagaies",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Neuf",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Sur devis",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-0/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 125.375,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signature - ImparfaitKAY-PAG-IMP-001",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Imparfaits",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Diagnostic réparation carboneKAY-SRV-REPAIR",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Réparation",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Demande en ligne",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-2/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 360,
+    "query": "?stress=1",
+    "scrollWidth": 360,
+    "rows": [
+      {
+        "height": 178.5625,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie de comp?tition carbone avec manche ergonomique renforc?REFERENCE-PRODUIT-EXCEPTIONNELLEMENT-LONGUE-12345678901234567890",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pi?ces de r?paration et accessoires",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 360,
+    "query": "?empty=1",
+    "scrollWidth": 360,
+    "rows": [],
+    "empty": "Aucun produit ne correspond aux filtres.",
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 390,
+    "query": "",
+    "scrollWidth": 390,
+    "rows": [
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signatureKAY-PAG-SIGNATURE",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pagaies",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Neuf",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Sur devis",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-0/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signature - ImparfaitKAY-PAG-IMP-001",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Imparfaits",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Diagnostic réparation carboneKAY-SRV-REPAIR",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Réparation",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Demande en ligne",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-2/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 390,
+    "query": "?stress=1",
+    "scrollWidth": 390,
+    "rows": [
+      {
+        "height": 149.375,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie de comp?tition carbone avec manche ergonomique renforc?REFERENCE-PRODUIT-EXCEPTIONNELLEMENT-LONGUE-12345678901234567890",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pi?ces de r?paration et accessoires",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 390,
+    "query": "?empty=1",
+    "scrollWidth": 390,
+    "rows": [],
+    "empty": "Aucun produit ne correspond aux filtres.",
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 540,
+    "query": "",
+    "scrollWidth": 540,
+    "rows": [
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signatureKAY-PAG-SIGNATURE",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pagaies",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Neuf",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Sur devis",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-0/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signature - ImparfaitKAY-PAG-IMP-001",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Imparfaits",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Diagnostic réparation carboneKAY-SRV-REPAIR",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Réparation",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Demande en ligne",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-2/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 540,
+    "query": "?stress=1",
+    "scrollWidth": 540,
+    "rows": [
+      {
+        "height": 138.375,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie de comp?tition carbone avec manche ergonomique renforc?REFERENCE-PRODUIT-EXCEPTIONNELLEMENT-LONGUE-12345678901234567890",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pi?ces de r?paration et accessoires",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 540,
+    "query": "?empty=1",
+    "scrollWidth": 540,
+    "rows": [],
+    "empty": "Aucun produit ne correspond aux filtres.",
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 720,
+    "query": "",
+    "scrollWidth": 705,
+    "rows": [
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signatureKAY-PAG-SIGNATURE",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pagaies",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Neuf",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Sur devis",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-0/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signature - ImparfaitKAY-PAG-IMP-001",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Imparfaits",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      },
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Diagnostic réparation carboneKAY-SRV-REPAIR",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Réparation",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Demande en ligne",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-2/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 720,
+    "query": "?stress=1",
+    "scrollWidth": 705,
+    "rows": [
+      {
+        "height": 121,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie de comp?tition carbone avec manche ergonomique renforc?REFERENCE-PRODUIT-EXCEPTIONNELLEMENT-LONGUE-12345678901234567890",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pi?ces de r?paration et accessoires",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 44,
+        "triggerWidth": 44
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 720,
+    "query": "?empty=1",
+    "scrollWidth": 705,
+    "rows": [],
+    "empty": "Aucun produit ne correspond aux filtres.",
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 1440,
+    "query": "",
+    "scrollWidth": 1425,
+    "rows": [
+      {
+        "height": 83,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signatureKAY-PAG-SIGNATURE",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pagaies",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Neuf",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Sur devis",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-0/modifier",
+        "triggerHeight": 38,
+        "triggerWidth": 38
+      },
+      {
+        "height": 84.6875,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie carbone signature - ImparfaitKAY-PAG-IMP-001",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Imparfaits",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 38,
+        "triggerWidth": 38
+      },
+      {
+        "height": 83,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Diagnostic réparation carboneKAY-SRV-REPAIR",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Réparation",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Disponible",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "Demande en ligne",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "Service",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-2/modifier",
+        "triggerHeight": 38,
+        "triggerWidth": 38
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 1440,
+    "query": "?stress=1",
+    "scrollWidth": 1425,
+    "rows": [
+      {
+        "height": 110.1875,
+        "columns": [
+          {
+            "label": "Produit",
+            "text": "Pagaie de comp?tition carbone avec manche ergonomique renforc?REFERENCE-PRODUIT-EXCEPTIONNELLEMENT-LONGUE-12345678901234567890",
+            "visible": true
+          },
+          {
+            "label": "Catégorie",
+            "text": "Pi?ces de r?paration et accessoires",
+            "visible": true
+          },
+          {
+            "label": "Type",
+            "text": "Imparfait",
+            "visible": true
+          },
+          {
+            "label": "Statut",
+            "text": "Sur commande",
+            "visible": true
+          },
+          {
+            "label": "Prix",
+            "text": "85,00 €100,00 €-15%",
+            "visible": true
+          },
+          {
+            "label": "Stock",
+            "text": "1 pièce",
+            "visible": true
+          },
+          {
+            "label": "Actions",
+            "text": "...",
+            "visible": true
+          }
+        ],
+        "href": "/admin/produits/ui-product-1/modifier",
+        "triggerHeight": 38,
+        "triggerWidth": 38
+      }
+    ],
+    "favicon": "/favicon.ico"
+  },
+  {
+    "width": 1440,
+    "query": "?empty=1",
+    "scrollWidth": 1425,
+    "rows": [],
+    "empty": "Aucun produit ne correspond aux filtres.",
+    "favicon": "/favicon.ico"
+  }
+]

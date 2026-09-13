@@ -24,6 +24,8 @@
 .admin-overview__note { margin:12px 0 0; font-size:12px; color:var(--metal); }
 .admin-page .data-table th { background:var(--fiber); font-size:10px; text-transform:uppercase; letter-spacing:.07em; }
 .admin-page .data-table td { font-size:12px; padding-block:12px; }
+.admin-product-identity { display:flex; flex-direction:column; justify-content:center; min-width:0; min-height:44px; }
+.admin-product-identity:hover strong { text-decoration:underline; text-underline-offset:3px; }
 .admin-page .admin-filters { border-radius:6px; background:var(--fiber); }
 .admin-page .form-stage { border-radius:4px; box-shadow:none; }
 .list-pagination { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; }
