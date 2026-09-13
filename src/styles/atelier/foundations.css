@@ -1,5 +1,6 @@
 /* Compact interface: readable text, short sections, consistent controls. */
 :root { --carbon:#151720; --primary:#151720; --ivory:#f7f7f9; --paper:#fff; --fiber:#eeeff4; --metal:#555a6a; --accent:#105bc6; --sea:#105bc6; --yellow:#ffd500; --red:#c80703; --purple:#883a7d; --line:#dfe1e8; --max:1280px; }
+:root { --brand-stripe:linear-gradient(110deg,var(--accent) 0 35%,var(--yellow) 35% 55%,var(--red) 55% 73%,var(--purple) 73%); }
 html, body { background:var(--ivory); color:var(--carbon); }
 body { font-size:14px; -webkit-font-smoothing:antialiased; }
 ::selection { background:var(--yellow); color:var(--carbon); }

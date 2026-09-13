@@ -1,0 +1,350 @@
+[
+  {
+    "name": "hero",
+    "width": 320,
+    "scrollWidth": 320,
+    "scrollY": 0,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "collection",
+    "width": 320,
+    "scrollWidth": 320,
+    "scrollY": 551,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "manifesto-footer",
+    "width": 320,
+    "scrollWidth": 320,
+    "scrollY": 1700,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "hero",
+    "width": 390,
+    "scrollWidth": 390,
+    "scrollY": 0,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "collection",
+    "width": 390,
+    "scrollWidth": 390,
+    "scrollY": 518,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "manifesto-footer",
+    "width": 390,
+    "scrollWidth": 390,
+    "scrollY": 1536,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "hero",
+    "width": 768,
+    "scrollWidth": 753,
+    "scrollY": 0,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "collection",
+    "width": 768,
+    "scrollWidth": 753,
+    "scrollY": 436,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "manifesto-footer",
+    "width": 768,
+    "scrollWidth": 753,
+    "scrollY": 1249,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "hero",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "scrollY": 0,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "collection",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "scrollY": 572,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  },
+  {
+    "name": "manifesto-footer",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "scrollY": 1260,
+    "panels": [
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      },
+      {
+        "background": "rgb(247, 247, 249)",
+        "opacity": "1"
+      }
+    ],
+    "footerBackground": "rgb(21, 23, 32)",
+    "footerBrand": "rgb(255, 255, 255)",
+    "heroStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "footerStripe": {
+      "height": "4px",
+      "gradient": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+    },
+    "photograph": "url(\"http://localhost:3000/brand/Emile_photo_principale.png\")",
+    "minimumTextContrast": 8.140278285749018,
+    "failures": []
+  }
+]

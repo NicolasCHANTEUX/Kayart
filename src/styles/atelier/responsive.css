@@ -36,6 +36,8 @@
  .admin-page .container { width:calc(100% - 32px); } .craft-grid { gap:16px; }
 }
 @media (max-width:540px) {
+ .home-page .collection-section,.home-page .atelier-manifesto { padding:16px 0; }
+ .home-content-panel { padding:16px 14px; }
  .section { padding:24px 0; } .account-link { font-size:11px; } .site-header .header-actions { gap:10px; }
  .atelier-hero__grid { grid-template-columns:1fr; position:relative; min-height:0; }
  .atelier-hero__copy { padding:28px 0 20px; }

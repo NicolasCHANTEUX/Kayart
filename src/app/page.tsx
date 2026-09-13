@@ -16,7 +16,7 @@ export default async function HomePage() {
       </div>
       <div className="atelier-hero__visual" aria-hidden="true"><KayartHeroMark/><span className="visual-index">KAYAK / ART / COMPOSITE / SPORT</span><div className="visual-caption"><span className="racing-wordmark">KAYART</span><span className="visual-caption__tagline">À L’ATELIER.<br/>SUR L’EAU.</span></div></div>
     </div></section>
-    <section className="section collection-section"><div className="container">
+    <section className="section collection-section"><div className="container home-content-panel">
       <div className="section__header"><div><div className="eyebrow">01 / La sélection</div><h2>Prêtes pour la suite.</h2></div><div><p>Pièces neuves, imparfaites et services atelier.</p><Link className="text-link" href="/boutique">Toute la boutique <span aria-hidden="true">↗</span></Link></div></div>
       {products.length ? <div className="grid product-grid">{products.map(product => <ProductCard key={product.id} product={product}/>)}</div> : <div className="collection-empty"><p>Vous recherchez une pièce particulière ? Parlons de votre besoin.</p><Link className="text-link" href="/contact">Contacter l’atelier ↗</Link></div>}
     </div></section>
@@ -26,6 +26,6 @@ export default async function HomePage() {
         <Link href="/sur-mesure" className="service-tile service-tile--custom"><span className="mono">02 — IMAGINER</span><div className="service-cross-art" aria-hidden="true">+</div><h3>À votre mesure.</h3><p>Un usage précis, une forme en tête, une contrainte technique : donnons un point de départ à votre projet.</p><span className="service-tile__cta">Parler de mon projet <b aria-hidden="true">↗</b></span></Link>
       </div>
     </div></section>
-    <section className="section atelier-manifesto"><div className="container"><div className="eyebrow">03 / L’esprit KayArt</div><div className="manifesto-grid"><h2>Le bon matériel <br/>commence par <br/><em>un échange.</em></h2><div><p className="lead">Comprendre votre pratique. Choisir une pièce adaptée. Prendre le temps de discuter des contraintes avant de fabriquer ou de réparer.</p><p>C’est cette relation directe avec l’atelier que vous retrouvez chez KayArt, de la première question au retrait de votre pièce.</p><Link className="button button--ghost" href="/contact">Échanger avec l’atelier ↗</Link></div></div></div></section>
+    <section className="section atelier-manifesto"><div className="container home-content-panel"><div className="eyebrow">03 / L’esprit KayArt</div><div className="manifesto-grid"><h2>Le bon matériel <br/>commence par <br/><em>un échange.</em></h2><div><p className="lead">Comprendre votre pratique. Choisir une pièce adaptée. Prendre le temps de discuter des contraintes avant de fabriquer ou de réparer.</p><p>C’est cette relation directe avec l’atelier que vous retrouvez chez KayArt, de la première question au retrait de votre pièce.</p><Link className="button button--ghost" href="/contact">Échanger avec l’atelier ↗</Link></div></div></div></section>
   </div>;
 }

@@ -11,11 +11,14 @@
  opacity:1;
 }
 .home-page .atelier-hero { background:transparent; }
-.shell:has(.home-page) .site-footer { background:transparent; }
+.home-page .collection-section,.home-page .atelier-manifesto { padding:24px 0; }
+/* Opaque reading surfaces keep contrast stable as the photograph scrolls behind them. */
+.home-content-panel { --metal:#464b59; background:var(--ivory); color:var(--carbon); border:1px solid var(--line); border-radius:6px; padding:24px; }
 @media(max-width:540px) {
  .shell:has(.home-page)::before { filter:blur(18px); }
 }
 .atelier-hero { overflow:hidden; background:var(--paper); }
+.atelier-hero::after { content:""; display:block; height:4px; background:var(--brand-stripe); }
 .atelier-hero__grid { display:grid; grid-template-columns:1.1fr 1fr; min-height:clamp(480px,64svh,640px); }
 .atelier-hero__copy { padding:48px 32px 40px 0; justify-content:center; display:flex; flex-direction:column; align-items:flex-start; position:relative; z-index:1; color:#fff; }
 .atelier-hero__copy .eyebrow { color:#fff; }
@@ -50,7 +53,7 @@
 .product-card__bottom .text-link { border:0; font-size:12px; }
 .product-card .product-price { font-size:16px; }
 .image-unavailable { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-height:100%; background:linear-gradient(125deg,#fff 0 45%,#ebedf4 45% 65%,#f4f4f7 65%); font-size:11px; color:var(--metal); }
-.image-unavailable::after { content:""; position:absolute; bottom:0; left:0; right:0; height:4px; background:linear-gradient(110deg,var(--accent) 0 35%,var(--yellow) 35% 55%,var(--red) 55% 73%,var(--purple) 73%); }
+.image-unavailable::after { content:""; position:absolute; bottom:0; left:0; right:0; height:4px; background:var(--brand-stripe); }
 .unavailable-art { display:block; width:48px; height:48px; flex-shrink:0; }
 .image-unavailable--thumbnail .unavailable-art { width:32px; height:32px; }
 .atelier-services { background:var(--carbon); color:#fff; padding:36px 0; }
@@ -71,16 +74,20 @@
 .manifesto-grid em { color:var(--accent); }
 .manifesto-grid p { color:#000; }
 .manifesto-grid p:not(.lead) { font-size:14px; line-height:1.6; margin-bottom:16px; }
-.site-footer { position:relative; background:#fff; color:var(--carbon); border-top:1px solid var(--line); padding:28px 0 0; }
+.site-footer { position:relative; background:var(--carbon); color:#fff; border-top:0; padding:28px 0 0; }
+.site-footer .brand__name { color:#fff; }
+.site-footer .eyebrow,.site-footer .brand__tagline { color:#bcc1ce; }
+.site-footer a:focus-visible { outline-color:var(--yellow); }
+.site-footer a:hover { color:var(--yellow); }
 .footer-top { display:flex; justify-content:space-between; gap:24px; padding-bottom:24px; }
 .footer-top h2 { font-size:28px; line-height:1.2; margin:0; }
-.footer-top h2 a { color:var(--accent); }
-.footer-top h2 a span { color:var(--accent); }
+.footer-top h2 a { color:var(--yellow); }
+.footer-top h2 a span { color:inherit; }
 .footer-contact { padding-top:12px; display:flex; flex-direction:column; gap:8px; font-size:14px; }
-.footer-contact p { font-size:12px; color:var(--metal); margin:0; }
-.footer-bottom { display:flex; align-items:center; gap:20px; border-top:1px solid var(--line); padding:14px 0; }
+.footer-contact p { font-size:12px; color:#bcc1ce; margin:0; }
+.footer-bottom { display:flex; align-items:center; gap:20px; border-top:1px solid #343745; padding:14px 0; }
 .footer-wordmark { display:flex; align-items:center; gap:8px; }
-.site-footer::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(110deg,var(--accent) 0 35%,var(--yellow) 35% 55%,var(--red) 55% 73%,var(--purple) 73%); }
+.site-footer::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--brand-stripe); }
 .footer-bottom>.mono { font-size:9px; }
 .footer-bottom nav { margin-left:auto; display:flex; flex-wrap:wrap; gap:16px; font-size:12px; }
 .footer-bottom nav a,.footer-contact a { display:inline-flex; align-items:center; min-height:32px; }
