@@ -1,0 +1,1702 @@
+[
+  {
+    "route": "/dashboard",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 844,
+    "overview": {
+      "height": 293.25,
+      "columns": "296px",
+      "cards": [
+        {
+          "height": 65.25,
+          "width": 296,
+          "titleHeight": 21.25,
+          "title": "Livraison et lancement"
+        },
+        {
+          "height": 68,
+          "width": 296,
+          "titleHeight": 21.25,
+          "title": "Produits"
+        },
+        {
+          "height": 68,
+          "width": 296,
+          "titleHeight": 21.25,
+          "title": "Commandes"
+        },
+        {
+          "height": 68,
+          "width": 296,
+          "titleHeight": 21.25,
+          "title": "Demandes clients"
+        }
+      ]
+    },
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [],
+    "menuTargets": []
+  },
+  {
+    "route": "/products",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 1631,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      }
+    ],
+    "productRows": [
+      {
+        "height": 281.609375,
+        "top": 713.078125
+      },
+      {
+        "height": 304.90625,
+        "top": 1002.6875
+      },
+      {
+        "height": 281.296875,
+        "top": 1315.59375
+      }
+    ],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 46
+      },
+      {
+        "font": 16,
+        "height": 45
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      }
+    ],
+    "menuTargets": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ]
+  },
+  {
+    "route": "/orders",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 1212,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 46
+      },
+      {
+        "font": 16,
+        "height": 45
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/requests",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 854,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/product-form",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 2710,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      },
+      {
+        "width": 96,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": {
+      "height": 102,
+      "columns": "86.6562px 86.6719px 86.6562px"
+    },
+    "inputs": [
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 220
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/dashboard",
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 844,
+    "overview": {
+      "height": 293.25,
+      "columns": "366px",
+      "cards": [
+        {
+          "height": 65.25,
+          "width": 366,
+          "titleHeight": 21.25,
+          "title": "Livraison et lancement"
+        },
+        {
+          "height": 68,
+          "width": 366,
+          "titleHeight": 21.25,
+          "title": "Produits"
+        },
+        {
+          "height": 68,
+          "width": 366,
+          "titleHeight": 21.25,
+          "title": "Commandes"
+        },
+        {
+          "height": 68,
+          "width": 366,
+          "titleHeight": 21.25,
+          "title": "Demandes clients"
+        }
+      ]
+    },
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [],
+    "menuTargets": []
+  },
+  {
+    "route": "/products",
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 1587,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      }
+    ],
+    "productRows": [
+      {
+        "height": 265.140625,
+        "top": 713.078125
+      },
+      {
+        "height": 293.21875,
+        "top": 986.21875
+      },
+      {
+        "height": 265.140625,
+        "top": 1287.4375
+      }
+    ],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 46
+      },
+      {
+        "font": 16,
+        "height": 45
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      }
+    ],
+    "menuTargets": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ]
+  },
+  {
+    "route": "/orders",
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 1125,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 46
+      },
+      {
+        "font": 16,
+        "height": 45
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/requests",
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 844,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/product-form",
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 2710,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.328125,
+        "height": 44
+      },
+      {
+        "width": 119.34375,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": {
+      "height": 102,
+      "columns": "110px 110px 110px"
+    },
+    "inputs": [
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 220
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/dashboard",
+    "width": 720,
+    "scrollWidth": 720,
+    "height": 844,
+    "overview": {
+      "height": 293.25,
+      "columns": "696px",
+      "cards": [
+        {
+          "height": 65.25,
+          "width": 696,
+          "titleHeight": 21.25,
+          "title": "Livraison et lancement"
+        },
+        {
+          "height": 68,
+          "width": 696,
+          "titleHeight": 21.25,
+          "title": "Produits"
+        },
+        {
+          "height": 68,
+          "width": 696,
+          "titleHeight": 21.25,
+          "title": "Commandes"
+        },
+        {
+          "height": 68,
+          "width": 696,
+          "titleHeight": 21.25,
+          "title": "Demandes clients"
+        }
+      ]
+    },
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [],
+    "menuTargets": []
+  },
+  {
+    "route": "/products",
+    "width": 720,
+    "scrollWidth": 705,
+    "height": 1605,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      }
+    ],
+    "productRows": [
+      {
+        "height": 265.140625,
+        "top": 759.078125
+      },
+      {
+        "height": 265.140625,
+        "top": 1032.21875
+      },
+      {
+        "height": 265.140625,
+        "top": 1305.359375
+      }
+    ],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 46
+      },
+      {
+        "font": 16,
+        "height": 45
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      }
+    ],
+    "menuTargets": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ]
+  },
+  {
+    "route": "/orders",
+    "width": 720,
+    "scrollWidth": 705,
+    "height": 1029,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 46
+      },
+      {
+        "font": 16,
+        "height": 45
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/requests",
+    "width": 720,
+    "scrollWidth": 720,
+    "height": 844,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      },
+      {
+        "width": 229.328125,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/product-form",
+    "width": 720,
+    "scrollWidth": 705,
+    "height": 2653,
+    "overview": null,
+    "navigation": 109,
+    "navTargets": [
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      },
+      {
+        "width": 224.328125,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": {
+      "height": 102,
+      "columns": "215px 215px 215px"
+    },
+    "inputs": [
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 44
+      },
+      {
+        "font": 16,
+        "height": 220
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/dashboard",
+    "width": 860,
+    "scrollWidth": 845,
+    "height": 845,
+    "overview": {
+      "height": 187.1875,
+      "columns": "307.5px 307.5px",
+      "cards": [
+        {
+          "height": 84.59375,
+          "width": 307.5,
+          "titleHeight": 23.75,
+          "title": "Livraison et lancement"
+        },
+        {
+          "height": 84.59375,
+          "width": 307.5,
+          "titleHeight": 23.75,
+          "title": "Produits"
+        },
+        {
+          "height": 84.59375,
+          "width": 307.5,
+          "titleHeight": 23.75,
+          "title": "Commandes"
+        },
+        {
+          "height": 84.59375,
+          "width": 307.5,
+          "titleHeight": 23.75,
+          "title": "Demandes clients"
+        }
+      ]
+    },
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [],
+    "menuTargets": []
+  },
+  {
+    "route": "/products",
+    "width": 860,
+    "scrollWidth": 845,
+    "height": 1214,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      }
+    ],
+    "productRows": [
+      {
+        "height": 83,
+        "top": 878.828125
+      },
+      {
+        "height": 110.1875,
+        "top": 961.828125
+      },
+      {
+        "height": 84.6875,
+        "top": 1072.015625
+      }
+    ],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 12.16,
+        "height": 44
+      },
+      {
+        "font": 12.16,
+        "height": 44
+      },
+      {
+        "font": 12.16,
+        "height": 44
+      },
+      {
+        "font": 12.16,
+        "height": 44
+      }
+    ],
+    "menuTargets": [
+      {
+        "width": 38,
+        "height": 38
+      },
+      {
+        "width": 38,
+        "height": 38
+      },
+      {
+        "width": 38,
+        "height": 38
+      }
+    ]
+  },
+  {
+    "route": "/orders",
+    "width": 860,
+    "scrollWidth": 845,
+    "height": 860,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 12,
+        "height": 44
+      },
+      {
+        "font": 12,
+        "height": 44
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/requests",
+    "width": 860,
+    "scrollWidth": 845,
+    "height": 866,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 14,
+        "height": 46
+      },
+      {
+        "font": 14,
+        "height": 46
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/product-form",
+    "width": 860,
+    "scrollWidth": 845,
+    "height": 2880,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      },
+      {
+        "width": 155,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": {
+      "height": 81,
+      "columns": "124px 124px 124px 124px 124px 124px"
+    },
+    "inputs": [
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 185.5
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/dashboard",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 845,
+    "overview": {
+      "height": 187.1875,
+      "columns": "588.5px 588.5px",
+      "cards": [
+        {
+          "height": 84.59375,
+          "width": 588.5,
+          "titleHeight": 23.75,
+          "title": "Livraison et lancement"
+        },
+        {
+          "height": 84.59375,
+          "width": 588.5,
+          "titleHeight": 23.75,
+          "title": "Produits"
+        },
+        {
+          "height": 84.59375,
+          "width": 588.5,
+          "titleHeight": 23.75,
+          "title": "Commandes"
+        },
+        {
+          "height": 84.59375,
+          "width": 588.5,
+          "titleHeight": 23.75,
+          "title": "Demandes clients"
+        }
+      ]
+    },
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [],
+    "menuTargets": []
+  },
+  {
+    "route": "/products",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 845,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      }
+    ],
+    "productRows": [
+      {
+        "height": 83,
+        "top": 460.125
+      },
+      {
+        "height": 84.6875,
+        "top": 543.125
+      },
+      {
+        "height": 83,
+        "top": 627.8125
+      }
+    ],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 12.16,
+        "height": 44
+      },
+      {
+        "font": 12.16,
+        "height": 44
+      },
+      {
+        "font": 12.16,
+        "height": 44
+      },
+      {
+        "font": 12.16,
+        "height": 44
+      }
+    ],
+    "menuTargets": [
+      {
+        "width": 38,
+        "height": 38
+      },
+      {
+        "width": 38,
+        "height": 38
+      },
+      {
+        "width": 38,
+        "height": 38
+      }
+    ]
+  },
+  {
+    "route": "/orders",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 845,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 12,
+        "height": 44
+      },
+      {
+        "font": 12,
+        "height": 44
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/requests",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 845,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": null,
+    "inputs": [
+      {
+        "font": 14,
+        "height": 46
+      },
+      {
+        "font": 14,
+        "height": 46
+      }
+    ],
+    "menuTargets": []
+  },
+  {
+    "route": "/product-form",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 2287,
+    "overview": null,
+    "navigation": 780,
+    "navTargets": [
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      },
+      {
+        "width": 165,
+        "height": 44
+      }
+    ],
+    "productRows": [],
+    "steps": {
+      "height": 66,
+      "columns": "183.156px 183.172px 183.172px 183.156px 183.172px 183.172px"
+    },
+    "inputs": [
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 45.5
+      },
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 47
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 44
+      },
+      {
+        "font": 13.12,
+        "height": 185.5
+      }
+    ],
+    "menuTargets": []
+  }
+]

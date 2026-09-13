@@ -11,12 +11,12 @@
 @media(max-width:800px) {
  .admin-quick-access__inner { display:block; padding-block:8px; }
  .admin-quick-access__label { display:block; margin-bottom:6px; }
- .admin-quick-access nav,.admin-navigation { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+ .admin-quick-access nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
  .admin-quick-access a { font-size:11px; padding:10px; }
- .admin-navigation { overflow:visible; }
- .admin-navigation a { white-space:normal; min-height:44px; font-size:11px; }
- .admin-navigation .admin-navigation__label { display:block!important; grid-column:1/-1; margin:4px 12px; }
- .admin-navigation .admin-navigation__back { display:flex!important; margin-top:0; }
+ .admin-navigation { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; padding:8px 12px; overflow:visible; }
+ .admin-navigation a { justify-content:center; align-items:center; padding:6px; white-space:normal; min-height:44px; font-size:11px; line-height:1.25; text-align:center; }
+ .admin-navigation .admin-navigation__label,.admin-navigation a>span { display:none; }
+ .admin-navigation .admin-navigation__back { margin-top:0; border-top:0; }
 }
 @media(max-width:360px) {
  .site-header__inner { gap:10px; }

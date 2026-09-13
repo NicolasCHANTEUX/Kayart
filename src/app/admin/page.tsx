@@ -11,30 +11,24 @@ export default async function AdminPage() {
   return (
     <section className="section admin-page">
       <div className="container">
-        <div className="eyebrow">Administration</div>
-        <h1 className="page-title">Admin</h1>
-        <p className="lead">
-          Pilotez le catalogue et les demandes client depuis cet espace
-          réservé aux comptes administrateurs.
-        </p>
-        <div className="admin-grid">
-          <Link className="feature-card" href="/admin/livraison"><div className="meta">Configuration</div><h3>Livraison et lancement</h3><p>Zones, tarifs, retrait atelier et informations légales à valider.</p></Link>
+        <h1 className="page-title">Administration</h1>
+        <p className="lead">Catalogue, commandes et demandes clients.</p>
+        <div className="admin-grid admin-overview">
+          <Link className="feature-card" href="/admin/livraison"><div><h2>Livraison et lancement</h2><p>Zones, tarifs et informations légales.</p></div><span className="admin-overview__arrow" aria-hidden="true">↗</span></Link>
           <Link className="feature-card" href="/admin/produits">
-            <div className="meta">Catalogue</div>
-            <h3>Produits</h3>
-            <p>{overview.products} éléments disponibles dans la source catalogue actuelle.</p>
+            <div><h2>Produits</h2><p>Catalogue, prix et stock.</p></div>
+            <span className="admin-overview__count" aria-label={`${overview.products} produits`}>{overview.products}</span>
           </Link>
           <Link className="feature-card" href="/admin/commandes">
-            <div className="meta">Commandes</div>
-            <h3>Commandes</h3>
-            <p>{overview.orders} commandes au total, dont {overview.testOrders} en mode test. Le checkout de test réserve le stock.</p>
+            <div><h2>Commandes</h2><p>Dont {overview.testOrders} en mode test.</p></div>
+            <span className="admin-overview__count" aria-label={`${overview.orders} commandes`}>{overview.orders}</span>
           </Link>
           <Link className="feature-card" href="/admin/demandes">
-            <div className="meta">Demandes</div>
-            <h3>Demandes clients</h3>
-            <p>{overview.openRequests} demandes nouvelles ou en cours : messages, réparations et projets sur mesure.</p>
+            <div><h2>Demandes clients</h2><p>Nouvelles ou en cours.</p></div>
+            <span className="admin-overview__count" aria-label={`${overview.openRequests} demandes nouvelles ou en cours`}>{overview.openRequests}</span>
           </Link>
         </div>
+        <p className="admin-overview__note">Les commandes Stripe de test réservent du stock.</p>
       </div>
     </section>
   );

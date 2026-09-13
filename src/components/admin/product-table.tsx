@@ -16,7 +16,7 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
   return (
     <>
       <div className="table-wrap">
-        <table className="data-table">
+        <table className="data-table admin-products-table">
           <thead>
             <tr>
               <th>Produit</th>
