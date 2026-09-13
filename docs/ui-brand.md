@@ -27,3 +27,9 @@ Résultats et captures : `outputs/ui-brand-2026-09-13/`.
 Les tests utilisent une copie isolée sans les fichiers d’environnement réels. Ils n’envoient ni demande client ni paiement. Les formulaires non configurés y affichent leur indisponibilité attendue. Les captures ne constituent pas une vérification physique sur iPhone/Safari.
 
 Cette version reste locale, sans publication GitHub ou Vercel. Les règles métier, droits administrateur, configuration de livraison, paiement et pages légales sont conservés.
+
+## Essai de fond d’ambiance
+
+L’accueil utilise désormais le même fichier `kayart-mark.svg` dans une couche décorative fixe. Après retour utilisateur, le flou est réduit à 28 px sur ordinateur et 18 px sur mobile, et l’opacité passe à 100 % : le fond clair ne décolore plus l’image. Le blanc encore présent appartient au monogramme K lui-même. Le fond reste visible au défilement, jusqu’au pied de page. La navigation reste blanche et le visuel principal reste net. L’effet est limité à l’accueil par `.home-page` ; aucun mouvement ni capture des clics n’est ajouté.
+
+Contrôles : ESLint, TypeScript, 64 vérifications navigateur, inspection visuelle en haut et en bas de page sur mobile et ordinateur. Captures et vérifications de portée : `outputs/ui-ambient-2026-09-13/`. Les captures pleine page montrent la couche fixe dans le premier écran ; les captures `home-bottom-*` montrent son rendu après défilement.

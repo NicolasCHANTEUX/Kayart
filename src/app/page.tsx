@@ -5,7 +5,7 @@ import { listFeaturedProducts } from "@/server/catalog/catalog.service";
 
 export default async function HomePage() {
   const products = (await listFeaturedProducts()).slice(0, 3);
-  return <>
+  return <div className="home-page">
     <section className="atelier-hero"><div className="container atelier-hero__grid">
       <div className="atelier-hero__copy">
         <div className="eyebrow"><span className="status-dot"/> Atelier carbone indépendant</div>
@@ -28,5 +28,5 @@ export default async function HomePage() {
       </div>
     </div></section>
     <section className="section atelier-manifesto"><div className="container"><div className="eyebrow">03 / L’esprit KayArt</div><div className="manifesto-grid"><h2>Le bon matériel <br/>commence par <br/><em>un échange.</em></h2><div><p className="lead">Comprendre votre pratique. Choisir une pièce adaptée. Prendre le temps de discuter des contraintes avant de fabriquer ou de réparer.</p><p>C’est cette relation directe avec l’atelier que vous retrouvez chez KayArt, de la première question au retrait de votre pièce.</p><Link className="button button--ghost" href="/contact">Échanger avec l’atelier ↗</Link></div></div></div></section>
-  </>;
+  </div>;
 }

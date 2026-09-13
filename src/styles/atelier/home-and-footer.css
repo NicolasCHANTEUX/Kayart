@@ -1,3 +1,21 @@
+.shell:has(.home-page) { isolation:isolate; }
+/* One decorative layer, using the exact same asset as the sharp hero mark. */
+.shell:has(.home-page)::before {
+ content:"";
+ position:fixed;
+ inset:0;
+ z-index:-1;
+ pointer-events:none;
+ background:url("/brand/Emile_photo_principale.png") center / cover no-repeat;
+ filter:blur(28px);
+ opacity:1;
+}
+.home-page .atelier-hero { background:transparent; }
+.shell:has(.home-page) .site-footer { background:transparent; }
+.shell:has(.home-page) .site-header { background:#fff; }
+@media(max-width:540px) {
+ .shell:has(.home-page)::before { filter:blur(18px); }
+}
 .atelier-hero { border-bottom:1px solid var(--line); overflow:hidden; background:var(--paper); }
 .atelier-hero__grid { display:grid; grid-template-columns:1.15fr 1fr; min-height:348px; }
 .atelier-hero__copy { padding:32px 28px 24px 0; justify-content:center; display:flex; flex-direction:column; align-items:flex-start; position:relative; z-index:1; }

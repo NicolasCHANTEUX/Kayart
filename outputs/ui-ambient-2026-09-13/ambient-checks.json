@@ -1,0 +1,26 @@
+[
+  {
+    "width": 390,
+    "scrollWidth": 390,
+    "scrollY": 1509,
+    "backdrop": "url(\"http://localhost:3107/brand/kayart-mark.svg\")",
+    "blur": "blur(70px)",
+    "footer": "rgba(0, 0, 0, 0)",
+    "header": "rgb(255, 255, 255)",
+    "sharp": "none"
+  },
+  {
+    "width": 1440,
+    "scrollWidth": 1425,
+    "scrollY": 1055,
+    "backdrop": "url(\"http://localhost:3107/brand/kayart-mark.svg\")",
+    "blur": "blur(100px)",
+    "footer": "rgba(0, 0, 0, 0)",
+    "header": "rgb(255, 255, 255)",
+    "sharp": "none"
+  },
+  {
+    "route": "/boutique",
+    "ambientContent": "none"
+  }
+]
