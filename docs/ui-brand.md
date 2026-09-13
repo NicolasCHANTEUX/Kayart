@@ -37,3 +37,7 @@ Contrôles : ESLint, TypeScript, 64 vérifications navigateur, inspection visuel
 ## Premier bloc agrandi
 
 Le visuel actuel est la photo `Emile_photo_principale.png`, également utilisée en fond flouté. Le premier bloc passe à une hauteur adaptative de 480 à 640 px sur grand écran, avec un titre jusqu’à 72 px. Sur téléphone, la photo devient une image en largeur sous le texte. Les textes du bloc sont clairs, l’accent du titre jaune et son soulignement bleu, pour se détacher de la photo sombre. Aucun voile n’est ajouté. Les autres sections restent compactes. Contrôles ESLint, TypeScript et 64 tests navigateur réussis ; captures dans `outputs/ui-hero-2026-09-13/`.
+
+## Navigation sombre
+
+La barre de navigation et son menu mobile adoptent le même anthracite que les bandes du site. Logo typographique, liens, boutons et icônes passent en blanc ; les états actifs et le focus utilisent le jaune. Le logo du pied de page conserve sa couleur propre. Contrôles visuels et ouverture du menu validés à 390 et 1 440 px ; captures dans `outputs/ui-dark-nav-2026-09-13/`.

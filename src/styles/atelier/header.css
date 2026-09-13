@@ -1,5 +1,5 @@
 
-.site-header { position:sticky; top:0; background:rgba(255,255,255,.97); border-bottom:1px solid var(--line); backdrop-filter:blur(12px); z-index:40; }
+.site-header { position:sticky; top:0; background:var(--carbon); color:#fff; border-bottom:1px solid #343745; z-index:40; }
 .site-header__inner { min-height:64px; gap:24px; }
 .brand { min-width:184px; display:flex; flex-direction:row; align-items:center; gap:9px; text-transform:none; flex-shrink:0; }
 .brand__mark { width:34px; height:34px; display:block; }
@@ -7,13 +7,18 @@
 .brand__name { font-family:"Arial Black","DM Sans",Arial,sans-serif; font-size:27px; font-weight:900; font-style:italic; letter-spacing:-.075em; line-height:1; color:var(--carbon); }
 .brand__name>span { color:var(--accent); }
 .brand__tagline { font-size:6px; letter-spacing:.055em; margin-top:4px; color:var(--metal); }
+.site-header .brand__name { color:#fff; }
+.site-header .brand__tagline { color:#bcc1ce; }
+.site-header .account-link,.site-header .menu-toggle { color:inherit; }
+.site-header a:focus-visible,.site-header button:focus-visible { outline-color:var(--yellow); }
 .main-navigation { margin-left:auto; }
 .main-nav { display:flex; align-items:center; gap:20px; }
 .main-nav a { font-size:12px; padding:12px 0; position:relative; }
-.main-nav a[aria-current=page]::after { content:""; height:2px; background:var(--accent); position:absolute; bottom:5px; inset-inline:0; }
+.main-nav a[aria-current=page]::after { content:""; height:2px; background:var(--yellow); position:absolute; bottom:5px; inset-inline:0; }
+.main-nav a:hover,.account-link:hover,.cart-link:hover { color:var(--yellow); }
 .main-nav__contact { display:none; }
 .menu-toggle { display:none; }
 .site-header .header-actions { display:flex; flex-wrap:nowrap; gap:16px; }
 .account-link { background:none; border:0; display:inline-flex; align-items:center; min-height:44px; font-size:11px; padding:0; cursor:pointer; }
 .cart-link { display:flex; align-items:center; gap:9px; font-size:12px; min-height:44px; }
-.cart-count { width:21px; height:21px; border-radius:50%; background:var(--fiber); display:grid; place-items:center; font-size:10px; }
+.cart-count { width:21px; height:21px; border-radius:50%; background:#343745; color:#fff; display:grid; place-items:center; font-size:10px; }

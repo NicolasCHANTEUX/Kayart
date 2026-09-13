@@ -1,0 +1,24 @@
+[
+  {
+    "width": 1440,
+    "scroll": 1425,
+    "header": "rgb(21, 23, 32)",
+    "brand": "rgb(255, 255, 255)",
+    "footerBrand": "rgb(21, 23, 32)",
+    "menu": "rgba(0, 0, 0, 0)",
+    "menuText": "rgb(255, 255, 255)",
+    "toggle": "rgb(255, 255, 255)",
+    "open": "false"
+  },
+  {
+    "width": 390,
+    "scroll": 390,
+    "header": "rgb(21, 23, 32)",
+    "brand": "rgb(255, 255, 255)",
+    "footerBrand": "rgb(21, 23, 32)",
+    "menu": "rgb(21, 23, 32)",
+    "menuText": "rgb(255, 255, 255)",
+    "toggle": "rgb(255, 255, 255)",
+    "open": "true"
+  }
+]

@@ -12,7 +12,6 @@
 }
 .home-page .atelier-hero { background:transparent; }
 .shell:has(.home-page) .site-footer { background:transparent; }
-.shell:has(.home-page) .site-header { background:#fff; }
 @media(max-width:540px) {
  .shell:has(.home-page)::before { filter:blur(18px); }
 }
