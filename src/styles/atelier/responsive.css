@@ -1,7 +1,7 @@
 @media (max-width:1100px) {
  .container { width:calc(100% - 40px); }
  .site-header__inner { gap:18px; } .main-nav { gap:18px; } .site-header .header-actions { gap:14px; }
- .atelier-hero__grid { min-height:340px; } .hero-actions { gap:12px; }
+ .atelier-hero__grid { min-height:440px; } .hero-actions { gap:12px; }
  .admin-shell { grid-template-columns:180px minmax(0,1fr); }
  .admin-page .container { width:calc(100% - 32px); }
  .product-detail-layout,.split { gap:24px; }
@@ -19,7 +19,7 @@
  .main-nav a { padding:12px 8px; font-size:15px; min-height:44px; border-bottom:1px solid var(--line); }
  .main-nav a[aria-current=page]::after { display:none; } .main-nav a[aria-current=page] { color:var(--accent); }
  .main-nav .main-nav__contact { display:block; font-size:13px; color:var(--accent); }
- .atelier-hero__copy { padding:24px 0; } .atelier-hero h1 { font-size:34px; }
+ .atelier-hero__copy { padding:32px 16px 28px 0; } .atelier-hero h1 { font-size:38px; }
  .desktop-break { display:none; } .atelier-hero__copy>p { max-width:340px; }
  .hero-footnote { font-size:10px; } .visual-index { font-size:8px; }
  .atelier-strip .container { flex-wrap:wrap; gap:6px 18px; justify-content:flex-start; font-size:11px; padding-block:10px; }
@@ -38,14 +38,14 @@
 }
 @media (max-width:540px) {
  .section { padding:24px 0; } .account-link { font-size:11px; } .site-header .header-actions { gap:10px; }
- .atelier-hero__grid { display:block; position:relative; min-height:0; }
- .atelier-hero__copy { padding:22px 0; }
- .atelier-hero h1 { max-width:calc(100% - 76px); font-size:clamp(23px,6.8vw,34px); margin:6px 0 14px; }
+ .atelier-hero__grid { grid-template-columns:1fr; position:relative; min-height:0; }
+ .atelier-hero__copy { padding:28px 0 20px; }
+ .atelier-hero h1 { max-width:100%; font-size:clamp(30px,9vw,42px); margin:6px 0 20px; }
  .atelier-hero .eyebrow { font-size:9px; margin-bottom:10px; }
- .atelier-hero__copy>p { font-size:14px; margin-bottom:14px; max-width:100%; }
+ .atelier-hero__copy>p { font-size:15px; margin-bottom:20px; max-width:100%; }
  .hero-actions { width:100%; gap:10px 14px; } .hero-actions .button,.hero-actions .text-link { font-size:12px; }
  .hero-footnote { display:none; }
- .atelier-hero__visual { position:absolute; top:34px; right:0; width:64px; height:68px; border:0; border-radius:0; clip-path:none; transform:rotate(5deg); }
+ .atelier-hero__visual { position:relative; top:auto; right:auto; width:100%; height:clamp(180px,55vw,250px); margin-bottom:22px; border:0; border-radius:0; clip-path:polygon(4% 0,100% 0,96% 100%,0 100%); transform:none; }
  .visual-caption,.visual-index { display:none; }
  .section__header { display:block; margin-bottom:16px; }
  .section__header>div:last-child:not(:first-child) { max-width:none; margin-top:10px; }

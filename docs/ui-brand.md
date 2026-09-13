@@ -33,3 +33,7 @@ Cette version reste locale, sans publication GitHub ou Vercel. Les règles méti
 L’accueil utilise désormais le même fichier `kayart-mark.svg` dans une couche décorative fixe. Après retour utilisateur, le flou est réduit à 28 px sur ordinateur et 18 px sur mobile, et l’opacité passe à 100 % : le fond clair ne décolore plus l’image. Le blanc encore présent appartient au monogramme K lui-même. Le fond reste visible au défilement, jusqu’au pied de page. La navigation reste blanche et le visuel principal reste net. L’effet est limité à l’accueil par `.home-page` ; aucun mouvement ni capture des clics n’est ajouté.
 
 Contrôles : ESLint, TypeScript, 64 vérifications navigateur, inspection visuelle en haut et en bas de page sur mobile et ordinateur. Captures et vérifications de portée : `outputs/ui-ambient-2026-09-13/`. Les captures pleine page montrent la couche fixe dans le premier écran ; les captures `home-bottom-*` montrent son rendu après défilement.
+
+## Premier bloc agrandi
+
+Le visuel actuel est la photo `Emile_photo_principale.png`, également utilisée en fond flouté. Le premier bloc passe à une hauteur adaptative de 480 à 640 px sur grand écran, avec un titre jusqu’à 72 px. Sur téléphone, la photo devient une image en largeur sous le texte. Les textes du bloc sont clairs, l’accent du titre jaune et son soulignement bleu, pour se détacher de la photo sombre. Aucun voile n’est ajouté. Les autres sections restent compactes. Contrôles ESLint, TypeScript et 64 tests navigateur réussis ; captures dans `outputs/ui-hero-2026-09-13/`.
