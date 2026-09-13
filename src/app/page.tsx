@@ -14,7 +14,7 @@ export default async function HomePage() {
         <div className="hero-actions"><Link className="button button--primary" href="/boutique">Explorer la boutique <span aria-hidden="true">↗</span></Link><Link className="text-link" href="/savoir-faire">L’atelier KayArt <span aria-hidden="true">→</span></Link></div>
         <div className="hero-footnote"><span>Conception · Fabrication · Réparation</span><span className="mono">KAYART / CARBON IN MOTION</span></div>
       </div>
-      <div className="atelier-hero__visual" aria-hidden="true"><KayartHeroMark/><span className="visual-index">KAYAK / ART / COMPOSITE / SPORT</span><div className="visual-caption"><span className="racing-wordmark">KAYART</span><span>À L’ATELIER.<br/>SUR L’EAU.</span></div></div>
+      <div className="atelier-hero__visual" aria-hidden="true"><KayartHeroMark/><span className="visual-index">KAYAK / ART / COMPOSITE / SPORT</span><div className="visual-caption"><span className="racing-wordmark">KAYART</span><span className="visual-caption__tagline">À L’ATELIER.<br/>SUR L’EAU.</span></div></div>
     </div></section>
     <div className="atelier-strip"><div className="container"><span>Pièces neuves & imparfaites</span><span>Réparation sur diagnostic</span><span>Retrait gratuit, sur rendez-vous</span></div></div>
     <section className="section collection-section"><div className="container">
