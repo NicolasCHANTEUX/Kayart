@@ -16,7 +16,6 @@ export default async function HomePage() {
       </div>
       <div className="atelier-hero__visual" aria-hidden="true"><KayartHeroMark/><span className="visual-index">KAYAK / ART / COMPOSITE / SPORT</span><div className="visual-caption"><span className="racing-wordmark">KAYART</span><span className="visual-caption__tagline">À L’ATELIER.<br/>SUR L’EAU.</span></div></div>
     </div></section>
-    <div className="atelier-strip"><div className="container"><span>Pièces neuves & imparfaites</span><span>Réparation sur diagnostic</span><span>Retrait gratuit, sur rendez-vous</span></div></div>
     <section className="section collection-section"><div className="container">
       <div className="section__header"><div><div className="eyebrow">01 / La sélection</div><h2>Prêtes pour la suite.</h2></div><div><p>Pièces neuves, imparfaites et services atelier.</p><Link className="text-link" href="/boutique">Toute la boutique <span aria-hidden="true">↗</span></Link></div></div>
       {products.length ? <div className="grid product-grid">{products.map(product => <ProductCard key={product.id} product={product}/>)}</div> : <div className="collection-empty"><p>Vous recherchez une pièce particulière ? Parlons de votre besoin.</p><Link className="text-link" href="/contact">Contacter l’atelier ↗</Link></div>}

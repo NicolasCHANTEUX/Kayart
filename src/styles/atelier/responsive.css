@@ -22,7 +22,6 @@
  .atelier-hero__copy { padding:32px 16px 28px 0; } .atelier-hero h1 { font-size:38px; }
  .desktop-break { display:none; } .atelier-hero__copy>p { max-width:340px; }
  .hero-footnote { font-size:10px; } .visual-index { font-size:8px; }
- .atelier-strip .container { flex-wrap:wrap; gap:6px 18px; justify-content:flex-start; font-size:11px; padding-block:10px; }
  .grid,.product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px 14px; }
  .section__header { align-items:flex-start; gap:16px; }
  .section__header>div:last-child:not(:first-child) { max-width:240px; }
