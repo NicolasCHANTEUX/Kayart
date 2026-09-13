@@ -1,0 +1,38 @@
+[
+  {
+    "width": 320,
+    "hydrated": true,
+    "menuVisibleAndClickable": true,
+    "editLinkCorrect": true,
+    "escapeAndOutsideClick": true,
+    "stockAndArchiveDialogs": true,
+    "noMutationSubmitted": true
+  },
+  {
+    "width": 390,
+    "hydrated": true,
+    "menuVisibleAndClickable": true,
+    "editLinkCorrect": true,
+    "escapeAndOutsideClick": true,
+    "stockAndArchiveDialogs": true,
+    "noMutationSubmitted": true
+  },
+  {
+    "width": 860,
+    "hydrated": true,
+    "menuVisibleAndClickable": true,
+    "editLinkCorrect": true,
+    "escapeAndOutsideClick": true,
+    "stockAndArchiveDialogs": true,
+    "noMutationSubmitted": true
+  },
+  {
+    "width": 1440,
+    "hydrated": true,
+    "menuVisibleAndClickable": true,
+    "editLinkCorrect": true,
+    "escapeAndOutsideClick": true,
+    "stockAndArchiveDialogs": true,
+    "noMutationSubmitted": true
+  }
+]

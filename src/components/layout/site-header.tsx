@@ -1,50 +1,16 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { logoutAction } from "@/app/connexion/actions";
-import { siteConfig } from "@/config/site";
 import { getCurrentAuthSession } from "@/server/auth/session";
-
+import { MainNavigation, CartLink, AdminQuickAccess } from "./navigation";
+import { KayartBrand } from "./kayart-brand";
 export async function SiteHeader() {
   const session = await getCurrentAuthSession();
-  const isAdmin = session?.role === "admin";
-
-  return (
-    <header className="site-header">
-      <div className="container site-header__inner">
-        <Link className="brand" href="/" aria-label="Retour à l'accueil KayArt">
-          <span className="brand__name">{siteConfig.name}</span>
-          <span className="brand__tagline">{siteConfig.tagline}</span>
-        </Link>
-
-        <nav className="nav" aria-label="Navigation principale">
-          {siteConfig.nav.map((item) => (
-            <Link key={item.href} href={item.href}>
-              {item.label}
-            </Link>
-          ))}
-          {isAdmin ? (
-            <Link className="nav__admin-link" href="/admin">
-              Admin
-            </Link>
-          ) : null}
-        </nav>
-
-        <div className="header-actions">
-          {session ? (
-            <form action={logoutAction} className="header-actions__form">
-              <button className="icon-link icon-link--button" type="submit">
-                Déconnexion
-              </button>
-            </form>
-          ) : (
-            <Link className="icon-link" href="/connexion">
-              Connexion
-            </Link>
-          )}
-          <Link className="icon-link" href="/panier" aria-label="Voir le panier">
-            Panier
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
+  return <header className="site-header"><div className="container site-header__inner">
+    <Link className="brand" href="/" aria-label="KayArt — accueil"><KayartBrand /></Link>
+    <MainNavigation/>
+    <div className="header-actions">
+      {session ? <form action={logoutAction} className="header-actions__form"><button className="account-link" type="submit">Déconnexion</button></form> : <Link className="account-link" href="/connexion" aria-label="Connexion"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2" stroke="currentColor" strokeWidth="1.5"/></svg><span className="sr-only">Connexion</span></Link>}
+      <CartLink/>
+    </div>
+  </div>{session?.role === "admin" ? <AdminQuickAccess/> : null}</header>;
 }

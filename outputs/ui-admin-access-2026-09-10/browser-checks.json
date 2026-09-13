@@ -1,0 +1,158 @@
+[
+  {
+    "role": "admin",
+    "width": 320,
+    "scroll": 320,
+    "staff": [
+      {
+        "href": "/admin",
+        "visible": true
+      },
+      {
+        "href": "/admin/produits",
+        "visible": true
+      },
+      {
+        "href": "/admin/commandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/demandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/livraison",
+        "visible": true
+      }
+    ]
+  },
+  {
+    "role": "admin",
+    "width": 390,
+    "scroll": 390,
+    "staff": [
+      {
+        "href": "/admin",
+        "visible": true
+      },
+      {
+        "href": "/admin/produits",
+        "visible": true
+      },
+      {
+        "href": "/admin/commandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/demandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/livraison",
+        "visible": true
+      }
+    ]
+  },
+  {
+    "role": "admin",
+    "width": 860,
+    "scroll": 860,
+    "staff": [
+      {
+        "href": "/admin",
+        "visible": true
+      },
+      {
+        "href": "/admin/produits",
+        "visible": true
+      },
+      {
+        "href": "/admin/commandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/demandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/livraison",
+        "visible": true
+      }
+    ]
+  },
+  {
+    "role": "admin",
+    "width": 1440,
+    "scroll": 1440,
+    "staff": [
+      {
+        "href": "/admin",
+        "visible": true
+      },
+      {
+        "href": "/admin/produits",
+        "visible": true
+      },
+      {
+        "href": "/admin/commandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/demandes",
+        "visible": true
+      },
+      {
+        "href": "/admin/livraison",
+        "visible": true
+      }
+    ]
+  },
+  {
+    "role": "customer",
+    "width": 320,
+    "scroll": 320,
+    "staff": []
+  },
+  {
+    "role": "customer",
+    "width": 390,
+    "scroll": 390,
+    "staff": []
+  },
+  {
+    "role": "customer",
+    "width": 860,
+    "scroll": 860,
+    "staff": []
+  },
+  {
+    "role": "customer",
+    "width": 1440,
+    "scroll": 1440,
+    "staff": []
+  },
+  {
+    "role": "anonymous",
+    "width": 320,
+    "scroll": 320,
+    "staff": []
+  },
+  {
+    "role": "anonymous",
+    "width": 390,
+    "scroll": 390,
+    "staff": []
+  },
+  {
+    "role": "anonymous",
+    "width": 860,
+    "scroll": 860,
+    "staff": []
+  },
+  {
+    "role": "anonymous",
+    "width": 1440,
+    "scroll": 1440,
+    "staff": []
+  }
+]

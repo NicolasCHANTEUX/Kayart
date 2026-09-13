@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Pièces carbone artisanales, réparation et sur-mesure.",
     start_url: "/",
     display: "standalone",
-    background_color: "#101312",
-    theme_color: "#101312",
+    background_color: "#ffffff",
+    theme_color: "#ffffff",
     icons: [
       {
         src: "/icon.svg",

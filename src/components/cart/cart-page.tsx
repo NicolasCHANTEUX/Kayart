@@ -16,7 +16,7 @@ export function CartPage({ pendingCheckout }: { pendingCheckout?: string }) {
   useEffect(() => {
     if (!loaded) return;
     setQuotePending(true);
-    try { localStorage.setItem(cartStorageKey, JSON.stringify(items)); } catch { setError("L’enregistrement local du panier est indisponible."); }
+    try { localStorage.setItem(cartStorageKey, JSON.stringify(items)); window.dispatchEvent(new Event("kayart:cart-updated")); } catch { setError("L’enregistrement local du panier est indisponible."); }
     const controller = new AbortController();
     const timer = setTimeout(() => {
       fetch("/api/cart/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items, country, postalCode }), signal: controller.signal }).then(async response => {
@@ -53,7 +53,7 @@ export function CartPage({ pendingCheckout }: { pendingCheckout?: string }) {
       try { const response = await fetch("/api/checkout/cancel", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ checkoutKey: cancelKey }) }); const result = await response.json(); if (!response.ok || result.status === "pending") throw new Error(result.error || "Confirmation encore en attente. Contactez l’atelier si le problème persiste."); localStorage.removeItem(attemptStorageKey); setCancelKey(""); setRetryBody(null); setCheckoutKey(crypto.randomUUID()); setItems([...items]); }
       catch (error) { setError(error instanceof Error ? error.message : "Annulation impossible."); } finally { setPending(false); }
     }}>Annuler cette tentative</button>{retryBody ? <button className="button button--ghost" disabled={pending} onClick={() => sendCheckout(retryBody)}>Reprendre la même tentative</button> : null}</div> : null}
-    {!items.length ? <p>Votre panier est vide. <Link href="/boutique">Découvrir la boutique</Link></p> : <>
+    {!items.length ? <div className="cart-empty"><span className="eyebrow">Votre prochaine pièce vous attend</span><h2>Tout commence par un choix.</h2><p>Votre panier est vide. Explorez les pièces de l’atelier pour trouver celle qui vous accompagne sur l’eau.</p><Link className="button button--primary" href="/boutique">Découvrir la boutique ↗</Link></div> : <>
       <ul className="cart-lines">{items.map(item => { const line = quote?.lines.find(line => line.productId === item.productId); return <li key={item.productId}><div><strong>{line?.name ?? "Article du panier"}</strong><p>{line ? formatMoneyCents(line.totalCents) : "Prix et stock en cours de vérification"}</p></div><label>Quantité<input type="number" min={1} max={line?.maxQuantity ?? 10} value={item.quantity} disabled={pending || !!cancelKey} onChange={event => { const quantity = Number(event.target.value); if (Number.isInteger(quantity) && quantity > 0 && quantity <= 10) { setItems(items.map(other => other.productId === item.productId ? { ...other, quantity } : other)); setCheckoutKey(crypto.randomUUID()); } }} /></label><button className="button button--ghost" disabled={pending || !!cancelKey} onClick={() => { setItems(items.filter(other => other.productId !== item.productId)); setCheckoutKey(crypto.randomUUID()); }}>Retirer</button></li>; })}</ul>
       <form action={checkout} className="customer-request-form"><fieldset disabled={pending || !!cancelKey}><legend>Réception</legend>
         <label className="request-consent"><input type="radio" name="method" value="pickup" checked={method === "pickup"} onChange={() => setMethod("pickup")} />Retrait atelier gratuit, sur rendez-vous</label>

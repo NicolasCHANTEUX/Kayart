@@ -57,7 +57,7 @@ export async function getCurrentAuthSession(): Promise<AuthenticatedSession | nu
     }
 
     return resolveAuthenticatedSession(user);
-  } catch (error) {
+  } catch {
     return null;
   }
 }

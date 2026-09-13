@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ProductImage } from "@/types/catalog";
-import { ProductImageView } from "./product-image";
+import { ProductImageView, UnavailableImageArt } from "./product-image";
 
 type ProductGalleryProps = {
   images: ProductImage[];
@@ -35,6 +35,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           <ProductImageView eager alt={currentImage.altText ?? title} src={currentImage.url} />
         ) : (
           <div className="product-gallery__empty">
+            <UnavailableImageArt />
             <span>Visuel à venir</span>
             <strong>{title}</strong>
           </div>

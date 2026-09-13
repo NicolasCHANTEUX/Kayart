@@ -11,20 +11,21 @@ export default function CustomPage() {
     <section className="section">
       <div className="container split">
         <div>
-          <div className="eyebrow">Projet personnalisé</div>
-          <h1 className="page-title">Sur mesure</h1>
+          <div className="eyebrow">Sur mesure / Projet</div>
+          <h1 className="page-title">Votre idée.<br/>Notre point de départ.</h1>
           <p className="lead">
             Présentez votre projet, son usage et les contraintes à respecter. L’atelier vous
             recontactera pour préciser la faisabilité, les dimensions et le devis.
           </p>
           <CustomerRequestForm kind="custom" submissionKey={randomUUID()} enabled={process.env.KAYART_DATA_SOURCE === "prisma"} />
         </div>
-        <div className="feature-card">
+        <aside className="feature-card request-guide">
           <div className="meta">Paramètres</div>
           <h3>Usage, dimensions, contraintes</h3>
           <p>Indiquez les dimensions souhaitées, le poids, la rigidité, la finition et votre délai. Le budget peut rester indicatif.</p>
+          <ol className="request-steps"><li><span>01</span>Présentez votre besoin</li><li><span>02</span>Échangez avec l’atelier</li><li><span>03</span>Validez les prochaines étapes</li></ol>
           <p><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></p>
-        </div>
+        </aside>
       </div>
     </section>
   );

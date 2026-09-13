@@ -40,6 +40,11 @@ try {
   assert.equal(protectedResponse.status, 401);
   results.push({ check: 'refreshed customer with admin claim still denied by admin service', passed: true });
 
+  const deniedPage = await fetch(base + '/connexion?redirect=%2Fadmin', { headers: { cookie: `kayart_access_token=${access}` } });
+  const deniedHtml = await deniedPage.text();
+  assert.equal(deniedPage.status, 200);assert.ok(deniedHtml.includes('Accès administrateur requis'));assert.ok(deniedHtml.includes('Se déconnecter'));
+  results.push({ check: 'customer requesting admin receives an explicit explanation without a home redirect', passed: true });
+
   const invalid = await fetch(base + '/', { headers: { cookie: 'kayart_refresh_token=fixture-invalid' } });
   assert.equal(invalid.headers.getSetCookie().filter(value => value.includes('Max-Age=0')).length, 2);
   results.push({ check: 'revoked refresh credentials cleared', passed: true });
@@ -59,7 +64,8 @@ try {
   }
   results.push({ check: 'logout after renewal revokes refreshed session and leaves both browser cookies expired', passed: true });
   assert.equal(refreshCalls, 5);
-  fs.mkdirSync('outputs/consolidation-2026-09-09', { recursive: true });
-  fs.writeFileSync('outputs/consolidation-2026-09-09/session-refresh-http.json', JSON.stringify(results, null, 2));
+  const reportDir = process.env.KAYART_HTTP_REPORT_DIR || 'outputs/latest-verification';
+  fs.mkdirSync(reportDir, { recursive: true });
+  fs.writeFileSync(reportDir + '/session-refresh-http.json', JSON.stringify(results, null, 2));
   console.log('Session refresh production HTTP checks passed:', results.length, '(local Auth double only).');
 } finally { await new Promise(resolve => server.close(resolve)); }

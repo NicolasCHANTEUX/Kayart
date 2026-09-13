@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { ProductImageView } from "@/components/catalog/product-image";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type PreviewImage = {
   file: File;
@@ -43,6 +44,36 @@ export function ProductImageUploader({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const isDisabled = disabled || isUploading;
+
+  const syncInputFiles = useCallback((nextImages: PreviewImage[]) => {
+    const transfer = new DataTransfer();
+
+    nextImages.forEach((image) => transfer.items.add(image.file));
+
+    if (inputRef.current) {
+      inputRef.current.files = transfer.files;
+    }
+  }, []);
+
+  const prepareDirectUploadAndSubmit = useCallback(async (form: HTMLFormElement, selectedImages: PreviewImage[]) => {
+    setUploadError(null);
+    setIsUploading(true);
+    isUploadingRef.current = true;
+
+    try {
+      const uploadedImages = await uploadImagesToSupabase(selectedImages, coverIndexRef.current);
+      attachUploadedImageFields(form, uploadedImages);
+
+      syncInputFiles([]);
+      isDirectUploadReadyRef.current = true;
+      form.requestSubmit();
+    } catch (error) {
+      setUploadError(getUploadErrorMessage(error));
+    } finally {
+      isUploadingRef.current = false;
+      setIsUploading(false);
+    }
+  }, [syncInputFiles]);
 
   useEffect(() => {
     imagesRef.current = images;
@@ -110,7 +141,7 @@ export function ProductImageUploader({
     return () => {
       currentForm.removeEventListener("submit", handleSubmit, true);
     };
-  }, []);
+  }, [prepareDirectUploadAndSubmit]);
 
   useEffect(() => {
     return () => {
@@ -158,25 +189,6 @@ export function ProductImageUploader({
     setCoverIndex((current) => Math.min(current, Math.max(nextImages.length - 1, 0)));
   }
 
-  async function prepareDirectUploadAndSubmit(form: HTMLFormElement, selectedImages: PreviewImage[]) {
-    setUploadError(null);
-    setIsUploading(true);
-    isUploadingRef.current = true;
-
-    try {
-      const uploadedImages = await uploadImagesToSupabase(selectedImages, coverIndexRef.current);
-      attachUploadedImageFields(form, uploadedImages);
-
-      syncInputFiles([]);
-      isDirectUploadReadyRef.current = true;
-      form.requestSubmit();
-    } catch (error) {
-      setUploadError(getUploadErrorMessage(error));
-    } finally {
-      isUploadingRef.current = false;
-      setIsUploading(false);
-    }
-  }
 
   function removeImage(indexToRemove: number) {
     const removedImage = images[indexToRemove];
@@ -215,15 +227,6 @@ export function ProductImageUploader({
     setCoverIndex(current => current === index ? target : current === target ? index : current);
   }
 
-  function syncInputFiles(nextImages: PreviewImage[]) {
-    const transfer = new DataTransfer();
-
-    nextImages.forEach((image) => transfer.items.add(image.file));
-
-    if (inputRef.current) {
-      inputRef.current.files = transfer.files;
-    }
-  }
 
   return (
     <>
@@ -281,7 +284,7 @@ export function ProductImageUploader({
         <div className="image-uploader-grid" aria-label="Images sélectionnées">
           {images.map((image, index) => (
             <div className="image-uploader-item" key={`${image.name}-${image.size}-${image.file.lastModified}`}>
-              <img alt="" src={image.url} />
+              <ProductImageView alt="" src={image.url} />
               <button
                 aria-pressed={coverIndex === index}
                 className="cover-button"

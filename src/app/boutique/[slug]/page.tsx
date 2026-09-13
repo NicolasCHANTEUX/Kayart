@@ -1,3 +1,4 @@
+import { ProductImageView } from "@/components/catalog/product-image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getIndexableOrigin } from "@/config/seo";
@@ -59,6 +60,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <section className="section product-detail-section">
+      <nav className="container breadcrumb" aria-label="Fil d’Ariane"><Link href="/">Accueil</Link><span aria-hidden="true">/</span><Link href="/boutique">Boutique</Link><span aria-hidden="true">/</span><span aria-current="page">{product.name}</span></nav>
       <div className="container product-detail-layout">
         <ProductGallery images={galleryImages} title={product.name} />
 
@@ -170,7 +172,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {defectImages.length > 0 ? (
                 <div className="defect-gallery" aria-label="Photos des défauts">
                   {defectImages.map((image) => (
-                    <img alt={image.altText ?? `Défaut ${product.name}`} key={image.id} src={image.url} />
+                    <ProductImageView alt={image.altText ?? `Défaut ${product.name}`} key={image.id} src={image.url} />
                   ))}
                 </div>
               ) : (

@@ -39,14 +39,14 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
           <div className="eyebrow">Compte KayArt</div>
           <h1 className="page-title">Créer un compte</h1>
           <p className="lead">
-            Créez un accès client avec une adresse mail et un mot de passe. Les droits administrateur restent attribués séparément.
+            Créez votre compte KayArt avec votre adresse email et un mot de passe personnel.
           </p>
         </div>
 
         <div className="auth-panel">
           <div className="auth-panel__header">
             <strong>Nouvel accès</strong>
-            <p>Un compte créé ici reste un compte client classique par défaut.</p>
+            <p>Renseignez vos identifiants pour commencer.</p>
           </div>
 
           {params.error ? <p className="form-notice form-notice--error">{params.error}</p> : null}

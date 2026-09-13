@@ -40,7 +40,7 @@ export function ProductTable({ canPersist, products }: ProductTableProps) {
                   <td data-label="Produit">
                     <div className="admin-product-cell">
                       <div className="admin-product-thumb">
-                        <ProductImageView alt={product.name} src={product.primaryImageUrl} />
+                        <ProductImageView thumbnail alt="" src={product.primaryImageUrl} />
                       </div>
                       <div>
                         <strong>{product.name}</strong>

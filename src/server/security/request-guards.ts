@@ -125,7 +125,7 @@ function getAllowedOrigins(host: string | null, proto: string | null) {
 function normalizeOrigin(value: string) {
   try {
     return new URL(value).origin;
-  } catch (error) {
+  } catch {
     return "";
   }
 }

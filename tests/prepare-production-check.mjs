@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 const target='work/urgent-production-check';
 fs.mkdirSync(target,{recursive:true});
-for(const name of ['src','public','prisma','package.json','package-lock.json','next.config.ts','tsconfig.json','next-env.d.ts']) {
+for(const name of ['src','public','prisma','package.json','package-lock.json','next.config.ts','eslint.config.mjs','tsconfig.json','next-env.d.ts']) {
   fs.cpSync(name,path.join(target,name),{recursive:true,filter:(source)=>!source.includes(path.join('public','uploads'))});
 }
 fs.appendFileSync(target+'/src/data/products.ts','\nproducts.push({ ...products[0], id:"regression-private-draft", slug:"regression-private-draft", name:"PRIVATE_DRAFT_7391", sku:"PRIVATE-7391", availability:"draft", publishedAt:null, description:"PRIVATE_DESCRIPTION_7391" });\n');

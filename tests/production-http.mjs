@@ -23,6 +23,7 @@ const contact=await fetch(base+'/contact?produit=Produit%20test&reference=REF-1'
 const contactBody=await contact.text();
 assert.ok(contactBody.includes('mailto:'));assert.ok(contactBody.includes('REF-1'));assert.ok(contactBody.includes('tel:'));
 const csp=contact.headers.get('content-security-policy');
+assert.equal(csp.includes("'unsafe-eval'"),false,'production must never permit the development eval runtime');
 for(const domain of ['https://images.unsplash.com','https://fonts.googleapis.com','https://fonts.gstatic.com']) assert.ok(csp.includes(domain));
 results.push({path:'/contact',status:contact.status,contextualContact:true,cspResourcesAllowed:true});
 for(const path of ['/mentions-legales','/cgv','/confidentialite']) {

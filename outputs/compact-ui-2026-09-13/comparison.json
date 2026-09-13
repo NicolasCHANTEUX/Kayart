@@ -1,0 +1,130 @@
+[
+  {
+    "route": "/",
+    "width": 390,
+    "before": 4144,
+    "after": 2482,
+    "reductionPercent": 40,
+    "overflow": false
+  },
+  {
+    "route": "/boutique",
+    "width": 390,
+    "before": 2246,
+    "after": 1756,
+    "reductionPercent": 22,
+    "overflow": false
+  },
+  {
+    "route": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 390,
+    "before": 3495,
+    "after": 2342,
+    "reductionPercent": 33,
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 390,
+    "before": 2484,
+    "after": 1863,
+    "reductionPercent": 25,
+    "overflow": false
+  },
+  {
+    "route": "/reparation",
+    "width": 390,
+    "before": 2898,
+    "after": 2189,
+    "reductionPercent": 24,
+    "overflow": false
+  },
+  {
+    "route": "/sur-mesure",
+    "width": 390,
+    "before": 3080,
+    "after": 2375,
+    "reductionPercent": 23,
+    "overflow": false
+  },
+  {
+    "route": "/connexion",
+    "width": 390,
+    "before": 1356,
+    "after": 984,
+    "reductionPercent": 27,
+    "overflow": false
+  },
+  {
+    "route": "/panier",
+    "width": 390,
+    "before": 956,
+    "after": 959,
+    "reductionPercent": 0,
+    "overflow": false
+  },
+  {
+    "route": "/",
+    "width": 1440,
+    "before": 3263,
+    "after": 2044,
+    "reductionPercent": 37,
+    "overflow": false
+  },
+  {
+    "route": "/boutique",
+    "width": 1440,
+    "before": 1658,
+    "after": 1099,
+    "reductionPercent": 34,
+    "overflow": false
+  },
+  {
+    "route": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 1440,
+    "before": 2447,
+    "after": 1871,
+    "reductionPercent": 24,
+    "overflow": false
+  },
+  {
+    "route": "/contact",
+    "width": 1440,
+    "before": 1871,
+    "after": 1371,
+    "reductionPercent": 27,
+    "overflow": false
+  },
+  {
+    "route": "/reparation",
+    "width": 1440,
+    "before": 2059,
+    "after": 1499,
+    "reductionPercent": 27,
+    "overflow": false
+  },
+  {
+    "route": "/sur-mesure",
+    "width": 1440,
+    "before": 2186,
+    "after": 1596,
+    "reductionPercent": 27,
+    "overflow": false
+  },
+  {
+    "route": "/connexion",
+    "width": 1440,
+    "before": 1277,
+    "after": 900,
+    "reductionPercent": 30,
+    "overflow": false
+  },
+  {
+    "route": "/panier",
+    "width": 1440,
+    "before": 964,
+    "after": 900,
+    "reductionPercent": 7,
+    "overflow": false
+  }
+]

@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isDevelopment = process.env.NODE_ENV === "development";
+
 const nextConfig: NextConfig = {
   async headers() {
     return [
@@ -16,7 +18,8 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com",
               "font-src 'self' data: https://fonts.gstatic.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "script-src 'self' 'unsafe-inline'",
+              // Next's development runtime needs eval; never enable it in production.
+              `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
               "connect-src 'self' https://*.supabase.co",
               "upgrade-insecure-requests"
             ].join("; ")

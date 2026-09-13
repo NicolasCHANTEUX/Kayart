@@ -1,0 +1,28 @@
+
+/* Administration: persistent context and restrained working surfaces. */
+.admin-shell { display:grid; grid-template-columns:190px minmax(0,1fr); max-width:1600px; margin:auto; min-height:70vh; }
+.admin-navigation { padding:20px 12px; background:var(--fiber); border-right:1px solid var(--line); display:flex; flex-direction:column; gap:7px; }
+.admin-navigation__label { font-size:9px; letter-spacing:.17em; text-transform:uppercase; margin:0 12px 12px; color:var(--metal); }
+.admin-navigation a { display:flex; justify-content:space-between; gap:8px; padding:12px; min-height:44px; font-size:12px; border-radius:6px; }
+.admin-navigation a[aria-current=page] { background:var(--carbon); color:#fff; }
+.admin-navigation a:hover { background:var(--line); color:var(--carbon); }
+.admin-navigation__back { margin-top:12px; border-top:1px solid var(--line); }
+.admin-workspace { min-width:0; }
+.admin-page { --admin-ink:var(--carbon); --admin-accent-soft:#e8effc; --admin-accent:var(--accent); --admin-accent-strong:#084497; --admin-surface:var(--paper); --admin-surface-2:var(--fiber); --admin-bg:var(--ivory); --admin-line:var(--line); --admin-text:var(--carbon); --admin-muted:var(--metal); background:var(--ivory); padding:24px 0 40px; }
+.admin-page .container { width:calc(100% - 40px); }
+.admin-page .page-title { font-size:30px; }
+.admin-page .eyebrow { margin-bottom:12px; }
+.admin-page .admin-panel,.admin-page .feature-card { min-height:0; box-shadow:none; border-radius:4px; }
+.admin-page .button { border-radius:6px; font-size:11px; }
+.admin-page .button--primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.admin-page .admin-grid { margin-top:20px; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.admin-page .data-table th { background:var(--fiber); font-size:10px; text-transform:uppercase; letter-spacing:.07em; }
+.admin-page .data-table td { font-size:12px; padding-block:12px; }
+.admin-page .admin-filters { border-radius:6px; background:var(--fiber); }
+.admin-page .form-stage { border-radius:4px; box-shadow:none; }
+.list-pagination { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; }
+.route-loading-overlay { height:3px; bottom:auto; background:var(--accent); backdrop-filter:none; pointer-events:none; display:block; }
+.route-loading-overlay .route-loading-indicator { display:none; }
+
+.admin-page .admin-panel__header,.admin-page .admin-filters { padding:16px; }
+.admin-page .drop-zone span { font-family:"DM Sans",Arial,sans-serif; font-size:20px; }

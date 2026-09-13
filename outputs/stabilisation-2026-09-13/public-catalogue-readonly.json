@@ -1,0 +1,85 @@
+{
+  "mode": "public read-only; no account cookies or submissions",
+  "checks": [
+    {
+      "route": "/boutique",
+      "width": 390,
+      "scroll": 390,
+      "h1": 1,
+      "images": 2,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/vcxb-bc",
+      "width": 390,
+      "scroll": 390,
+      "h1": 1,
+      "images": 1,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/gamma-rio-s-700-cm",
+      "width": 390,
+      "scroll": 390,
+      "h1": 1,
+      "images": 0,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/kinetic-vortex",
+      "width": 390,
+      "scroll": 390,
+      "h1": 1,
+      "images": 0,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/sigma-3-720-cm",
+      "width": 390,
+      "scroll": 390,
+      "h1": 1,
+      "images": 0,
+      "broken": 0
+    },
+    {
+      "route": "/boutique",
+      "width": 1440,
+      "scroll": 1440,
+      "h1": 1,
+      "images": 2,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/vcxb-bc",
+      "width": 1440,
+      "scroll": 1440,
+      "h1": 1,
+      "images": 1,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/gamma-rio-s-700-cm",
+      "width": 1440,
+      "scroll": 1440,
+      "h1": 1,
+      "images": 0,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/kinetic-vortex",
+      "width": 1440,
+      "scroll": 1440,
+      "h1": 1,
+      "images": 0,
+      "broken": 0
+    },
+    {
+      "route": "/boutique/sigma-3-720-cm",
+      "width": 1440,
+      "scroll": 1440,
+      "h1": 1,
+      "images": 0,
+      "broken": 0
+    }
+  ]
+}

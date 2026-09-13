@@ -1,5 +1,6 @@
 "use client";
 
+import { ProductImageView } from "@/components/catalog/product-image";
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { ProductImageUploader } from "@/components/admin/product-image-uploader";
 import { productAvailabilityLabels } from "@/lib/catalog";
@@ -82,7 +83,7 @@ export function ImperfectProductForm({
           <div className="model-preview">
             <div className="model-preview__image">
               {selectedProduct.primaryImageUrl ? (
-                <img alt="" src={selectedProduct.primaryImageUrl} />
+                <ProductImageView alt="" src={selectedProduct.primaryImageUrl} />
               ) : (
                 <span>Sans image</span>
               )}
@@ -214,14 +215,6 @@ function blockInvalidNumericKey(event: KeyboardEvent<HTMLInputElement>) {
   }
 
   event.preventDefault();
-}
-
-function sanitizeNumericInput(input: HTMLInputElement) {
-  const nextValue = sanitizeIntegerInput(input.value);
-
-  if (input.value !== nextValue) {
-    input.value = nextValue;
-  }
 }
 
 function sanitizePercentInputElement(input: HTMLInputElement) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const showDelayMs = 90;
 const minVisibleMs = 260;
@@ -16,6 +16,41 @@ export function RouteLoadingIndicator() {
   const hideTimerRef = useRef<number | null>(null);
   const fallbackTimerRef = useRef<number | null>(null);
   const visibleSinceRef = useRef(0);
+
+  const stopLoading = useCallback(() => {
+    clearTimer(showTimerRef);
+    clearTimer(fallbackTimerRef);
+
+    const elapsed = visibleSinceRef.current ? Date.now() - visibleSinceRef.current : minVisibleMs;
+    const delay = Math.max(minVisibleMs - elapsed, 0);
+
+    clearTimer(hideTimerRef);
+    hideTimerRef.current = window.setTimeout(() => {
+      setIsVisible(false);
+      visibleSinceRef.current = 0;
+    }, delay);
+  }, []);
+
+  const startLoading = useCallback(() => {
+    clearTimer(hideTimerRef);
+    clearTimer(showTimerRef);
+    clearTimer(fallbackTimerRef);
+
+    showTimerRef.current = window.setTimeout(() => {
+      visibleSinceRef.current = Date.now();
+      setIsVisible(true);
+    }, showDelayMs);
+
+    fallbackTimerRef.current = window.setTimeout(() => {
+      stopLoading();
+    }, fallbackHideMs);
+  }, [stopLoading]);
+
+  const clearTimers = useCallback(() => {
+    clearTimer(showTimerRef);
+    clearTimer(hideTimerRef);
+    clearTimer(fallbackTimerRef);
+  }, []);
 
   useEffect(() => {
     function handleDocumentClick(event: MouseEvent) {
@@ -50,46 +85,11 @@ export function RouteLoadingIndicator() {
       window.removeEventListener("pageshow", handlePageShow);
       clearTimers();
     };
-  }, []);
+  }, [startLoading, stopLoading, clearTimers]);
 
   useEffect(() => {
     stopLoading();
-  }, [routeKey]);
-
-  function startLoading() {
-    clearTimer(hideTimerRef);
-    clearTimer(showTimerRef);
-    clearTimer(fallbackTimerRef);
-
-    showTimerRef.current = window.setTimeout(() => {
-      visibleSinceRef.current = Date.now();
-      setIsVisible(true);
-    }, showDelayMs);
-
-    fallbackTimerRef.current = window.setTimeout(() => {
-      stopLoading();
-    }, fallbackHideMs);
-  }
-
-  function stopLoading() {
-    clearTimer(showTimerRef);
-    clearTimer(fallbackTimerRef);
-
-    const elapsed = visibleSinceRef.current ? Date.now() - visibleSinceRef.current : minVisibleMs;
-    const delay = Math.max(minVisibleMs - elapsed, 0);
-
-    clearTimer(hideTimerRef);
-    hideTimerRef.current = window.setTimeout(() => {
-      setIsVisible(false);
-      visibleSinceRef.current = 0;
-    }, delay);
-  }
-
-  function clearTimers() {
-    clearTimer(showTimerRef);
-    clearTimer(hideTimerRef);
-    clearTimer(fallbackTimerRef);
-  }
+  }, [routeKey, stopLoading]);
 
   if (!isVisible) {
     return null;

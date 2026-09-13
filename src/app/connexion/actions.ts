@@ -74,7 +74,7 @@ function getPostLoginRedirectPath(role: string, requestedRedirect: string) {
   }
 
   if (requestedRedirect.startsWith("/admin")) {
-    return "/";
+    return `/connexion?redirect=${encodeURIComponent(requestedRedirect)}`;
   }
 
   return requestedRedirect || "/";

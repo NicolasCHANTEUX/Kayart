@@ -1,5 +1,6 @@
 "use client";
 
+import { ProductImageView } from "@/components/catalog/product-image";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { ProductImageUploader } from "@/components/admin/product-image-uploader";
 import {
@@ -430,7 +431,7 @@ export function ProductForm({
                 >
                   {"\u00d7"}
                 </button>
-                <img alt={image.altText ?? ""} src={image.url} />
+                <ProductImageView alt={image.altText ?? ""} src={image.url} />
                 <figcaption>
                   <button type="button" className="button button--ghost" aria-pressed={coverImageId === image.id} onClick={() => setSelectedCover(image.id)}>{coverImageId === image.id ? "Couverture" : "Choisir comme couverture"}</button>
                   <div className="actions-row">

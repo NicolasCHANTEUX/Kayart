@@ -9,11 +9,11 @@ export function CustomerRequestForm({ kind, submissionKey, subject = "", enabled
   function field(name: string, label: string, options: { required?: boolean; max?: number; type?: string; multiline?: boolean; initial?: string } = {}) {
     const error = state.errors?.[name];
     const common = { name, id: `request-${name}`, required: options.required, maxLength: options.max ?? 200, defaultValue: state.values?.[name] ?? options.initial ?? "", "aria-invalid": Boolean(error), "aria-describedby": error ? `error-${name}` : undefined };
-    return <label htmlFor={common.id}>{label}{options.multiline ? <textarea {...common} rows={6} /> : <input {...common} type={options.type ?? "text"} autoComplete={name === "name" ? "name" : name === "email" ? "email" : name === "phone" ? "tel" : "off"} />}{error ? <span id={`error-${name}`} className="field-error">{error}</span> : null}</label>;
+    return <label htmlFor={common.id}>{label}{options.multiline ? <textarea {...common} rows={name === "message" ? 4 : 3} /> : <input {...common} type={options.type ?? "text"} autoComplete={name === "name" ? "name" : name === "email" ? "email" : name === "phone" ? "tel" : "off"} />}{error ? <span id={`error-${name}`} className="field-error">{error}</span> : null}</label>;
   }
   return <form action={action} className="customer-request-form">
     <h2>{kind === "repair" ? "Décrire la réparation" : kind === "custom" ? "Présenter votre projet" : "Envoyer un message"}</h2>
-    {!enabled ? <p className="form-notice">Le formulaire est indisponible sur cet environnement. Vous pouvez joindre l’atelier par email.</p> : null}
+    {!enabled ? <p className="form-notice">Le formulaire est momentanément indisponible. <a href="mailto:contact.kayart@gmail.com">Écrivez directement à l’atelier ↗</a></p> : null}
     {state.message ? <p className="form-notice form-notice--error" role="alert">{state.message}</p> : null}
     <input type="hidden" name="kind" value={kind} /><input type="hidden" name="submissionKey" value={submissionKey} />
     <div className="request-honeypot" aria-hidden="true"><label>Site web<input name="website" tabIndex={-1} autoComplete="off" /></label></div>

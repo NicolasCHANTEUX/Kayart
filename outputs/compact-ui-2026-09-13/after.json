@@ -1,0 +1,188 @@
+[
+  {
+    "route": "/",
+    "width": 390,
+    "height": 2482,
+    "scrollWidth": 390,
+    "h1Size": "30.03px",
+    "sectionPadding": "0px",
+    "buttons": [
+      44,
+      44
+    ]
+  },
+  {
+    "route": "/boutique",
+    "width": 390,
+    "height": 1756,
+    "scrollWidth": 390,
+    "h1Size": "30px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 390,
+    "height": 2342,
+    "scrollWidth": 390,
+    "h1Size": "28px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44,
+      44,
+      44
+    ]
+  },
+  {
+    "route": "/contact",
+    "width": 390,
+    "height": 1863,
+    "scrollWidth": 390,
+    "h1Size": "30px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44,
+      44
+    ]
+  },
+  {
+    "route": "/reparation",
+    "width": 390,
+    "height": 2189,
+    "scrollWidth": 390,
+    "h1Size": "30px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/sur-mesure",
+    "width": 390,
+    "height": 2375,
+    "scrollWidth": 390,
+    "h1Size": "30px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/connexion",
+    "width": 390,
+    "height": 984,
+    "scrollWidth": 390,
+    "h1Size": "30px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/panier",
+    "width": 390,
+    "height": 959,
+    "scrollWidth": 390,
+    "h1Size": "30px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44,
+      44
+    ]
+  },
+  {
+    "route": "/",
+    "width": 1440,
+    "height": 2044,
+    "scrollWidth": 1440,
+    "h1Size": "54px",
+    "sectionPadding": "0px",
+    "buttons": [
+      44,
+      44
+    ]
+  },
+  {
+    "route": "/boutique",
+    "width": 1440,
+    "height": 1099,
+    "scrollWidth": 1440,
+    "h1Size": "42px",
+    "sectionPadding": "40px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 1440,
+    "height": 1871,
+    "scrollWidth": 1440,
+    "h1Size": "38px",
+    "sectionPadding": "24px",
+    "buttons": [
+      44,
+      44,
+      96
+    ]
+  },
+  {
+    "route": "/contact",
+    "width": 1440,
+    "height": 1371,
+    "scrollWidth": 1440,
+    "h1Size": "42px",
+    "sectionPadding": "40px",
+    "buttons": [
+      44,
+      44
+    ]
+  },
+  {
+    "route": "/reparation",
+    "width": 1440,
+    "height": 1499,
+    "scrollWidth": 1440,
+    "h1Size": "42px",
+    "sectionPadding": "40px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/sur-mesure",
+    "width": 1440,
+    "height": 1596,
+    "scrollWidth": 1440,
+    "h1Size": "42px",
+    "sectionPadding": "40px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/connexion",
+    "width": 1440,
+    "height": 900,
+    "scrollWidth": 1440,
+    "h1Size": "42px",
+    "sectionPadding": "32px",
+    "buttons": [
+      44
+    ]
+  },
+  {
+    "route": "/panier",
+    "width": 1440,
+    "height": 900,
+    "scrollWidth": 1440,
+    "h1Size": "42px",
+    "sectionPadding": "40px",
+    "buttons": [
+      44,
+      44
+    ]
+  }
+]

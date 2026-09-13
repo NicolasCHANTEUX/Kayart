@@ -1,130 +1,32 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ProductCard } from "@/components/catalog/product-card";
+import { KayartHeroMark } from "@/components/layout/kayart-brand";
 import { listFeaturedProducts } from "@/server/catalog/catalog.service";
 
-const processSteps = [
-  "Conception",
-  "Preparation",
-  "Stratification",
-  "Finition",
-  "Contrôle"
-];
-
 export default async function HomePage() {
-  const featuredProducts = await listFeaturedProducts();
-
-  return (
-    <>
-      <section className="hero">
-        <div className="container hero__content">
-          <div className="eyebrow">Atelier carbone / kayak / pièces techniques</div>
-          <h1>KayArt</h1>
-          <p>
-            Fabrication carbone, réparation de kayak, pièces uniques et projets sur mesure.
-            Une boutique d'atelier pensée pour comprendre, choisir et confier le bon matériel.
-          </p>
-          <div className="hero__actions">
-            <Link className="button button--primary" href="/boutique">
-              Explorer la boutique
-            </Link>
-            <Link className="button button--ghost" href="/sur-mesure">
-              Demander du sur mesure
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section__header">
-            <h2>Produits, services et pièces uniques</h2>
-            <Link className="button button--ghost" href="/boutique">
-              Tout voir
-            </Link>
-          </div>
-          <div className="grid">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section section--light">
-        <div className="container split">
-          <div>
-            <div className="eyebrow">Savoir-faire</div>
-            <h2>Une logique d'atelier avant une logique de catalogue</h2>
-            <p className="lead">
-              KayArt doit montrer le geste, les matières, les contraintes et les choix techniques.
-              Chaque fiche, chaque demande et chaque image doit aider le client à comprendre ce
-              qu'il achète ou ce qu'il confie à l'atelier.
-            </p>
-          </div>
-          <div className="process">
-            {processSteps.map((step, index) => (
-              <div className="process__item" key={step}>
-                <div className="process__number">{String(index + 1).padStart(2, "0")}</div>
-                <div>{step}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section__header">
-            <h2>Réparation et sur-mesure comme parcours dédiés</h2>
-          </div>
-          <div className="grid">
-            <article className="feature-card feature-card--repair">
-              <div className="feature-card__visual" aria-hidden="true" />
-              <div>
-                <div className="meta">Diagnostic</div>
-                <h3>Réparation carbone</h3>
-              </div>
-              <p>
-                Un formulaire dédié permettra d'envoyer photos, contexte et description du
-                dommage pour une réponse claire de l'atelier.
-              </p>
-              <Link className="button button--ghost" href="/reparation">
-                Demander un diagnostic
-              </Link>
-            </article>
-
-            <article className="feature-card feature-card--custom">
-              <div className="feature-card__visual" aria-hidden="true" />
-              <div>
-                <div className="meta">Projet</div>
-                <h3>Fabrication sur mesure</h3>
-              </div>
-              <p>
-                Dimensions, usage, niveau, contraintes et finition seront cadrés dans une demande
-                simple, sans transformer la V1 en configurateur complexe.
-              </p>
-              <Link className="button button--ghost" href="/sur-mesure">
-                Préparer une demande
-              </Link>
-            </article>
-
-            <article className="feature-card feature-card--journal">
-              <div className="feature-card__visual" aria-hidden="true" />
-              <div>
-                <div className="meta">PWA</div>
-                <h3>Installable sans complexité</h3>
-              </div>
-              <p>
-                Le socle prévoit une PWA progressive : installation mobile et desktop, cache
-                sobre, sans panier offline ni notification prématurée.
-              </p>
-              <Link className="button button--ghost" href="/journal">
-                Suivre le projet
-              </Link>
-            </article>
-          </div>
-        </div>
-      </section>
-    </>
-  );
+  const products = (await listFeaturedProducts()).slice(0, 3);
+  return <>
+    <section className="atelier-hero"><div className="container atelier-hero__grid">
+      <div className="atelier-hero__copy">
+        <div className="eyebrow"><span className="status-dot"/> Atelier carbone indépendant</div>
+        <h1>Du carbone.<br/><em>Du caractère.</em></h1>
+        <p>Des pièces pour votre pratique. Un atelier pour réparer, fabriquer et donner forme à vos idées.</p>
+        <div className="hero-actions"><Link className="button button--primary" href="/boutique">Explorer la boutique <span aria-hidden="true">↗</span></Link><Link className="text-link" href="/savoir-faire">L’atelier KayArt <span aria-hidden="true">→</span></Link></div>
+        <div className="hero-footnote"><span>Conception · Fabrication · Réparation</span><span className="mono">KAYART / CARBON IN MOTION</span></div>
+      </div>
+      <div className="atelier-hero__visual" aria-hidden="true"><KayartHeroMark/><span className="visual-index">KAYAK / ART / COMPOSITE / SPORT</span><div className="visual-caption"><span className="racing-wordmark">KAYART</span><span>À L’ATELIER.<br/>SUR L’EAU.</span></div></div>
+    </div></section>
+    <div className="atelier-strip"><div className="container"><span>Pièces neuves & imparfaites</span><span>Réparation sur diagnostic</span><span>Retrait gratuit, sur rendez-vous</span></div></div>
+    <section className="section collection-section"><div className="container">
+      <div className="section__header"><div><div className="eyebrow">01 / La sélection</div><h2>Prêtes pour la suite.</h2></div><div><p>Pièces neuves, imparfaites et services atelier.</p><Link className="text-link" href="/boutique">Toute la boutique <span aria-hidden="true">↗</span></Link></div></div>
+      {products.length ? <div className="grid product-grid">{products.map(product => <ProductCard key={product.id} product={product}/>)}</div> : <div className="collection-empty"><p>Vous recherchez une pièce particulière ? Parlons de votre besoin.</p><Link className="text-link" href="/contact">Contacter l’atelier ↗</Link></div>}
+    </div></section>
+    <section className="atelier-services"><div className="container"><div className="section__header"><div><div className="eyebrow">02 / Au-delà de la boutique</div><h2>Une pièce. Une histoire.<br/>Et la suite à écrire.</h2></div><p>Votre matériel mérite un regard d’atelier.<br/>Votre projet aussi.</p></div>
+      <div className="service-grid">
+        <Link href="/reparation" className="service-tile service-tile--repair"><span className="mono">01 — RÉPARER</span><div className="service-line-art" aria-hidden="true"><i/><i/><i/></div><h3>Retour à l’eau.</h3><p>Une pièce endommagée ? Décrivez le problème et partagez vos photos pour préparer un diagnostic.</p><span className="service-tile__cta">Demander un diagnostic <b aria-hidden="true">↗</b></span></Link>
+        <Link href="/sur-mesure" className="service-tile service-tile--custom"><span className="mono">02 — IMAGINER</span><div className="service-cross-art" aria-hidden="true">+</div><h3>À votre mesure.</h3><p>Un usage précis, une forme en tête, une contrainte technique : donnons un point de départ à votre projet.</p><span className="service-tile__cta">Parler de mon projet <b aria-hidden="true">↗</b></span></Link>
+      </div>
+    </div></section>
+    <section className="section atelier-manifesto"><div className="container"><div className="eyebrow">03 / L’esprit KayArt</div><div className="manifesto-grid"><h2>Le bon matériel <br/>commence par <br/><em>un échange.</em></h2><div><p className="lead">Comprendre votre pratique. Choisir une pièce adaptée. Prendre le temps de discuter des contraintes avant de fabriquer ou de réparer.</p><p>C’est cette relation directe avec l’atelier que vous retrouvez chez KayArt, de la première question au retrait de votre pièce.</p><Link className="button button--ghost" href="/contact">Échanger avec l’atelier ↗</Link></div></div></div></section>
+  </>;
 }

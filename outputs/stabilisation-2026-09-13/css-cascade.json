@@ -1,0 +1,33 @@
+[
+  {
+    "file": "src/app/globals.css",
+    "modules": [
+      "base-and-public",
+      "accounts",
+      "admin-components",
+      "product-detail",
+      "admin-operations",
+      "admin-theme",
+      "responsive",
+      "requests-and-cart"
+    ],
+    "cascadeUnchanged": true,
+    "sha256": "87fdd3cce05d51d7e76768e5a3f760432f4ee14e43d6b130e4902a301b801710"
+  },
+  {
+    "file": "src/app/atelier-v2.css",
+    "modules": [
+      "foundations",
+      "header",
+      "home-and-footer",
+      "catalog",
+      "forms-and-pages",
+      "admin",
+      "responsive",
+      "compatibility",
+      "admin-access"
+    ],
+    "cascadeUnchanged": true,
+    "sha256": "afcfc1bde90d53fcec304a6e6b7c405480f11a372320bf38297ed74dcc507014"
+  }
+]

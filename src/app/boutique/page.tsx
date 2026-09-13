@@ -15,17 +15,18 @@ export default async function ShopPage({ searchParams }: { searchParams?: Promis
   const { products, filters } = result;
 
   return (
-    <section className="section">
+    <section className="section shop-page">
       <div className="container">
         <div className="section__header">
           <div>
-            <div className="eyebrow">Catalogue</div>
-            <h1 className="page-title">Boutique</h1>
+            <div className="eyebrow">Le catalogue de l’atelier</div>
+            <h1 className="page-title">Des pièces de caractère.</h1>
           </div>
-          <p className="lead">
+          <p className="lead catalog-intro">
             Produits neufs, pièces imparfaites, services atelier et projets sur commande.
           </p>
         </div>
+        <nav className="shop-paths" aria-label="Accès rapides au catalogue"><Link href="/boutique">Tout explorer</Link><Link href="/boutique?stock=1">En stock</Link><Link href="/boutique?condition=imperfect">Les imparfaits</Link><Link href="/boutique?condition=used">Seconde vie</Link></nav>
         <form className="catalog-filters" action="/boutique" role="search">
           <label>Rechercher<input type="search" name="q" maxLength={120} defaultValue={filters.q} placeholder="Nom, référence ou description" /></label>
           <label>Catégorie<select name="category" defaultValue={filters.category}><option value="">Toutes</option>{result.categories.map(c => <option key={c.id} value={c.slug}>{c.name}</option>)}</select></label>
@@ -34,7 +35,7 @@ export default async function ShopPage({ searchParams }: { searchParams?: Promis
           <label className="request-consent"><input type="checkbox" name="stock" value="1" defaultChecked={filters.stock === "1"} />En stock uniquement</label>
           <button className="button button--primary">Appliquer</button><Link href="/boutique">Réinitialiser</Link>
         </form>
-        <p role="status">{result.total} résultat{result.total > 1 ? "s" : ""}</p>
+        <p className="shop-result-count" role="status">{result.total} résultat{result.total > 1 ? "s" : ""}</p>
         {!result.total ? <p>Aucun produit ne correspond à ces critères. Modifiez les filtres ou <Link href="/boutique">affichez tout le catalogue</Link>.</p> : null}
         <div className="grid">
           {products.map((product) => (

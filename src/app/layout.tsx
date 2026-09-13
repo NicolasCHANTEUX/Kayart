@@ -6,6 +6,7 @@ import { RouteLoadingIndicator } from "@/components/layout/route-loading-indicat
 import { siteConfig } from "@/config/site";
 import { getIndexableOrigin } from "@/config/seo";
 import "./globals.css";
+import "./atelier-v2.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1d3a4a",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1
 };

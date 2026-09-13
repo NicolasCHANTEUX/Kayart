@@ -1,0 +1,195 @@
+[
+  {
+    "path": "/admin",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/commandes",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/commandes",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/demandes",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/demandes",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/livraison",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/livraison",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits/regression-private-draft/modifier",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/admin/produits/regression-private-draft/modifier",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique/regression-private-draft",
+    "rsc": false,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/boutique/regression-private-draft",
+    "rsc": true,
+    "status": 200,
+    "privateMarkersAbsent": true
+  },
+  {
+    "path": "/api/admin/product-images/upload",
+    "origin": "http://localhost:3107",
+    "status": 401
+  },
+  {
+    "path": "/api/admin/product-images/upload",
+    "origin": "https://evil.invalid",
+    "status": 403
+  },
+  {
+    "path": "/contact",
+    "status": 200,
+    "contextualContact": true,
+    "cspResourcesAllowed": true
+  },
+  {
+    "path": "/mentions-legales",
+    "status": 404,
+    "legalPublicationBlocked": true
+  },
+  {
+    "path": "/cgv",
+    "status": 404,
+    "legalPublicationBlocked": true
+  },
+  {
+    "path": "/confidentialite",
+    "status": 404,
+    "legalPublicationBlocked": true
+  },
+  {
+    "path": "/contact",
+    "status": 200,
+    "formPresent": true
+  },
+  {
+    "path": "/reparation",
+    "status": 200,
+    "formPresent": true
+  },
+  {
+    "path": "/sur-mesure",
+    "status": 200,
+    "formPresent": true
+  },
+  {
+    "path": "/api/checkout",
+    "status": 503
+  },
+  {
+    "path": "/api/stripe/webhook",
+    "status": 400
+  },
+  {
+    "path": "/api/cron/checkouts",
+    "status": 401
+  },
+  {
+    "path": "/api/admin/request-images/11111111-1111-4111-8111-111111111111",
+    "status": 401
+  },
+  {
+    "path": "/api/cart/quote",
+    "status": 200,
+    "paymentDisabled": true,
+    "noInventedRate": true
+  },
+  {
+    "path": "/boutique?q=aucun-resultat-fixture-62948",
+    "status": 200,
+    "emptySearchSafe": true
+  },
+  {
+    "path": "/boutique?q=regression-private-draft",
+    "status": 200,
+    "emptySearchSafe": true
+  },
+  {
+    "path": "/boutique?sort=price-asc&stock=1&page=9999",
+    "status": 200,
+    "filtersPresent": true
+  },
+  {
+    "path": "/robots.txt",
+    "status": 200,
+    "indexingDisabled": true
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "noMockOrPrivateUrls": true
+  },
+  {
+    "path": "/boutique",
+    "previewNoindexMetadata": true
+  }
+]

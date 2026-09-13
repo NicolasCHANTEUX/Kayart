@@ -1,0 +1,373 @@
+[
+  {
+    "path": "/",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/contact",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/reparation",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/sur-mesure",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/connexion",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/inscription",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/savoir-faire",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/journal",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/panier",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 320,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/contact",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/reparation",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/sur-mesure",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/connexion",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/inscription",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/savoir-faire",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/journal",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/panier",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 390,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/contact",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/reparation",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/sur-mesure",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/connexion",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/inscription",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/savoir-faire",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/journal",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/panier",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 768,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/contact",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/reparation",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/sur-mesure",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/connexion",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/inscription",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/savoir-faire",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/journal",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/panier",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 860,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/contact",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/reparation",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/sur-mesure",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/connexion",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/inscription",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/savoir-faire",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/journal",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/panier",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "path": "/boutique/pagaie-carbone-signature-imparfaite",
+    "width": 1440,
+    "noOverflow": true,
+    "oneHeading": true
+  },
+  {
+    "check": "mobile menu opens and Escape closes with focus restored",
+    "passed": true
+  },
+  {
+    "check": "filtered empty catalogue remains actionable",
+    "passed": true
+  },
+  {
+    "check": "add to cart updates header immediately",
+    "passed": true
+  },
+  {
+    "check": "filled cart and delivery control fit viewport",
+    "width": 320,
+    "passed": true
+  },
+  {
+    "check": "filled cart and delivery control fit viewport",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "check": "filled cart and delivery control fit viewport",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "check": "filled cart and delivery control fit viewport",
+    "width": 860,
+    "passed": true
+  },
+  {
+    "check": "filled cart and delivery control fit viewport",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "check": "remove restores empty state and updates header",
+    "passed": true
+  }
+]

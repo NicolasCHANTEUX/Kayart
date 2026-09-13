@@ -1,3 +1,4 @@
+import { ProductImageView } from "@/components/catalog/product-image";
 import Link from "next/link";
 import { requestKinds, requestKindLabels, requestStatuses, requestStatusLabels, type RequestKind, type CustomerRequestStatus } from "@/lib/customer-requests";
 import { listAdminRequests } from "@/server/requests/request-service";
@@ -21,7 +22,7 @@ export default async function RequestsPage({ searchParams }: { searchParams?: Pr
       <div className="meta">{requestKindLabels[kind]} · {requestStatusLabels[request.status]} · {new Date(request.createdAt).toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}</div>
       <h2>{request.subject}</h2><p>{request.name} — <a href={`mailto:${encodeURIComponent(request.email)}`}>{request.email}</a>{request.phone ? ` — ${request.phone}` : ""}</p>
       <p className="request-message">{request.message}</p>{request.details ? <p className="request-message">{request.details}</p> : null}
-      <div className="request-photos">{request.imageIds.map(id => <a key={id} href={`/api/admin/request-images/${id}`} target="_blank" rel="noreferrer"><img src={`/api/admin/request-images/${id}`} alt="Photo jointe à la demande" loading="lazy" /></a>)}</div>
+      <div className="request-photos">{request.imageIds.map(id => <a key={id} href={`/api/admin/request-images/${id}`} target="_blank" rel="noreferrer"><ProductImageView src={`/api/admin/request-images/${id}`} alt="Photo jointe à la demande" /></a>)}</div>
       <form action={updateRequestStatusAction} className="request-filter"><input type="hidden" name="kind" value={kind} /><input type="hidden" name="id" value={request.id} /><input type="hidden" name="updatedAt" value={request.updatedAt} /><label>Statut<select name="status" defaultValue={request.status}>{requestStatuses.map(value => <option key={value} value={value}>{requestStatusLabels[value]}</option>)}</select></label><button className="button button--primary">Enregistrer</button></form>
     </article>)}</div>
     <nav className="header-actions" aria-label="Pagination">{page > 1 ? <Link href={`/admin/demandes?type=${kind}&page=${page - 1}&status=${status ?? ""}`}>Précédent</Link> : null}<span>Page {page}</span>{hasNext ? <Link href={`/admin/demandes?type=${kind}&page=${page + 1}&status=${status ?? ""}`}>Suivant</Link> : null}</nav>

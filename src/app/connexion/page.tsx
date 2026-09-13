@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { sanitizeRedirectPath } from "@/lib/safe-redirect";
-import { loginAction } from "@/app/connexion/actions";
+import { loginAction, logoutAction } from "@/app/connexion/actions";
 import { AuthSubmitButton } from "@/components/auth/auth-submit-button";
 import { getCurrentAuthSession } from "@/server/auth/session";
 
@@ -32,8 +32,17 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     redirect(redirectPath || "/admin");
   }
 
+  if (session && redirectPath.startsWith("/admin")) {
+    return <section className="section auth-page"><div className="container auth-layout">
+      <div><div className="eyebrow">Administration</div><h1 className="page-title">Accès administrateur requis</h1><p className="lead">Vous êtes connecté, mais ce compte ne dispose pas des droits nécessaires pour gérer l’atelier.</p></div>
+      <div className="auth-panel"><p>Compte connecté : <strong>{session.user.email}</strong></p><p>Si vous gérez KayArt, faites vérifier les droits associés à ce compte. Vous pouvez aussi vous déconnecter pour utiliser votre compte administrateur.</p>
+        <form action={logoutAction}><button className="button button--primary" type="submit">Se déconnecter</button></form><Link className="text-link" href="/">Retour au site</Link>
+      </div>
+    </div></section>;
+  }
+
   if (session) {
-    redirect(redirectPath && !redirectPath.startsWith("/admin") ? redirectPath : "/");
+    redirect(redirectPath || "/");
   }
 
   return (
@@ -43,20 +52,20 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <div className="eyebrow">Espace sécurisé</div>
           <h1 className="page-title">Connexion</h1>
           <p className="lead">
-            Connectez-vous avec l'adresse mail et le mot de passe du compte administrateur KayArt.
+            Bienvenue. Connectez-vous avec les identifiants de votre compte KayArt.
           </p>
         </div>
 
         <div className="auth-panel">
           <div className="auth-panel__header">
-            <strong>Accès administrateur</strong>
-            <p>Les comptes non administrateurs restent sur l'expérience publique du site.</p>
+            <strong>Vos identifiants</strong>
+            <p>Utilisez l’adresse email avec laquelle vous avez créé votre compte.</p>
           </div>
 
           {params.error ? <p className="form-notice form-notice--error">{params.error}</p> : null}
           {params.created ? (
             <p className="form-notice form-notice--success">
-              Compte créé. Si Supabase vous a envoyé un email de confirmation, validez-le avant de vous connecter.
+              Compte créé. Si vous avez reçu un email de confirmation, validez-le avant de vous connecter.
             </p>
           ) : null}
 
@@ -69,7 +78,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 defaultValue={params.email ?? ""}
                 inputMode="email"
                 name="email"
-                placeholder="admin@kayart.fr"
+                placeholder="vous@exemple.fr"
                 required
                 type="email"
               />

@@ -1,0 +1,26 @@
+[
+  {
+    "check": "refreshed identity visible in same rendered request; credentials only in HttpOnly cookies",
+    "passed": true
+  },
+  {
+    "check": "refreshed customer with admin claim still denied by admin service",
+    "passed": true
+  },
+  {
+    "check": "customer requesting admin receives an explicit explanation without a home redirect",
+    "passed": true
+  },
+  {
+    "check": "revoked refresh credentials cleared",
+    "passed": true
+  },
+  {
+    "check": "outage leaves credentials for retry without authenticating",
+    "passed": true
+  },
+  {
+    "check": "logout after renewal revokes refreshed session and leaves both browser cookies expired",
+    "passed": true
+  }
+]

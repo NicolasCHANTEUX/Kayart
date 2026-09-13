@@ -82,7 +82,7 @@ export function PasswordResetForm({ supabasePublishableKey, supabaseUrl }: Passw
       setIsSuccess(true);
       setAccessToken("");
       window.history.replaceState({}, document.title, "/nouveau-mot-de-passe");
-    } catch (error) {
+    } catch {
       setErrorMessage("Impossible de modifier le mot de passe pour le moment.");
     } finally {
       setIsPending(false);
