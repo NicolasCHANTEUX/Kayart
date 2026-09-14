@@ -41,6 +41,10 @@
 .home-page .collection-section .section__header p { color:#000; }
 .product-card { min-height:0; min-width:0; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; gap:0; display:block; overflow:visible; }
 .product-card__visual { position:relative; display:block; aspect-ratio:1.65; min-height:0; height:auto; border:1px solid var(--line); border-radius:4px; overflow:hidden; background:#f0f1f5!important; margin-bottom:12px; }
+.product-card__visual::after { content:""; position:absolute; inset:auto 0 0; height:4px; background:var(--brand-stripe); pointer-events:none; }
+.product-card__visual .image-unavailable::after { content:none; }
+.product-card__visual .image-unavailable--branded { background:linear-gradient(125deg,#f6f7fa 0 44%,#eeeff4 44% 66%,#f6f7fa 66%); }
+.unavailable-mark { display:block; width:64px; height:56px; flex-shrink:0; color:#b6bbc9; }
 .product-card__visual img { padding:16px; object-fit:contain; width:100%; height:100%; transition:transform .2s; }
 .product-card:hover .product-card__visual img { transform:scale(1.025); }
 .product-card__badge { position:absolute; top:10px; left:10px; font-size:10px; padding:4px 7px; background:#fff; border:1px solid var(--line); border-radius:2px; color:var(--carbon); }

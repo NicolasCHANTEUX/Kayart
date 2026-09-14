@@ -8,9 +8,9 @@ export function ProductCard({ product }: { product: Product }) {
   const availability = product.condition === "service" ? "Service atelier" : product.availability === "reserved" ? "Réservé" : product.availability === "made-to-order" || product.priceCents === null ? "Sur commande" : (product.stockQuantity ?? 0) > 0 ? "En stock" : "Sur demande";
   return <article className={`product-card product-card--${product.condition}`}>
     <Link className="product-card__visual" href={`/boutique/${product.slug}`} tabIndex={-1} aria-hidden="true">
-      <ProductImageView alt="" src={imageUrl}/><span className="product-card__badge">{productConditionLabels[product.condition]}</span><span className="product-card__arrow">↗</span>
+      <ProductImageView alt="" src={imageUrl} brandedFallback/><span className="product-card__badge">{productConditionLabels[product.condition]}</span><span className="product-card__arrow" aria-hidden="true">↗</span>
     </Link>
-    <div className="product-card__body"><div className="product-card__meta"><span>{product.categoryName}</span><span className="product-card__availability">{availability}</span></div>
+    <div className="product-card__body"><div className="product-card__meta"><span>{product.categoryName}</span><span className="product-card__availability" data-in-stock={availability === "En stock"}>{availability}</span></div>
       <h3><Link href={`/boutique/${product.slug}`}>{product.name}</Link></h3>
       <p>{product.shortDescription}</p>
       <div className="product-card__bottom"><ProductPrice compact product={product}/><Link className="text-link" href={`/boutique/${product.slug}`} aria-label={`Découvrir ${product.name}`}>Découvrir ↗</Link></div>

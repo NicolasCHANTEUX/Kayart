@@ -1,0 +1,68 @@
+[
+  {
+    "width": 320,
+    "noOverflow": true,
+    "disclosure": "opens and closes",
+    "stripes": true
+  },
+  {
+    "width": 390,
+    "noOverflow": true,
+    "disclosure": "opens and closes",
+    "stripes": true
+  },
+  {
+    "width": 540,
+    "noOverflow": true,
+    "disclosure": "opens and closes",
+    "stripes": true
+  },
+  {
+    "width": 768,
+    "noOverflow": true,
+    "disclosure": "opens and closes",
+    "stripes": true
+  },
+  {
+    "width": 800,
+    "noOverflow": true,
+    "disclosure": "opens and closes",
+    "stripes": true
+  },
+  {
+    "width": 801,
+    "noOverflow": true,
+    "disclosure": "always visible",
+    "stripes": true
+  },
+  {
+    "width": 1024,
+    "noOverflow": true,
+    "disclosure": "always visible",
+    "stripes": true
+  },
+  {
+    "width": 1280,
+    "noOverflow": true,
+    "disclosure": "always visible",
+    "stripes": true
+  },
+  {
+    "width": 1440,
+    "noOverflow": true,
+    "disclosure": "always visible",
+    "stripes": true
+  },
+  {
+    "check": "submit, active count, closed-panel search, remove one criterion and reset",
+    "passed": true
+  },
+  {
+    "check": "keyboard focus, Enter disclosure and responsive form persistence",
+    "passed": true
+  },
+  {
+    "check": "filters accessible without JavaScript",
+    "passed": true
+  }
+]
