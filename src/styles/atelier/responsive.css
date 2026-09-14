@@ -6,6 +6,22 @@
  .admin-page .container { width:calc(100% - 32px); }
  .product-detail-layout,.split { gap:24px; }
 }
+@media (min-width:801px) {
+ .footer-cta__inner { padding-block:16px; }
+ .footer-cta h2>span { margin-bottom:4px; }
+ .footer-cta__copy { display:flex; align-items:center; gap:20px; max-width:none; }
+ .footer-cta__copy p { flex:1; min-width:0; margin:0; font-size:13px; line-height:1.45; }
+ .footer-cta__link { flex-shrink:0; gap:12px; }
+ .footer-main { padding-block:18px; }
+ .footer-main h3 { margin-bottom:6px; }
+ .footer-identity p { margin-top:8px; }
+ .footer-navigation { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:16px; align-content:start; }
+ .footer-navigation h3 { grid-column:1/-1; }
+ .footer-navigation a { gap:8px; justify-content:flex-start; }
+ .footer-contact p { margin-top:6px; }
+ .footer-legal { min-height:32px; padding-block:6px; }
+ .footer-legal a { min-height:32px; }
+}
 @media (max-width:800px) {
  .footer-main { grid-template-columns:1fr 1fr; gap:24px; }
  .footer-identity { grid-column:1 / -1; }

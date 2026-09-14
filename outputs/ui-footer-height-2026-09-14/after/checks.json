@@ -1,0 +1,377 @@
+[
+  {
+    "approved": false,
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 470.140625,
+    "columns": "124.359px 217.641px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      36.796875,
+      44,
+      0,
+      44,
+      44,
+      44,
+      44,
+      44,
+      44,
+      44
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": true,
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 518.140625,
+    "columns": "124.359px 217.641px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [
+      "/mentions-legales",
+      "/cgv",
+      "/confidentialite"
+    ],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      36.796875,
+      44,
+      0,
+      44,
+      44,
+      44,
+      44,
+      44,
+      44,
+      44,
+      44,
+      44,
+      44
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": false,
+    "width": 1024,
+    "scrollWidth": 1009,
+    "height": 278.515625,
+    "columns": "379.516px 233.547px 291.938px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      41.21875,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": true,
+    "width": 1024,
+    "scrollWidth": 1009,
+    "height": 291.515625,
+    "columns": "379.516px 233.547px 291.938px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [
+      "/mentions-legales",
+      "/cgv",
+      "/confidentialite"
+    ],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      41.21875,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": false,
+    "width": 1280,
+    "scrollWidth": 1265,
+    "height": 288.8125,
+    "columns": "476.797px 293.422px 366.781px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      51.515625,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": true,
+    "width": 1280,
+    "scrollWidth": 1265,
+    "height": 301.8125,
+    "columns": "476.797px 293.422px 366.781px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [
+      "/mentions-legales",
+      "/cgv",
+      "/confidentialite"
+    ],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      51.515625,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": false,
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 290.1875,
+    "columns": "509.922px 313.812px 392.266px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      52.890625,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": true,
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 303.1875,
+    "columns": "509.922px 313.812px 392.266px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [
+      "/mentions-legales",
+      "/cgv",
+      "/confidentialite"
+    ],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      52.890625,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": false,
+    "width": 1870,
+    "scrollWidth": 1855,
+    "height": 290.1875,
+    "columns": "509.922px 313.812px 392.266px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      52.890625,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  },
+  {
+    "approved": true,
+    "width": 1870,
+    "scrollWidth": 1855,
+    "height": 303.1875,
+    "columns": "509.922px 313.812px 392.266px",
+    "nav": [
+      "/boutique",
+      "/sur-mesure",
+      "/reparation",
+      "/savoir-faire",
+      "/journal"
+    ],
+    "legal": [
+      "/mentions-legales",
+      "/cgv",
+      "/confidentialite"
+    ],
+    "contact": [
+      "mailto:contact.kayart@gmail.com",
+      "tel:+33664631543"
+    ],
+    "copyright": "© 2026 KayArt",
+    "overflowing": [],
+    "touchHeights": [
+      52.890625,
+      44,
+      44,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "stripe": "linear-gradient(110deg, rgb(16, 91, 198) 0px, rgb(16, 91, 198) 35%, rgb(255, 213, 0) 35%, rgb(255, 213, 0) 55%, rgb(200, 7, 3) 55%, rgb(200, 7, 3) 73%, rgb(136, 58, 125) 73%)"
+  }
+]
