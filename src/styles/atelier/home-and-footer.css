@@ -1,22 +1,7 @@
-﻿.shell:has(.home-page,.shop-page) { isolation:isolate; }
-/* Shared ambient layer, using the exact same photograph as the home hero. */
-.shell:has(.home-page,.shop-page)::before {
- content:"";
- position:fixed;
- inset:0;
- z-index:-1;
- pointer-events:none;
- background:url("/brand/Emile_photo_principale.png") center / cover no-repeat;
- filter:blur(28px);
- opacity:1;
-}
-.home-page .atelier-hero { background:transparent; }
+﻿.home-page .atelier-hero { background:transparent; }
 .home-page .collection-section,.home-page .atelier-manifesto { padding:24px 0; }
 /* Opaque reading surfaces keep contrast stable as the photograph scrolls behind them. */
 .home-content-panel { --metal:#464b59; background:var(--ivory); color:var(--carbon); border:1px solid var(--line); border-radius:6px; padding:24px; }
-@media(max-width:540px) {
- .shell:has(.home-page,.shop-page)::before { filter:blur(18px); }
-}
 .atelier-hero { overflow:hidden; background:var(--paper); }
 .atelier-hero::after { content:""; display:block; height:4px; background:var(--brand-stripe); }
 .atelier-hero__grid { display:grid; grid-template-columns:1.1fr 1fr; min-height:clamp(480px,64svh,640px); }

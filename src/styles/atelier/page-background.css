@@ -1,0 +1,18 @@
+/* The initial server render uses the page marker; hydrated navigation keeps
+   the last completed background on the persistent shell during loading. */
+.shell:is([data-page-background=ambient],:not([data-page-background]):has(.home-page,.shop-page)) { isolation:isolate; }
+.shell:is([data-page-background=ambient],:not([data-page-background]):has(.home-page,.shop-page))::before {
+ content:"";
+ position:fixed;
+ inset:0;
+ z-index:-1;
+ pointer-events:none;
+ background:url("/brand/Emile_photo_principale.png") center / cover no-repeat;
+ filter:blur(28px);
+ opacity:1;
+}
+.route-loading-screen { background:transparent; }
+.shell[data-page-background=ambient] .route-loading-screen .route-loading-indicator { border-color:#ffffff66; border-top-color:var(--yellow); border-right-color:var(--accent); }
+@media(max-width:540px) {
+ .shell:is([data-page-background=ambient],:not([data-page-background]):has(.home-page,.shop-page))::before { filter:blur(18px); }
+}

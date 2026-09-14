@@ -1,6 +1,7 @@
 /* Ordered entry point. See src/styles/README.md before changing import order. */
 @import "../styles/atelier/foundations.css";
 @import "../styles/atelier/header.css";
+@import "../styles/atelier/page-background.css";
 @import "../styles/atelier/home-and-footer.css";
 @import "../styles/atelier/catalog.css";
 @import "../styles/atelier/forms-and-pages.css";

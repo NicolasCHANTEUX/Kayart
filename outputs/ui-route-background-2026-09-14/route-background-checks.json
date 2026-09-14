@@ -1,0 +1,74 @@
+[
+  {
+    "width": 390,
+    "source": "/",
+    "destination": "/boutique",
+    "before": "ambient",
+    "after": "ambient",
+    "loadingFrames": 328,
+    "passed": true
+  },
+  {
+    "width": 390,
+    "source": "/boutique",
+    "destination": "/contact",
+    "before": "ambient",
+    "after": "plain",
+    "loadingFrames": 326,
+    "passed": true
+  },
+  {
+    "width": 390,
+    "source": "/contact",
+    "destination": "/",
+    "before": "plain",
+    "after": "ambient",
+    "loadingFrames": 330,
+    "passed": true
+  },
+  {
+    "width": 390,
+    "source": "/reparation",
+    "destination": "/contact",
+    "before": "plain",
+    "after": "plain",
+    "loadingFrames": 330,
+    "passed": true
+  },
+  {
+    "width": 1440,
+    "source": "/",
+    "destination": "/boutique",
+    "before": "ambient",
+    "after": "ambient",
+    "loadingFrames": 342,
+    "passed": true
+  },
+  {
+    "width": 1440,
+    "source": "/boutique",
+    "destination": "/contact",
+    "before": "ambient",
+    "after": "plain",
+    "loadingFrames": 330,
+    "passed": true
+  },
+  {
+    "width": 1440,
+    "source": "/contact",
+    "destination": "/",
+    "before": "plain",
+    "after": "ambient",
+    "loadingFrames": 327,
+    "passed": true
+  },
+  {
+    "width": 1440,
+    "source": "/reparation",
+    "destination": "/contact",
+    "before": "plain",
+    "after": "plain",
+    "loadingFrames": 330,
+    "passed": true
+  }
+]

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { RouteLoadingIndicator } from "@/components/layout/route-loading-indicator";
+import { PageBackground } from "@/components/layout/page-background";
 import { siteConfig } from "@/config/site";
 import { getIndexableOrigin } from "@/config/seo";
 import "./globals.css";
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <RouteLoadingIndicator />
         </Suspense>
         <div className="shell">
+          <PageBackground />
           <SiteHeader />
           <main id="main-content" tabIndex={-1}>{children}</main>
           <SiteFooter />
