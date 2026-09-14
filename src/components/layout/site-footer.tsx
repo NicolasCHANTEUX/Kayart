@@ -20,7 +20,7 @@ export function SiteFooter() {
         <div className="container footer-cta__inner">
           <h2><span>Une idée en tête ?</span><Link href="/contact">Parlons-en. <span aria-hidden="true">↗</span></Link></h2>
           <div className="footer-cta__copy">
-            <p>Une réparation, une pièce sur mesure ou simplement une question ? Échangeons directement.</p>
+            <p>Une réparation, une pièce sur mesure ou une question ?</p>
             <Link className="footer-cta__link" href="/contact">Contacter l’atelier <span aria-hidden="true">↗</span></Link>
           </div>
         </div>

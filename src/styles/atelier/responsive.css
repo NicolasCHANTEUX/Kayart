@@ -77,9 +77,24 @@
  .service-tile { padding:16px; min-height:0; } .service-tile h3 { font-size:23px; margin-top:14px; }
  .atelier-services .section__header>p { margin-top:12px; }
  .manifesto-grid h2 br { display:none; } .manifesto-grid p.lead { font-size:15px; }
- .footer-cta__inner { grid-template-columns:1fr; gap:16px; padding-block:24px; }
- .footer-main { grid-template-columns:1fr; gap:24px; padding-block:24px; }
- .footer-legal { align-items:flex-start; flex-direction:column; gap:8px; padding-block:16px; }
+ .footer-cta__inner { grid-template-columns:1fr; gap:8px; padding-block:16px; }
+ .footer-cta h2>span { margin-bottom:4px; font-size:10px; }
+ .footer-cta h2 a { font-size:32px; }
+ .footer-cta__copy { max-width:none; }
+ .footer-cta__copy p { margin-bottom:0; font-size:13px; line-height:1.45; }
+ .footer-cta__link { gap:12px; }
+ .footer-main { grid-template-columns:1fr; gap:16px; padding-block:16px; }
+ .footer-wordmark { gap:8px; }
+ .site-footer .brand__mark { width:30px; height:30px; }
+ .site-footer .brand__name { font-size:27px; }
+ .footer-identity p { margin-top:2px; font-size:10px; }
+ .footer-main h3 { margin-bottom:4px; }
+ .footer-navigation { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:16px; align-items:stretch; }
+ .footer-navigation h3 { grid-column:1 / -1; }
+ .footer-navigation a { justify-content:flex-start; }
+ .footer-navigation a span { display:none; }
+ .footer-contact p { margin-top:4px; }
+ .footer-legal { align-items:flex-start; flex-direction:column; gap:4px; padding-block:12px; }
  .footer-legal nav { gap:0 16px; }
  .catalog-filters { padding:12px; gap:10px; }
  .catalog-filters label { flex:1 1 40%; min-width:0; } .catalog-filters label:first-child { flex-basis:100%; }
