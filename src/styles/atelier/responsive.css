@@ -1,4 +1,4 @@
-@media (max-width:1100px) {
+﻿@media (max-width:1100px) {
  .container { width:calc(100% - 40px); }
  .site-header__inner { gap:18px; } .main-nav { gap:18px; } .site-header .header-actions { gap:14px; }
  .atelier-hero__grid { min-height:440px; } .hero-actions { gap:12px; }
@@ -7,6 +7,9 @@
  .product-detail-layout,.split { gap:24px; }
 }
 @media (max-width:800px) {
+ .footer-main { grid-template-columns:1fr 1fr; gap:24px; }
+ .footer-identity { grid-column:1 / -1; }
+ .footer-navigation a,.footer-contact a,.footer-legal a { min-height:44px; }
  .container { width:calc(100% - 32px); } .section { padding:28px 0; }
  .site-header__inner { min-height:60px; gap:14px; flex-wrap:nowrap; }
  .brand { min-width:122px; gap:7px; } .brand__mark { width:28px; height:28px; } .brand__name { font-size:23px; } .brand__tagline { display:none; }
@@ -26,7 +29,7 @@
  .section__header { align-items:flex-start; gap:16px; }
  .section__header>div:last-child:not(:first-child) { max-width:240px; }
  .service-tile { padding:18px; } .atelier-services { padding:28px 0; }
- .manifesto-grid { gap:24px; } .footer-top h2 { font-size:26px; }
+ .manifesto-grid { gap:24px; }
  .split { grid-template-columns:1fr; gap:20px; } .split>.feature-card { position:static; margin-top:0; }
  .product-detail-layout { grid-template-columns:1fr 1fr; gap:20px; }
  .product-gallery__stage { min-height:240px; } .product-title { font-size:28px; }
@@ -74,10 +77,10 @@
  .service-tile { padding:16px; min-height:0; } .service-tile h3 { font-size:23px; margin-top:14px; }
  .atelier-services .section__header>p { margin-top:12px; }
  .manifesto-grid h2 br { display:none; } .manifesto-grid p.lead { font-size:15px; }
- .footer-top { flex-direction:column; gap:16px; padding-bottom:18px; }
- .footer-contact { padding-top:0; gap:4px; } .site-footer { padding-top:22px; }
- .footer-bottom { flex-wrap:wrap; gap:8px 16px; padding-block:12px; }
- .footer-bottom>.mono { display:none; } .footer-bottom nav { flex-basis:100%; margin:0; gap:6px 16px; }
+ .footer-cta__inner { grid-template-columns:1fr; gap:16px; padding-block:24px; }
+ .footer-main { grid-template-columns:1fr; gap:24px; padding-block:24px; }
+ .footer-legal { align-items:flex-start; flex-direction:column; gap:8px; padding-block:16px; }
+ .footer-legal nav { gap:0 16px; }
  .catalog-filters { padding:12px; gap:10px; }
  .catalog-filters label { flex:1 1 40%; min-width:0; } .catalog-filters label:first-child { flex-basis:100%; }
  .catalog-filters .request-consent { flex-basis:100%; }
