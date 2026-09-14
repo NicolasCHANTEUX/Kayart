@@ -25,9 +25,9 @@ Ce document décrit le code local, y compris la refonte UI non publiée. « Impl
 | Réparation | Demande et photos privées, suivi des statuts | Diagnostic, devis et échanges réalisés hors application |
 | Sur-mesure | Demande structurée et suivi | Pas de configurateur produit ni de devis chiffré automatique |
 | Administration demandes | Listes, filtres, pagination, changements de statut avec contrôle de conflit | Changer un statut n’envoie pas de réponse au client |
-| Panier | Persistance locale, recalcul serveur, quantités, compteur | Recette de paniers représentatifs avec le catalogue final |
+| Panier | Fiches avec visuel, référence et prix unitaire ; quantités, erreurs par article, estimation de réception et compteur ; [parcours séparé le 14 septembre](panier-commande.md) | Recette de paniers représentatifs avec le catalogue final |
 | Livraison | Zones, pays/préfixes, tarifs administrables, retrait gratuit | Frais réels non renseignés ; France inactive sans tarif ; transports particuliers sur devis |
-| Checkout Stripe test | Réservation de stock, idempotence, session hébergée | Clés du compte KayArt de test et webhook à configurer ; recette Stripe réelle manquante |
+| Checkout Stripe test | Page `/commande` dédiée, coordonnées et réception, récapitulatif ; réservation de stock, idempotence, session hébergée. Formulaire masqué lorsque le test est désactivé | Clés du compte KayArt de test et webhook à configurer ; recette Stripe réelle manquante |
 | Paiement et stock | Webhook signé, confirmation, libération/validation des réservations | Les tests isolés ne prouvent pas la livraison effective des webhooks Stripe |
 | Expiration et reprise | Annulation, réconciliation, workflow désactivé par défaut | Activer et observer uniquement sur une cible de test explicitement configurée |
 | Gestion des commandes | Recherche, listes et pagination | Préparation/retrait/expédition implémentés uniquement pour commandes Stripe de test payées |

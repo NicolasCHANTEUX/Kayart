@@ -14,7 +14,7 @@ export async function reconcileCheckout(checkoutKey: string, cancel = false) {
   }) : await findOrder(getPrismaClient());
   if (!order) return { status: "absent" };
   if (!order.isTest) throw new Error("Unknown checkout.");
-  if (order.paymentStatus !== "pending") return { status: order.paymentStatus };
+  if (order.paymentStatus !== "pending") return { status: order.paymentStatus, sessionId: order.paymentStatus === "paid" ? order.stripeCheckoutSessionId : undefined };
   if (!order.stripeCheckoutSessionId) return { status: "pending", needsReview: true };
   const stripe = getTestStripe();
   let session = await stripe.checkout.sessions.retrieve(order.stripeCheckoutSessionId);
@@ -22,7 +22,7 @@ export async function reconcileCheckout(checkoutKey: string, cancel = false) {
   if (cancel && session.status === "open") session = await stripe.checkout.sessions.expire(session.id);
   if (session.payment_status === "paid") {
     await settleVerifiedSession(session, `reconcile:${session.id}:paid`, "paid");
-    return { status: "paid" };
+    return { status: "paid", sessionId: session.id };
   }
   if (session.status === "expired") {
     await settleVerifiedSession(session, `reconcile:${session.id}:expired`, "expired");

@@ -4,6 +4,7 @@ Commencer par [l??tat V1](v1-status.md), qui distingue code livr?, validations e
 
 | Guide | Usage |
 | --- | --- |
+| [Panier et commande](panier-commande.md) | Parcours séparé, erreurs par article et recette navigateur |
 | [Architecture](architecture.md) | Responsabilit?s et parcours des donn?es |
 | [D?ploiement](deployment.md) | Recette et conditions d?ouverture |
 | [Base de donn?es](database.md) | Sources de v?rit? et migrations |

@@ -14,7 +14,7 @@ try {
  await call('Page.enable');await call('Runtime.enable');
  for(const width of [320,390,768,860,1440]) {
   await call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600});
-  for(const path of ['/','/boutique','/contact','/reparation','/sur-mesure','/connexion','/inscription','/savoir-faire','/journal','/panier','/boutique/pagaie-carbone-signature-imparfaite']) {
+  for(const path of ['/','/boutique','/contact','/reparation','/sur-mesure','/connexion','/inscription','/savoir-faire','/journal','/panier','/commande','/boutique/pagaie-carbone-signature-imparfaite']) {
    await navigate(path);
    const state=await evaluate('({width:innerWidth,scroll:document.documentElement.scrollWidth,h1:document.querySelectorAll("h1").length,main:!!document.querySelector("#main-content"),lang:document.documentElement.lang})');
    assert.ok(state.scroll<=state.width+1,`${path} overflows at ${width}: ${state.scroll}`);assert.equal(state.h1,1);assert.ok(state.main);assert.equal(state.lang,'fr');

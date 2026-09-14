@@ -64,6 +64,15 @@ test('two checkouts cannot reserve the same last unit',async()=>{
  const h=harness();const results=await Promise.allSettled([h.service.startTestCheckout(input()),h.service.startTestCheckout(input())]);
  assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(h.state().products[0].stockQuantity,0);assert.equal(h.state().orders.length,1);
 });
+
+test('reconciliation of an already paid attempt returns its confirmation session without releasing stock',async()=>{
+ const h=harness();const request=input();await h.service.startTestCheckout(request);
+ const session={...[...h.sessions.values()][0],status:'complete',payment_status:'paid',payment_intent:'pi_test_fixture'};
+ await h.settlement.settleVerifiedSession(session,'evt_paid_return','paid');
+ const result=await h.reconciliation.reconcileCheckout(request.checkoutKey,true);
+ assert.equal(result.status,'paid');assert.equal(result.sessionId,session.id);
+ assert.equal(h.state().products[0].stockQuantity,0);
+});
 test('unavailable shipping fails before any stock is reserved',async()=>{
  const h=harness();await assert.rejects(h.service.startTestCheckout(input({method:'shipping',shippingZoneId:randomUUID(),address:{country:'FR',postalCode:'20000'}})),/livraison/);
  assert.equal(h.state().products[0].stockQuantity,1);assert.equal(h.state().orders.length,0);assert.equal(h.stripeCalls(),0);
