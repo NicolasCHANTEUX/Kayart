@@ -1,6 +1,6 @@
-﻿.shell:has(.home-page) { isolation:isolate; }
-/* One decorative layer, using the exact same asset as the sharp hero mark. */
-.shell:has(.home-page)::before {
+﻿.shell:has(.home-page,.shop-page) { isolation:isolate; }
+/* Shared ambient layer, using the exact same photograph as the home hero. */
+.shell:has(.home-page,.shop-page)::before {
  content:"";
  position:fixed;
  inset:0;
@@ -15,7 +15,7 @@
 /* Opaque reading surfaces keep contrast stable as the photograph scrolls behind them. */
 .home-content-panel { --metal:#464b59; background:var(--ivory); color:var(--carbon); border:1px solid var(--line); border-radius:6px; padding:24px; }
 @media(max-width:540px) {
- .shell:has(.home-page)::before { filter:blur(18px); }
+ .shell:has(.home-page,.shop-page)::before { filter:blur(18px); }
 }
 .atelier-hero { overflow:hidden; background:var(--paper); }
 .atelier-hero::after { content:""; display:block; height:4px; background:var(--brand-stripe); }

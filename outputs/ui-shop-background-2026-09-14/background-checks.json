@@ -1,0 +1,45 @@
+[
+  {
+    "width": 320,
+    "scroll": 320,
+    "background": "url(\"http://127.0.0.1:3000/brand/Emile_photo_principale.png\")",
+    "filter": "blur(18px)",
+    "position": "fixed",
+    "opacity": "1",
+    "header": "rgb(247, 247, 249)",
+    "card": "rgb(255, 255, 255)"
+  },
+  {
+    "width": 390,
+    "scroll": 390,
+    "background": "url(\"http://127.0.0.1:3000/brand/Emile_photo_principale.png\")",
+    "filter": "blur(18px)",
+    "position": "fixed",
+    "opacity": "1",
+    "header": "rgb(247, 247, 249)",
+    "card": "rgb(255, 255, 255)"
+  },
+  {
+    "width": 768,
+    "scroll": 753,
+    "background": "url(\"http://127.0.0.1:3000/brand/Emile_photo_principale.png\")",
+    "filter": "blur(28px)",
+    "position": "fixed",
+    "opacity": "1",
+    "header": "rgb(247, 247, 249)",
+    "card": "rgb(255, 255, 255)"
+  },
+  {
+    "width": 1440,
+    "scroll": 1425,
+    "background": "url(\"http://127.0.0.1:3000/brand/Emile_photo_principale.png\")",
+    "filter": "blur(28px)",
+    "position": "fixed",
+    "opacity": "1",
+    "header": "rgb(247, 247, 249)",
+    "card": "rgb(255, 255, 255)"
+  },
+  {
+    "emptyStateReadable": true
+  }
+]

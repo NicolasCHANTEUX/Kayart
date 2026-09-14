@@ -53,7 +53,7 @@ export default async function ShopPage({ searchParams }: { searchParams?: Promis
             <Link className="shop-active-filters__reset" href="/boutique">Tout effacer</Link>
           </div> : null}
         </div>
-        {!result.total ? <p>Aucun produit ne correspond à ces critères. Modifiez les filtres ou <Link href="/boutique">affichez tout le catalogue</Link>.</p> : null}
+        {!result.total ? <p className="shop-empty">Aucun produit ne correspond à ces critères. Modifiez les filtres ou <Link href="/boutique">affichez tout le catalogue</Link>.</p> : null}
         <div className="grid">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />

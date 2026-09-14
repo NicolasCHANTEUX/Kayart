@@ -126,7 +126,8 @@
  .catalog-filters .request-consent { flex-basis:100%; }
  .catalog-filters input,.catalog-filters select { font-size:16px; max-width:100%; }
  .shop-paths { gap:6px; margin-block:12px; } .shop-paths a { font-size:12px; padding:8px 10px; }
- .shop-page .section__header { gap:8px; margin-bottom:0; }
+ .shop-page .section__header { gap:8px; margin-bottom:0; padding:12px; }
+ .shop-page .section__header .page-title { font-size:28px; }
  .shop-page .catalog-intro { margin:0; font-size:13px; }
  .shop-page .shop-paths { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
  .shop-filters { grid-template-columns:minmax(0,1fr); }
