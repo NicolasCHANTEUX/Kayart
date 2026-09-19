@@ -9,5 +9,12 @@ export function KayartBrand() {
 }
 
 export function KayartHeroMark() {
-  return <Image className="hero-brand-mark" src="/brand/Emile_photo_principale.png" alt="" width={1000} height={950} unoptimized priority />;
+  return <Image
+    className="hero-brand-mark"
+    src="/brand/Emile_photo_principale.png"
+    alt=""
+    fill
+    sizes="(max-width:540px) 100vw, (max-width:1100px) 48vw, 610px"
+    priority
+  />;
 }

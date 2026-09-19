@@ -7,7 +7,7 @@
  inset:0;
  z-index:-1;
  pointer-events:none;
- background:url("/brand/Emile_photo_principale.png") center / cover no-repeat;
+ background:url("/brand/Emile_photo_principale.webp") center / cover no-repeat;
  filter:blur(28px);
  opacity:1;
 }
