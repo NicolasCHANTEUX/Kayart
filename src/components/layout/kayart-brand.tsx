@@ -15,6 +15,7 @@ export function KayartHeroMark() {
     alt=""
     fill
     sizes="(max-width:540px) 100vw, (max-width:1100px) 48vw, 610px"
+    quality={100}
     priority
   />;
 }

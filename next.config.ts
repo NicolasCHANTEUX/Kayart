@@ -60,7 +60,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [],
-    formats: ["image/avif", "image/webp"]
+    formats: ["image/avif", "image/webp"],
+    // Next only allows quality values listed here; the hero photo requests 100 to skip re-compression of an already-optimized source.
+    qualities: [75, 100]
   }
 };
 
