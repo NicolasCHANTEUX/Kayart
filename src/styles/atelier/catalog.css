@@ -1,5 +1,6 @@
 
 /* Catalogue and product detail */
+.list-pagination { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; }
 .shop-page .section__header { padding:16px; border:1px solid var(--line); border-radius:5px; background:var(--ivory); }
 .shop-page .section__header .page-title { margin-bottom:6px; }
 .shop-page .section__header p { margin-bottom:0; }

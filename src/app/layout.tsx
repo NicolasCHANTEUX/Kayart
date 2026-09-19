@@ -44,6 +44,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* Discovered from the initial HTML instead of three levels deep inside a CSS @import, so the browser can start the font fetch immediately. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* This rule assumes the Pages Router's per-page _document.js; the root layout already applies to every route, so the "single page" warning doesn't apply here. */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" />
       </head>
       <body>

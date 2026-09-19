@@ -373,22 +373,6 @@
   gap: 9px;
 }
 
-.loading-spinner {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 auto;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 999px;
-  animation: loading-spin 700ms linear infinite;
-}
-
-@keyframes loading-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .form-panel {
   margin-top: 42px;
 }
@@ -434,25 +418,6 @@
   opacity: 0.46;
 }
 
-.form-notice {
-  margin: 0;
-  padding: 16px 24px;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
-  color: var(--carbon);
-  font-weight: 800;
-}
-
-.form-notice--error {
-  border-color: rgba(192, 57, 43, 0.32);
-  color: #9c2f24;
-}
-
-.form-notice--success {
-  border-color: rgba(140, 175, 126, 0.42);
-  color: #4f7946;
-}
-
 .admin-form fieldset,
 .form-stage {
   display: grid;
@@ -484,12 +449,6 @@
   color: var(--accent);
   font-weight: 900;
   text-transform: uppercase;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
 }
 
 .price-preview {
@@ -794,10 +753,4 @@
   height: 1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-}
-
-.form-hint {
-  margin: 0;
-  color: var(--metal);
-  font-size: 0.9rem;
 }

@@ -28,9 +28,6 @@
 .admin-product-identity:hover strong { text-decoration:underline; text-underline-offset:3px; }
 .admin-page .admin-filters { border-radius:6px; background:var(--fiber); }
 .admin-page .form-stage { border-radius:4px; box-shadow:none; }
-.list-pagination { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; }
-.route-loading-overlay { height:3px; bottom:auto; background:var(--accent); backdrop-filter:none; pointer-events:none; display:block; }
-.route-loading-overlay .route-loading-indicator { display:none; }
 
 .admin-page .admin-panel__header,.admin-page .admin-filters { padding:16px; }
 .admin-page .drop-zone span { font-family:"DM Sans",Arial,sans-serif; font-size:20px; }

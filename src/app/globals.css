@@ -1,9 +1,6 @@
 /* Ordered entry point. See src/styles/README.md before changing import order. */
 @import "../styles/legacy/base-and-public.css";
 @import "../styles/legacy/accounts.css";
-@import "../styles/legacy/admin-components.css";
 @import "../styles/legacy/product-detail.css";
-@import "../styles/legacy/admin-operations.css";
-@import "../styles/legacy/admin-theme.css";
 @import "../styles/legacy/responsive.css";
 @import "../styles/legacy/requests-and-cart.css";

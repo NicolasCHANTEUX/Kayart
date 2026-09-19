@@ -73,6 +73,13 @@ select {
   animation: route-loading-fade-in 160ms ease both;
 }
 
+/* Admin restyles this to a thin top bar instead of the overlay spinner.
+   Kept here (not in the admin-only stylesheet) because the indicator renders
+   as a sibling of .shell, never inside .admin-page, so it can't be scoped
+   through CSS ancestry to admin routes only. */
+.route-loading-overlay { height: 3px; bottom: auto; background: var(--accent); backdrop-filter: none; pointer-events: none; display: block; }
+.route-loading-overlay .route-loading-indicator { display: none; }
+
 .route-loading-screen {
   min-height: 58vh;
   display: grid;
@@ -113,6 +120,54 @@ select {
 }
 
 @keyframes route-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Shared by public forms (customer requests, auth) and admin forms alike. */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-hint {
+  margin: 0;
+  color: var(--metal);
+  font-size: 0.9rem;
+}
+
+.form-notice {
+  margin: 0;
+  padding: 16px 24px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  color: var(--carbon);
+  font-weight: 800;
+}
+
+.form-notice--error {
+  border-color: rgba(192, 57, 43, 0.32);
+  color: #9c2f24;
+}
+
+.form-notice--success {
+  border-color: rgba(140, 175, 126, 0.42);
+  color: #4f7946;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  animation: loading-spin 700ms linear infinite;
+}
+
+@keyframes loading-spin {
   to {
     transform: rotate(360deg);
   }
