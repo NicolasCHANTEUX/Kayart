@@ -11,7 +11,7 @@ export function KayartBrand() {
 export function KayartHeroMark() {
   return <Image
     className="hero-brand-mark"
-    src="/brand/Emile_photo_principale.png"
+    src="/brand/Emile_photo_principale.webp"
     alt=""
     fill
     sizes="(max-width:540px) 100vw, (max-width:1100px) 48vw, 610px"
