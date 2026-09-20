@@ -30,7 +30,7 @@ Ce document décrit le code local, y compris la refonte UI non publiée. « Impl
 | Checkout Stripe test | Page `/commande` dédiée, coordonnées et réception, récapitulatif ; réservation de stock, idempotence, session hébergée. Formulaire masqué lorsque le test est désactivé | Clés du compte KayArt de test et webhook à configurer ; recette Stripe réelle manquante |
 | Paiement et stock | Webhook signé, confirmation, libération/validation des réservations | Les tests isolés ne prouvent pas la livraison effective des webhooks Stripe |
 | Expiration et reprise | Annulation, réconciliation, workflow désactivé par défaut | Activer et observer uniquement sur une cible de test explicitement configurée |
-| Gestion des commandes | Recherche, listes, pagination, et enregistrement de ventes manuelles hors Stripe (`KAYART_ENABLE_MANUAL_ORDERS`) avec décompte réel du stock | Préparation/retrait/expédition implémentés uniquement pour commandes Stripe de test payées ; les ventes manuelles s'arrêtent au statut payé |
+| Gestion des commandes | Recherche, listes, pagination, et enregistrement de ventes manuelles hors Stripe (`KAYART_ENABLE_MANUAL_ORDERS`), volontairement indépendant du stock et de la disponibilité du catalogue | Préparation/retrait/expédition implémentés uniquement pour commandes Stripe de test payées ; les ventes manuelles s'arrêtent au statut payé |
 | Vente réelle | Refusée explicitement | Ajouter un mode production, ses contrôles légaux et ses parcours sans libellés de test après validation métier |
 | Remboursements | Statuts présents | Pas de workflow Stripe de remboursement ni de gestion des remboursements partiels |
 | Espace client | Authentification disponible | Pas de tableau de bord client, historique personnel ou suivi de commande complet |

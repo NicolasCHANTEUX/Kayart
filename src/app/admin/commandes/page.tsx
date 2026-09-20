@@ -69,19 +69,19 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
         <div className="admin-panel">
           {params.error ? <p className="form-notice form-notice--error">{params.error}</p> : null}
           {params.created === "1" ? (
-            <p className="form-notice form-notice--success">Vente manuelle enregistrée. Stock mis à jour.</p>
+            <p className="form-notice form-notice--success">Vente manuelle enregistrée.</p>
           ) : null}
           {params.updated === "paid" ? (
             <p className="form-notice form-notice--success">Paiement marqué comme payé.</p>
           ) : null}
           {params.updated === "deleted" ? (
-            <p className="form-notice form-notice--success">Vente annulée, stock remis en vente.</p>
+            <p className="form-notice form-notice--success">Vente annulée.</p>
           ) : null}
 
           <div className="admin-panel__header">
             <div>
               <strong>Suivi des commandes</strong>
-              <p>Les commandes Stripe de test réservent le stock. Leur paiement est confirmé automatiquement par Stripe. Les ventes manuelles décomptent le stock immédiatement et doivent être marquées payées une fois le règlement reçu.</p>
+              <p>Les commandes Stripe de test réservent le stock. Leur paiement est confirmé automatiquement par Stripe. Les ventes manuelles sont indépendantes du stock et de la disponibilité du site ; elles doivent être marquées payées une fois le règlement reçu.</p>
             </div>
           </div>
 

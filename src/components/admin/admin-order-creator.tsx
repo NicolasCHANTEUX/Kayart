@@ -100,7 +100,7 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
               <div>
                 <span className="modal-eyebrow">Vente manuelle</span>
                 <h2>Créer une commande</h2>
-                <p>Enregistrez une vente réalisée hors ligne (atelier, virement...). Le stock est décompté immédiatement.</p>
+                <p>Enregistrez une vente réalisée hors ligne (atelier, virement...), indépendamment du stock et de la disponibilité affichés sur le site.</p>
               </div>
               <button className="modal-close-button" onClick={() => setIsOpen(false)} type="button">
                 {"\u00d7"}

@@ -558,94 +558,79 @@ export const prismaCatalogRepository: CatalogRepository = {
     requireManualOrders();
     const prisma = getPrismaClient();
 
-    return prisma.$transaction(async (tx) => {
-      const requestedProductIds = input.items.map((item) => item.productId);
-      const productRows = await tx.product.findMany({
-        select: {
-          id: true,
-          name: true,
-          priceCents: true,
-          sku: true,
-          availability: true,
-          stockQuantity: true
-        },
-        where: {
-          id: {
-            in: requestedProductIds
-          }
+    // Manual sales are a deliberate exception to the catalog: neither stock nor
+    // availability gate them, so admins can record a sale independently of what
+    // the site currently shows.
+    const requestedProductIds = input.items.map((item) => item.productId);
+    const productRows = await prisma.product.findMany({
+      select: {
+        id: true,
+        name: true,
+        priceCents: true,
+        sku: true
+      },
+      where: {
+        id: {
+          in: requestedProductIds
         }
-      });
-      const productsById = new Map(productRows.map((product) => [product.id, product]));
-
-      const orderItems = input.items.map((item) => {
-        const product = productsById.get(item.productId);
-
-        if (!product) {
-          throw new Error("Un produit de la commande est introuvable.");
-        }
-
-        if (product.availability !== "available" && product.availability !== "madeToOrder") {
-          throw new Error(`${product.name} n’est plus disponible à la vente.`);
-        }
-
-        const unitPriceCents = product.priceCents;
-        if (unitPriceCents === null || unitPriceCents <= 0 || !Number.isSafeInteger(item.quantity) || item.quantity <= 0 || item.quantity > 10000) {
-          throw new Error("Prix ou quantité invalide pour cette vente.");
-        }
-
-        return {
-          productId: product.id,
-          productName: product.name,
-          productSku: product.sku,
-          quantity: item.quantity,
-          unitPriceCents,
-          totalCents: unitPriceCents * item.quantity,
-          tracksStock: product.stockQuantity !== null
-        };
-      });
-
-      const subtotalCents = orderItems.reduce((total, item) => total + item.totalCents, 0);
-      if (!Number.isSafeInteger(subtotalCents) || subtotalCents > 2147483647) {
-        throw new Error("Le montant total dépasse la limite autorisée.");
       }
-
-      for (const item of orderItems) {
-        if (!item.tracksStock) continue;
-        const result = await tx.product.updateMany({
-          where: { id: item.productId, stockQuantity: { gte: item.quantity } },
-          data: { stockQuantity: { decrement: item.quantity }, updatedAt: new Date() }
-        });
-        if (!result.count) throw new Error("Le stock a changé entre-temps. Actualisez la page et réessayez.");
-      }
-
-      const row = await tx.order.create({
-        data: {
-          currency: "EUR",
-          customerNote: formatManualOrderNote(input.customerNote),
-          guestEmail: input.guestEmail,
-          items: {
-            create: orderItems.map((item) => ({
-              productId: item.productId,
-              productName: item.productName,
-              productSku: item.productSku,
-              quantity: item.quantity,
-              totalCents: item.totalCents,
-              unitPriceCents: item.unitPriceCents
-            }))
-          },
-          orderNumber: generateManualOrderNumber(),
-          paidAt: null,
-          paymentStatus: "pending",
-          shippingCents: 0,
-          status: "pending",
-          subtotalCents,
-          totalCents: subtotalCents
-        },
-        include: orderInclude
-      });
-
-      return mapPrismaAdminOrder(row);
     });
+    const productsById = new Map(productRows.map((product) => [product.id, product]));
+
+    const orderItems = input.items.map((item) => {
+      const product = productsById.get(item.productId);
+
+      if (!product) {
+        throw new Error("Un produit de la commande est introuvable.");
+      }
+
+      const unitPriceCents = product.priceCents;
+      if (unitPriceCents === null || unitPriceCents <= 0 || !Number.isSafeInteger(item.quantity) || item.quantity <= 0 || item.quantity > 10000) {
+        throw new Error("Prix ou quantité invalide pour cette vente.");
+      }
+
+      return {
+        productId: product.id,
+        productName: product.name,
+        productSku: product.sku,
+        quantity: item.quantity,
+        unitPriceCents,
+        totalCents: unitPriceCents * item.quantity
+      };
+    });
+
+    const subtotalCents = orderItems.reduce((total, item) => total + item.totalCents, 0);
+    if (!Number.isSafeInteger(subtotalCents) || subtotalCents > 2147483647) {
+      throw new Error("Le montant total dépasse la limite autorisée.");
+    }
+
+    const row = await prisma.order.create({
+      data: {
+        currency: "EUR",
+        customerNote: formatManualOrderNote(input.customerNote),
+        guestEmail: input.guestEmail,
+        items: {
+          create: orderItems.map((item) => ({
+            productId: item.productId,
+            productName: item.productName,
+            productSku: item.productSku,
+            quantity: item.quantity,
+            totalCents: item.totalCents,
+            unitPriceCents: item.unitPriceCents
+          }))
+        },
+        orderNumber: generateManualOrderNumber(),
+        paidAt: null,
+        paymentStatus: "pending",
+        shippingCents: 0,
+        status: "pending",
+        subtotalCents,
+        totalCents: subtotalCents
+      },
+      include: orderInclude
+    });
+
+    return mapPrismaAdminOrder(row);
   },
 
   async markAdminOrderPaid(input) {
@@ -675,27 +660,17 @@ export const prismaCatalogRepository: CatalogRepository = {
   async deleteAdminOrder(input) {
     requireManualOrders();
     const prisma = getPrismaClient();
-    const existing = await prisma.order.findUnique({ where: { id: input.id }, include: orderInclude });
+    const existing = await prisma.order.findUnique({ where: { id: input.id } });
     if (!existing || !isManualAdminOrder(existing)) throw new Error("Cette action est réservée aux ventes manuelles sans paiement Stripe.");
     if (existing.paymentStatus !== "pending" || existing.status !== "pending") throw new Error("Seules les ventes en attente peuvent être annulées.");
 
-    await prisma.$transaction(async (tx) => {
-      for (const item of existing.items) {
-        if (!item.productId) continue;
-        await tx.product.updateMany({
-          where: { id: item.productId, stockQuantity: { not: null } },
-          data: { stockQuantity: { increment: item.quantity }, updatedAt: new Date() }
-        });
+    await prisma.order.updateMany({
+      data: { status: "cancelled", paymentStatus: "cancelled", updatedAt: new Date() },
+      where: {
+        id: input.id, status: "pending", paymentStatus: "pending",
+        orderNumber: existing.orderNumber, customerNote: existing.customerNote,
+        stripeCheckoutSessionId: null, stripePaymentIntentId: null
       }
-
-      await tx.order.updateMany({
-        data: { status: "cancelled", paymentStatus: "cancelled", updatedAt: new Date() },
-        where: {
-          id: input.id, status: "pending", paymentStatus: "pending",
-          orderNumber: existing.orderNumber, customerNote: existing.customerNote,
-          stripeCheckoutSessionId: null, stripePaymentIntentId: null
-        }
-      });
     });
   }
 };

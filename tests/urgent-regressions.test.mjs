@@ -122,45 +122,29 @@ test('manual sale payment updates both statuses and is idempotent; cancellation 
  await repo.markAdminOrderPaid({id:'order'});
  assert.equal(updates,1);assert.equal(current.status,'paid');assert.equal(current.paidAt,paidAt);
  await assert.rejects(repo.deleteAdminOrder({id:'order'}),/attente/);
- current={...order,items:[]};
- const repoWithTx=repository({order:{findUnique:async()=>current,updateMany:async(q)=>{current={...current,...q.data};return {count:1};}},$transaction:async(fn)=>fn({product:{updateMany:async()=>({count:1})},order:{updateMany:async(q)=>{current={...current,...q.data};return {count:1};}}})});
- await repoWithTx.deleteAdminOrder({id:'order'});assert.equal(current.status,'cancelled');
+ current={...order};await repo.deleteAdminOrder({id:'order'});assert.equal(current.status,'cancelled');
 });
 
-test('manual order creation decrements finite stock, skips made-to-order and rejects unavailable or insufficient stock',async()=>{
- const stockProduct={id:'p1',name:'Stock item',priceCents:1000,sku:'SKU1',availability:'available',stockQuantity:3};
- const madeToOrderProduct={id:'p2',name:'MTO item',priceCents:2000,sku:'SKU2',availability:'madeToOrder',stockQuantity:null};
- let decrements=[],orderCreated=null;
- const tx={
-  product:{findMany:async()=>[stockProduct,madeToOrderProduct],updateMany:async(q)=>{decrements.push(q);return {count:1};}},
-  order:{create:async(q)=>{orderCreated=q.data;return {...q.data,id:'order',createdAt:new Date(),paidAt:null,items:[]};}}
- };
- const repo=repository({$transaction:async(fn)=>fn(tx)});
- await repo.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p1',quantity:2},{productId:'p2',quantity:1}]});
- assert.equal(decrements.length,1);
- assert.equal(decrements[0].where.id,'p1');assert.equal(decrements[0].data.stockQuantity.decrement,2);
- assert.ok(orderCreated.orderNumber.startsWith('MAN-'));assert.equal(orderCreated.customerNote,'Vente manuelle admin');
-
- const draftProduct={id:'p3',name:'Draft',priceCents:1000,sku:'SKU3',availability:'draft',stockQuantity:5};
- const repoDraft=repository({$transaction:async(fn)=>fn({product:{findMany:async()=>[draftProduct]},order:{}})});
- await assert.rejects(repoDraft.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p3',quantity:1}]}),/disponible/);
-
- const lowStock={id:'p4',name:'Low',priceCents:1000,sku:'SKU4',availability:'available',stockQuantity:1};
- const repoLow=repository({$transaction:async(fn)=>fn({product:{findMany:async()=>[lowStock],updateMany:async()=>({count:0})},order:{}})});
- await assert.rejects(repoLow.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p4',quantity:5}]}),/stock a changé/);
-});
-
-test('cancelling a manual sale releases finite stock but leaves made-to-order untouched',async()=>{
- const existing={...order,items:[{productId:'p1',quantity:2},{productId:'p2',quantity:1}]};
- const increments=[];
+test('manual order creation is a deliberate exception: draft, unavailable and out-of-stock products are all sellable',async()=>{
+ const draftProduct={id:'p1',name:'Draft item',priceCents:1000,sku:'SKU1',availability:'draft',stockQuantity:0};
+ let orderCreated=null;
  const repo=repository({
-  order:{findUnique:async()=>existing},
-  $transaction:async(fn)=>fn({product:{updateMany:async(q)=>{increments.push(q);return {count:1};}},order:{updateMany:async()=>({count:1})}})
+  product:{findMany:async()=>[draftProduct]},
+  order:{create:async(q)=>{orderCreated=q.data;return {...q.data,id:'order',createdAt:new Date(),paidAt:null,items:[]};}}
  });
- await repo.deleteAdminOrder({id:'order'});
- assert.equal(increments.length,2);
- assert.equal(increments[0].data.stockQuantity.increment,2);
- assert.equal(increments[1].data.stockQuantity.increment,1);
+ await repo.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p1',quantity:5}]});
+ assert.ok(orderCreated.orderNumber.startsWith('MAN-'));
+ assert.equal(orderCreated.customerNote,'Vente manuelle admin');
+ assert.equal(orderCreated.totalCents,5000);
+});
+
+test('manual order creation still rejects missing products and invalid price or quantity',async()=>{
+ const repoMissing=repository({product:{findMany:async()=>[]},order:{}});
+ await assert.rejects(repoMissing.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'ghost',quantity:1}]}),/introuvable/);
+
+ const noPrice={id:'p2',name:'No price',priceCents:null,sku:'SKU2'};
+ const repoNoPrice=repository({product:{findMany:async()=>[noPrice]},order:{}});
+ await assert.rejects(repoNoPrice.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p2',quantity:1}]}),/Prix ou quantité/);
 });
 
 test('image decoding rejects disguised text and SVG; valid pixels are reencoded',async()=>{

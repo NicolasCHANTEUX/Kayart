@@ -46,7 +46,7 @@ export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps)
             <div>
               <span className="modal-eyebrow">Annulation de vente</span>
               <h2>{order.orderNumber}</h2>
-              <p>La vente sera annulée, le stock remis en vente, et la commande restera dans l'historique.</p>
+              <p>La vente sera annulée et restera dans l'historique.</p>
             </div>
             <form action={deleteAdminOrderAction} className="modal-form">
               <input name="id" type="hidden" value={order.id} />
