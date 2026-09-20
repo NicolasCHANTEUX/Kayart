@@ -92,9 +92,9 @@ test('hide and show retain reserved and made-to-order states',async()=>{
   const product={...base,availability};
   const repo=repository({product:{findUnique:async()=>product,update:async(q)=>{saved=q.data;return {...product,...q.data};}}});
   await repo.updateProductVisibility({id:'product',availability:'unavailable'});
-  assert.equal(saved.publishedAt,null);assert.equal(saved.availability,undefined);
+  assert.equal(saved.publishedAt,null);assert.equal(saved.availability,availability);
   await repo.updateProductVisibility({id:'product',availability:'available'});
-  assert.ok(saved.publishedAt);assert.equal(saved.availability,undefined);
+  assert.ok(saved.publishedAt);assert.equal(saved.availability,availability);
  }
 });
 

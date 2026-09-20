@@ -26,8 +26,11 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [stockQuantity, setStockQuantity] = useState(String(product.stockQuantity ?? 0));
   const canEditStock = canPersist && product.condition !== "service";
-  const canShowProduct = !product.publishedAt;
-  const canToggleVisibility = canPersist && !["draft", "unavailable", "archived"].includes(product.availability);
+  // Unavailable/archived products need the "restock" action regardless of publishedAt:
+  // a product can stay published while marked unavailable (shown as out of stock).
+  const needsRestock = product.availability === "unavailable" || product.availability === "archived";
+  const canShowProduct = needsRestock || !product.publishedAt;
+  const canToggleVisibility = canPersist && product.availability !== "draft";
   const maxStockQuantity = (product.condition === "imperfect" || product.condition === "used") ? 1 : Number.POSITIVE_INFINITY;
   const canUsePortal = typeof document !== "undefined";
 
@@ -137,11 +140,9 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
                   disabled={!canToggleVisibility}
                   type={canPersist ? "submit" : "button"}
                 >
-                  Afficher
+                  {product.availability === "archived" ? "Désarchiver" : "Afficher"}
                 </button>
               </form>
-            ) : product.availability === "archived" ? (
-              <span className="row-actions__item row-actions__item--disabled">Déjà archivé</span>
             ) : (
               <form action={canPersist ? hideProductAction : undefined} onSubmit={() => setIsMenuOpen(false)}>
                 <input name="id" type="hidden" value={product.id} />

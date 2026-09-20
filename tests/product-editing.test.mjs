@@ -85,6 +85,45 @@ test('switching covers demotes first, scopes mutations to the product and keeps 
   assert.equal(saved.baseProductId, 'model'); assert.equal(saved.defectDescription, base.defectDescription);
 });
 
+test('showing an unavailable or archived product restocks it, while showing or hiding a normal product leaves its availability untouched', async () => {
+  async function visibilityRepository(existing) {
+    let saved;
+    const module = load('src/server/catalog/catalog.repository.ts', {
+      '@/server/db/prisma': {
+        getPrismaClient: () => ({
+          product: {
+            findUnique: async () => existing,
+            update: async (query) => {
+              saved = query.data;
+              return { ...existing, ...query.data, attributes: [], images: [] };
+            }
+          }
+        })
+      }
+    });
+    return { repository: module.prismaCatalogRepository, savedData: () => saved };
+  }
+
+  for (const availability of ['unavailable', 'archived']) {
+    const { repository, savedData } = await visibilityRepository({ ...base, availability, publishedAt: null });
+    await repository.updateProductVisibility({ id: base.id, availability: 'available' });
+    assert.equal(savedData().availability, 'available', `${availability} products must become available again when shown`);
+    assert.ok(savedData().publishedAt instanceof Date);
+  }
+
+  const { repository: reservedShow, savedData: reservedShowData } = await visibilityRepository({ ...base, availability: 'reserved', publishedAt: null });
+  await reservedShow.updateProductVisibility({ id: base.id, availability: 'available' });
+  assert.equal(reservedShowData().availability, 'reserved', 'showing a reserved product must not overwrite its availability');
+
+  const { repository: reservedHide, savedData: reservedHideData } = await visibilityRepository({ ...base, availability: 'reserved', publishedAt: new Date() });
+  await reservedHide.updateProductVisibility({ id: base.id, availability: 'unavailable' });
+  assert.equal(reservedHideData().availability, 'reserved', 'hiding a reserved product must not overwrite its availability');
+  assert.equal(reservedHideData().publishedAt, null);
+
+  const { repository: draftRepo } = await visibilityRepository({ ...base, availability: 'draft', publishedAt: null });
+  await assert.rejects(draftRepo.updateProductVisibility({ id: base.id, availability: 'available' }));
+});
+
 test('imperfect public page displays its edited description and own images rather than replacing them with the base model', async () => {
   const ownImage = { id: 'own', url: '/own.webp', isPrimary: true, position: 0 };
   const product = { ...base, publishedAt: null, images: [ownImage], baseProduct: { name: 'Base model', slug: 'base-model', images: [{ id: 'base-image' }], description: 'Model description' } };

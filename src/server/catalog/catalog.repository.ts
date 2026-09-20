@@ -533,12 +533,17 @@ export const prismaCatalogRepository: CatalogRepository = {
     const prisma = getPrismaClient();
     const existing = await prisma.product.findUnique({ where: { id: input.id } });
     if (!existing) throw new Error("Produit introuvable.");
-    if (["draft", "unavailable", "archived"].includes(existing.availability)) {
+    if (existing.availability === "draft") {
       throw new Error("Modifiez la fiche et choisissez son statut avant de la publier.");
     }
+    const makeAvailable = input.availability === "available";
+    // Bringing back an unavailable or archived product also restores its sellable status;
+    // hiding a product never changes why it was available (reserved, made-to-order, ...).
+    const restocking = makeAvailable && (existing.availability === "unavailable" || existing.availability === "archived");
     const row = await prisma.product.update({
       data: {
-        publishedAt: input.availability === "available" ? new Date() : null,
+        availability: restocking ? "available" : existing.availability,
+        publishedAt: makeAvailable ? new Date() : null,
         updatedAt: new Date()
       },
       include: productInclude,
