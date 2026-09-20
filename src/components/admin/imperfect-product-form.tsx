@@ -1,7 +1,8 @@
 "use client";
 
 import { ProductImageView } from "@/components/catalog/product-image";
-import { useMemo, useState, type KeyboardEvent } from "react";
+import { useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useFormStatus } from "react-dom";
 import { ProductImageUploader } from "@/components/admin/product-image-uploader";
 import { productAvailabilityLabels } from "@/lib/catalog";
 import { formatMoneyCents } from "@/lib/format";
@@ -33,6 +34,7 @@ export function ImperfectProductForm({
   );
   const preview = getSalePreview(basePrice, discountPercent);
   const canSubmit = canPersist && baseProducts.length > 0;
+  const isSubmittingRef = useRef(false);
 
   function handleModelChange(productId: string) {
     const product = baseProducts.find((candidate) => candidate.id === productId);
@@ -41,8 +43,17 @@ export function ImperfectProductForm({
     setBasePrice(getModelPriceValue(product));
   }
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    if (isSubmittingRef.current) {
+      event.preventDefault();
+      return;
+    }
+
+    isSubmittingRef.current = true;
+  }
+
   return (
-    <form action={action} className="admin-form imperfect-form">
+    <form action={action} className="admin-form imperfect-form" onSubmit={handleSubmit}>
       {errorMessage ? <p className="form-notice form-notice--error">{errorMessage}</p> : null}
 
       <fieldset className="form-stage">
@@ -164,11 +175,32 @@ export function ImperfectProductForm({
       </fieldset>
 
       <div className="form-actions">
-        <button className="button button--primary" disabled={!canSubmit} type={canSubmit ? "submit" : "button"}>
-          {canPersist ? "Créer le produit imparfait" : "Base non connectée"}
-        </button>
+        <ImperfectProductSubmitButton canPersist={canPersist} canSubmit={canSubmit} />
       </div>
     </form>
+  );
+}
+
+function ImperfectProductSubmitButton({ canPersist, canSubmit }: { canPersist: boolean; canSubmit: boolean }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className="button button--primary form-actions__submit"
+      disabled={!canSubmit || pending}
+      type={canSubmit ? "submit" : "button"}
+    >
+      {pending ? (
+        <>
+          <span className="loading-spinner" aria-hidden="true" />
+          Enregistrement...
+        </>
+      ) : canPersist ? (
+        "Créer le produit imparfait"
+      ) : (
+        "Base non connectée"
+      )}
+    </button>
   );
 }
 

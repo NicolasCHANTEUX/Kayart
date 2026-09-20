@@ -2,6 +2,7 @@
 
 import { ProductImageView } from "@/components/catalog/product-image";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useFormStatus } from "react-dom";
 import { ProductImageUploader } from "@/components/admin/product-image-uploader";
 import {
   productAvailabilityLabels,
@@ -49,6 +50,7 @@ export function ProductForm({
   submitLabel = "Enregistrer"
 }: ProductFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const isSubmittingRef = useRef(false);
   const [name, setName] = useState(defaultValues?.name ?? "");
   const [slug, setSlug] = useState(defaultValues?.slug ?? "");
   const [sku, setSku] = useState(defaultValues?.sku ?? "");
@@ -129,6 +131,11 @@ export function ProductForm({
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    if (isSubmittingRef.current) {
+      event.preventDefault();
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     const nextUnlockedStep = getUnlockedStep(formData);
 
@@ -137,7 +144,10 @@ export function ProductForm({
     if (nextUnlockedStep < steps.length - 1) {
       event.preventDefault();
       setStepError(getBlockingError(formData) ?? "Complétez les sections encore verrouillées avant d'enregistrer.");
+      return;
     }
+
+    isSubmittingRef.current = true;
   }
 
   function scrollToStep(stepId: string) {
@@ -461,11 +471,40 @@ export function ProductForm({
       </fieldset>
 
       <div className="form-actions">
-        <button className="button button--primary" disabled={!isReadyToSubmit} type={isReadyToSubmit ? "submit" : "button"}>
-          {canPersist ? submitLabel : "Base non connectée"}
-        </button>
+        <ProductFormSubmitButton canPersist={canPersist} isReadyToSubmit={isReadyToSubmit} submitLabel={submitLabel} />
       </div>
     </form>
+  );
+}
+
+function ProductFormSubmitButton({
+  canPersist,
+  isReadyToSubmit,
+  submitLabel
+}: {
+  canPersist: boolean;
+  isReadyToSubmit: boolean;
+  submitLabel: string;
+}) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className="button button--primary form-actions__submit"
+      disabled={!isReadyToSubmit || pending}
+      type={isReadyToSubmit ? "submit" : "button"}
+    >
+      {pending ? (
+        <>
+          <span className="loading-spinner" aria-hidden="true" />
+          Enregistrement...
+        </>
+      ) : canPersist ? (
+        submitLabel
+      ) : (
+        "Base non connectée"
+      )}
+    </button>
   );
 }
 
