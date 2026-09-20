@@ -33,7 +33,7 @@ export type AdminOrder = {
   customerNote: string | null;
   paidAt: string | null;
   createdAt: string;
-  isFictive: boolean;
+  isManual: boolean;
   isTest?: boolean;
   customerName?: string | null;
   fulfillmentMethod?: string | null;

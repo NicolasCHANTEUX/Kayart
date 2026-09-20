@@ -15,7 +15,7 @@ import type {
   ProductCondition
 } from "@/types/catalog";
 import type { AdminOrder } from "@/types/orders";
-import { isFictiveAdminOrder } from "@/server/catalog/order-safety";
+import { isManualAdminOrder } from "@/server/catalog/order-safety";
 
 type PrismaProductBaseRelations = PrismaProduct & {
   category: PrismaCategory | null;
@@ -95,7 +95,7 @@ export function mapPrismaAdminOrder(order: PrismaOrderWithItems): AdminOrder {
     customerNote: order.customerNote,
     paidAt: order.paidAt?.toISOString() ?? null,
     createdAt: order.createdAt.toISOString(),
-    isFictive: isFictiveAdminOrder(order),
+    isManual: isManualAdminOrder(order),
     isTest: order.isTest,
     customerName: order.customerName,
     fulfillmentMethod: order.fulfillmentMethod,

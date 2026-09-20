@@ -98,9 +98,9 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
           <div aria-modal="true" className="admin-modal admin-modal--wide order-modal" role="dialog">
             <div className="modal-header-row">
               <div>
-                <span className="modal-eyebrow">Commande factice</span>
+                <span className="modal-eyebrow">Vente manuelle</span>
                 <h2>Créer une commande</h2>
-                <p>Créez une commande de test sans modifier le stock des produits.</p>
+                <p>Enregistrez une vente réalisée hors ligne (atelier, virement...). Le stock est décompté immédiatement.</p>
               </div>
               <button className="modal-close-button" onClick={() => setIsOpen(false)} type="button">
                 {"\u00d7"}
@@ -113,7 +113,7 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
                 <label>
                   Email client
                   <input
-                    defaultValue="commande-factice@kayart.local"
+                    defaultValue="vente-directe@kayart.local"
                     name="guestEmail"
                     placeholder="client@example.com"
                     type="email"
@@ -121,7 +121,7 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
                 </label>
                 <label>
                   Note interne
-                  <input name="customerNote" placeholder="Essai admin, démonstration, brouillon..." type="text" />
+                  <input name="customerNote" placeholder="Payée en espèces, virement en attente..." type="text" />
                 </label>
               </div>
 

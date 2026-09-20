@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import { load } from './helpers/load-module.mjs';
 
 const base = { id:'product', name:'Produit test', slug:'produit-test', sku:'TEST', categoryId:'category', condition:'new', availability:'available', priceCents:1990, compareAtPriceCents:null, stockQuantity:1, description:'Description technique existante.', shortDescription:'Test', attributes:[{label:'Poids',value:'0.5',unit:'kg'},{label:'Dimensions',value:'20 cm'},{label:'Matière',value:'Carbone'}], images:[], isFeatured:false,isCustomizable:false,isReservable:false, publishedAt:new Date(), category:null };
-function repository(prisma, env={KAYART_ENABLE_ORDER_SIMULATOR:'true'}) {
+function repository(prisma, env={KAYART_ENABLE_MANUAL_ORDERS:'true'}) {
   return load('src/server/catalog/catalog.repository.ts', {'@/server/db/prisma':{getPrismaClient:()=>prisma}},env).prismaCatalogRepository;
 }
 
@@ -105,9 +105,9 @@ test('used products retain their condition and private base models are omitted p
  assert.equal(result.baseProduct,null);assert.equal(result.baseProductId,null);
 });
 
-const order={id:'order',orderNumber:'TEST-20260908-ABC',customerNote:'Commande factice admin',stripeCheckoutSessionId:null,stripePaymentIntentId:null,status:'pending',paymentStatus:'pending',createdAt:new Date(),paidAt:null,items:[]};
-test('simulator rejects real orders, legacy ADM orders, external payments and disabled configuration',async()=>{
- for(const unsafe of [{...order,orderNumber:'REAL-1'},{...order,orderNumber:'ADM-1'},{...order,stripePaymentIntentId:'pi_real'},{...order,customerNote:'customer text'}]) {
+const order={id:'order',orderNumber:'MAN-20260908-ABC',customerNote:'Vente manuelle admin',stripeCheckoutSessionId:null,stripePaymentIntentId:null,status:'pending',paymentStatus:'pending',createdAt:new Date(),paidAt:null,items:[]};
+test('manual order safety rejects real orders, legacy test orders, external payments and disabled configuration',async()=>{
+ for(const unsafe of [{...order,orderNumber:'REAL-1'},{...order,orderNumber:'TEST-20260908-ABC'},{...order,stripePaymentIntentId:'pi_real'},{...order,customerNote:'customer text'}]) {
   const repo=repository({order:{findUnique:async()=>unsafe}});
   await assert.rejects(repo.markAdminOrderPaid({id:'order'}),/réservée/);
   await assert.rejects(repo.deleteAdminOrder({id:'order'}),/réservée/);
@@ -115,14 +115,52 @@ test('simulator rejects real orders, legacy ADM orders, external payments and di
  await assert.rejects(repository({},{}).createAdminOrder({}),/désactivé/);
 });
 
-test('simulation payment updates both statuses and is idempotent; cancellation retains history',async()=>{
+test('manual sale payment updates both statuses and is idempotent; cancellation retains history',async()=>{
  let current={...order},updates=0;
  const repo=repository({order:{findUnique:async()=>current,findUniqueOrThrow:async()=>current,updateMany:async(q)=>{updates++;current={...current,...q.data};return {count:1};}}});
  await repo.markAdminOrderPaid({id:'order'});const paidAt=current.paidAt;
  await repo.markAdminOrderPaid({id:'order'});
  assert.equal(updates,1);assert.equal(current.status,'paid');assert.equal(current.paidAt,paidAt);
  await assert.rejects(repo.deleteAdminOrder({id:'order'}),/attente/);
- current={...order};await repo.deleteAdminOrder({id:'order'});assert.equal(current.status,'cancelled');
+ current={...order,items:[]};
+ const repoWithTx=repository({order:{findUnique:async()=>current,updateMany:async(q)=>{current={...current,...q.data};return {count:1};}},$transaction:async(fn)=>fn({product:{updateMany:async()=>({count:1})},order:{updateMany:async(q)=>{current={...current,...q.data};return {count:1};}}})});
+ await repoWithTx.deleteAdminOrder({id:'order'});assert.equal(current.status,'cancelled');
+});
+
+test('manual order creation decrements finite stock, skips made-to-order and rejects unavailable or insufficient stock',async()=>{
+ const stockProduct={id:'p1',name:'Stock item',priceCents:1000,sku:'SKU1',availability:'available',stockQuantity:3};
+ const madeToOrderProduct={id:'p2',name:'MTO item',priceCents:2000,sku:'SKU2',availability:'madeToOrder',stockQuantity:null};
+ let decrements=[],orderCreated=null;
+ const tx={
+  product:{findMany:async()=>[stockProduct,madeToOrderProduct],updateMany:async(q)=>{decrements.push(q);return {count:1};}},
+  order:{create:async(q)=>{orderCreated=q.data;return {...q.data,id:'order',createdAt:new Date(),paidAt:null,items:[]};}}
+ };
+ const repo=repository({$transaction:async(fn)=>fn(tx)});
+ await repo.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p1',quantity:2},{productId:'p2',quantity:1}]});
+ assert.equal(decrements.length,1);
+ assert.equal(decrements[0].where.id,'p1');assert.equal(decrements[0].data.stockQuantity.decrement,2);
+ assert.ok(orderCreated.orderNumber.startsWith('MAN-'));assert.equal(orderCreated.customerNote,'Vente manuelle admin');
+
+ const draftProduct={id:'p3',name:'Draft',priceCents:1000,sku:'SKU3',availability:'draft',stockQuantity:5};
+ const repoDraft=repository({$transaction:async(fn)=>fn({product:{findMany:async()=>[draftProduct]},order:{}})});
+ await assert.rejects(repoDraft.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p3',quantity:1}]}),/disponible/);
+
+ const lowStock={id:'p4',name:'Low',priceCents:1000,sku:'SKU4',availability:'available',stockQuantity:1};
+ const repoLow=repository({$transaction:async(fn)=>fn({product:{findMany:async()=>[lowStock],updateMany:async()=>({count:0})},order:{}})});
+ await assert.rejects(repoLow.createAdminOrder({guestEmail:'a@b.test',customerNote:null,items:[{productId:'p4',quantity:5}]}),/stock a changé/);
+});
+
+test('cancelling a manual sale releases finite stock but leaves made-to-order untouched',async()=>{
+ const existing={...order,items:[{productId:'p1',quantity:2},{productId:'p2',quantity:1}]};
+ const increments=[];
+ const repo=repository({
+  order:{findUnique:async()=>existing},
+  $transaction:async(fn)=>fn({product:{updateMany:async(q)=>{increments.push(q);return {count:1};}},order:{updateMany:async()=>({count:1})}})
+ });
+ await repo.deleteAdminOrder({id:'order'});
+ assert.equal(increments.length,2);
+ assert.equal(increments[0].data.stockQuantity.increment,2);
+ assert.equal(increments[1].data.stockQuantity.increment,1);
 });
 
 test('image decoding rejects disguised text and SVG; valid pixels are reencoded',async()=>{

@@ -46,7 +46,7 @@ const paymentStatusLabels: Record<PaymentStatus, string> = {
 
 export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageProps) {
   const params = searchParams ? await searchParams : {};
-  const canPersist = isCatalogPersistenceEnabled() && process.env.KAYART_ENABLE_ORDER_SIMULATOR === "true";
+  const canPersist = isCatalogPersistenceEnabled() && process.env.KAYART_ENABLE_MANUAL_ORDERS === "true";
   const [products, result] = await Promise.all([canPersist ? listAdminProducts() : Promise.resolve([]), searchAdminOrders(params)]);
   const { orders } = result;
 
@@ -69,25 +69,25 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
         <div className="admin-panel">
           {params.error ? <p className="form-notice form-notice--error">{params.error}</p> : null}
           {params.created === "1" ? (
-            <p className="form-notice form-notice--success">Commande factice créée. Aucun stock modifié.</p>
+            <p className="form-notice form-notice--success">Vente manuelle enregistrée. Stock mis à jour.</p>
           ) : null}
           {params.updated === "paid" ? (
             <p className="form-notice form-notice--success">Paiement marqué comme payé.</p>
           ) : null}
           {params.updated === "deleted" ? (
-            <p className="form-notice form-notice--success">Simulation annulée, historique conservé.</p>
+            <p className="form-notice form-notice--success">Vente annulée, stock remis en vente.</p>
           ) : null}
 
           <div className="admin-panel__header">
             <div>
               <strong>Suivi des commandes</strong>
-              <p>Les commandes Stripe de test réservent le stock. Leur paiement est confirmé automatiquement par Stripe. Les simulations internes restent sans effet sur le stock.</p>
+              <p>Les commandes Stripe de test réservent le stock. Leur paiement est confirmé automatiquement par Stripe. Les ventes manuelles décomptent le stock immédiatement et doivent être marquées payées une fois le règlement reçu.</p>
             </div>
           </div>
 
           {canPersist && products.length === 0 ? (
             <p className="admin-panel__note">
-              Aucun produit n'est disponible pour créer une commande factice.
+              Aucun produit n'est disponible pour créer une vente manuelle.
             </p>
           ) : null}
 
@@ -126,8 +126,8 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
                       <strong>{formatMoneyCents(order.totalCents)}</strong>
                     </td>
                     <td data-label="Statut">
-                      <span className={`table-badge table-badge--order-${order.isFictive ? "fictive" : order.status}`}>
-                        {order.isFictive ? "Factice" : orderStatusLabels[order.status]}
+                      <span className={`table-badge table-badge--order-${order.isManual ? "manual" : order.status}`}>
+                        {order.isManual ? "Vente manuelle" : orderStatusLabels[order.status]}
                       </span>
                     </td>
                     <td data-label="Paiement">
@@ -152,7 +152,7 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
 
           {!canPersist ? (
             <p className="admin-panel__note">
-              Le simulateur interne est désactivé. Le suivi des commandes Stripe est indépendant de ce simulateur.
+              L'enregistrement de ventes manuelles est désactivé. Le suivi des commandes Stripe est indépendant de cette fonctionnalité.
             </p>
           ) : null}
         </div>

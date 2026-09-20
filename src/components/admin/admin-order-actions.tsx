@@ -16,7 +16,7 @@ type AdminOrderActionsProps = {
 
 export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const canMarkPaid = canPersist && order.isFictive && order.paymentStatus === "pending" && order.status === "pending";
+  const canMarkPaid = canPersist && order.isManual && order.paymentStatus === "pending" && order.status === "pending";
 
   if (order.isTest) {
     const label = order.status === "paid" ? "Préparer le test" : order.status === "preparing" ? (order.fulfillmentMethod === "pickup" ? "Marquer prête" : "Marquer expédiée") : ["ready", "shipped"].includes(order.status) ? "Terminer le test" : null;
@@ -36,7 +36,7 @@ export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps)
           onClick={() => setIsDeleteOpen(true)}
           type="button"
         >
-          Annuler la simulation
+          Annuler la vente
         </button>
       </div>
 
@@ -44,9 +44,9 @@ export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps)
         <div className="modal-backdrop" role="presentation">
           <div aria-modal="true" className="admin-modal admin-modal--danger" role="dialog">
             <div>
-              <span className="modal-eyebrow">Annulation de simulation</span>
+              <span className="modal-eyebrow">Annulation de vente</span>
               <h2>{order.orderNumber}</h2>
-              <p>La simulation sera annulée et restera dans l'historique.</p>
+              <p>La vente sera annulée, le stock remis en vente, et la commande restera dans l'historique.</p>
             </div>
             <form action={deleteAdminOrderAction} className="modal-form">
               <input name="id" type="hidden" value={order.id} />
@@ -54,7 +54,7 @@ export function AdminOrderActions({ canPersist, order }: AdminOrderActionsProps)
                 <button className="button button--ghost" onClick={() => setIsDeleteOpen(false)} type="button">
                   Annuler
                 </button>
-                <ActionButton danger label="Annuler la simulation" />
+                <ActionButton danger label="Annuler la vente" />
               </div>
             </form>
           </div>

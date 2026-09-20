@@ -23,7 +23,7 @@ import {
 import { getPrismaClient } from "@/server/db/prisma";
 import type { Category, Product } from "@/types/catalog";
 import type { AdminOrder } from "@/types/orders";
-import { isFictiveAdminOrder, requireOrderSimulator } from "@/server/catalog/order-safety";
+import { isManualAdminOrder, requireManualOrders } from "@/server/catalog/order-safety";
 import { planProductImages } from "./product-image-plan";
 import { ProductFormError } from "./catalog.input";
 
@@ -555,7 +555,7 @@ export const prismaCatalogRepository: CatalogRepository = {
   },
 
   async createAdminOrder(input) {
-    requireOrderSimulator();
+    requireManualOrders();
     const prisma = getPrismaClient();
 
     return prisma.$transaction(async (tx) => {
@@ -565,7 +565,9 @@ export const prismaCatalogRepository: CatalogRepository = {
           id: true,
           name: true,
           priceCents: true,
-          sku: true
+          sku: true,
+          availability: true,
+          stockQuantity: true
         },
         where: {
           id: {
@@ -582,9 +584,13 @@ export const prismaCatalogRepository: CatalogRepository = {
           throw new Error("Un produit de la commande est introuvable.");
         }
 
+        if (product.availability !== "available" && product.availability !== "madeToOrder") {
+          throw new Error(`${product.name} n’est plus disponible à la vente.`);
+        }
+
         const unitPriceCents = product.priceCents;
         if (unitPriceCents === null || unitPriceCents <= 0 || !Number.isSafeInteger(item.quantity) || item.quantity <= 0 || item.quantity > 10000) {
-          throw new Error("Prix ou quantité invalide pour cette simulation.");
+          throw new Error("Prix ou quantité invalide pour cette vente.");
         }
 
         return {
@@ -593,7 +599,8 @@ export const prismaCatalogRepository: CatalogRepository = {
           productSku: product.sku,
           quantity: item.quantity,
           unitPriceCents,
-          totalCents: unitPriceCents * item.quantity
+          totalCents: unitPriceCents * item.quantity,
+          tracksStock: product.stockQuantity !== null
         };
       });
 
@@ -601,10 +608,20 @@ export const prismaCatalogRepository: CatalogRepository = {
       if (!Number.isSafeInteger(subtotalCents) || subtotalCents > 2147483647) {
         throw new Error("Le montant total dépasse la limite autorisée.");
       }
+
+      for (const item of orderItems) {
+        if (!item.tracksStock) continue;
+        const result = await tx.product.updateMany({
+          where: { id: item.productId, stockQuantity: { gte: item.quantity } },
+          data: { stockQuantity: { decrement: item.quantity }, updatedAt: new Date() }
+        });
+        if (!result.count) throw new Error("Le stock a changé entre-temps. Actualisez la page et réessayez.");
+      }
+
       const row = await tx.order.create({
         data: {
           currency: "EUR",
-          customerNote: formatFictiveOrderNote(input.customerNote),
+          customerNote: formatManualOrderNote(input.customerNote),
           guestEmail: input.guestEmail,
           items: {
             create: orderItems.map((item) => ({
@@ -616,7 +633,7 @@ export const prismaCatalogRepository: CatalogRepository = {
               unitPriceCents: item.unitPriceCents
             }))
           },
-          orderNumber: generateFictiveOrderNumber(),
+          orderNumber: generateManualOrderNumber(),
           paidAt: null,
           paymentStatus: "pending",
           shippingCents: 0,
@@ -632,10 +649,10 @@ export const prismaCatalogRepository: CatalogRepository = {
   },
 
   async markAdminOrderPaid(input) {
-    requireOrderSimulator();
+    requireManualOrders();
     const prisma = getPrismaClient();
     const existing = await prisma.order.findUnique({ where: { id: input.id }, include: orderInclude });
-    if (!existing || !isFictiveAdminOrder(existing)) throw new Error("Cette action est réservée aux commandes de test sans paiement externe.");
+    if (!existing || !isManualAdminOrder(existing)) throw new Error("Cette action est réservée aux ventes manuelles sans paiement Stripe.");
     if (existing.paymentStatus === "paid") return mapPrismaAdminOrder(existing);
     if (existing.status !== "pending" || existing.paymentStatus !== "pending") throw new Error("Cette commande ne peut plus être payée.");
     await prisma.order.updateMany({
@@ -656,32 +673,43 @@ export const prismaCatalogRepository: CatalogRepository = {
   },
 
   async deleteAdminOrder(input) {
-    requireOrderSimulator();
+    requireManualOrders();
     const prisma = getPrismaClient();
-    const existing = await prisma.order.findUnique({ where: { id: input.id } });
-    if (!existing || !isFictiveAdminOrder(existing)) throw new Error("Cette action est réservée aux commandes de test sans paiement externe.");
-    if (existing.paymentStatus !== "pending" || existing.status !== "pending") throw new Error("Seules les simulations en attente peuvent être annulées.");
-    await prisma.order.updateMany({
-      data: { status: "cancelled", paymentStatus: "cancelled", updatedAt: new Date() },
-      where: {
-        id: input.id, status: "pending", paymentStatus: "pending",
-        orderNumber: existing.orderNumber, customerNote: existing.customerNote,
-        stripeCheckoutSessionId: null, stripePaymentIntentId: null
+    const existing = await prisma.order.findUnique({ where: { id: input.id }, include: orderInclude });
+    if (!existing || !isManualAdminOrder(existing)) throw new Error("Cette action est réservée aux ventes manuelles sans paiement Stripe.");
+    if (existing.paymentStatus !== "pending" || existing.status !== "pending") throw new Error("Seules les ventes en attente peuvent être annulées.");
+
+    await prisma.$transaction(async (tx) => {
+      for (const item of existing.items) {
+        if (!item.productId) continue;
+        await tx.product.updateMany({
+          where: { id: item.productId, stockQuantity: { not: null } },
+          data: { stockQuantity: { increment: item.quantity }, updatedAt: new Date() }
+        });
       }
+
+      await tx.order.updateMany({
+        data: { status: "cancelled", paymentStatus: "cancelled", updatedAt: new Date() },
+        where: {
+          id: input.id, status: "pending", paymentStatus: "pending",
+          orderNumber: existing.orderNumber, customerNote: existing.customerNote,
+          stripeCheckoutSessionId: null, stripePaymentIntentId: null
+        }
+      });
     });
   }
 };
 
-function generateFictiveOrderNumber() {
+function generateManualOrderNumber() {
   const now = new Date();
   const date = now.toISOString().slice(0, 10).replaceAll("-", "");
   const suffix = `${now.getTime().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 
-  return `TEST-${date}-${suffix.toUpperCase()}`;
+  return `MAN-${date}-${suffix.toUpperCase()}`;
 }
 
-function formatFictiveOrderNote(note: string | null) {
-  const prefix = "Commande factice admin";
+function formatManualOrderNote(note: string | null) {
+  const prefix = "Vente manuelle admin";
 
   if (!note) {
     return prefix;
