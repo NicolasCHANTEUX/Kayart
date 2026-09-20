@@ -401,7 +401,18 @@ export function ProductForm({
 
       <fieldset className={stageClassName(4)} id="product-step-options" inert={isStepLocked(4)}>
         <legend>Options V1</legend>
+        <p className="form-hint">
+          « Afficher » contrôle seul la présence du produit dans la boutique, indépendamment de son statut de disponibilité.
+        </p>
         <div className="check-grid">
+          <label>
+            <input
+              defaultChecked={defaultValues ? Boolean(defaultValues.isPublished) : true}
+              name="isPublished"
+              type="checkbox"
+            />
+            Afficher
+          </label>
           <label>
             <input defaultChecked={defaultValues?.isFeatured} name="isFeatured" type="checkbox" />
             Mettre en avant

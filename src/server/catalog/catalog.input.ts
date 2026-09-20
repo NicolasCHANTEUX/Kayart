@@ -50,6 +50,7 @@ export type ProductCreateInput = {
   isFeatured: boolean;
   isReservable: boolean;
   isCustomizable: boolean;
+  isPublished: boolean;
 };
 
 export type ProductUpdateInput = ProductCreateInput & {
@@ -242,7 +243,8 @@ export function parseProductFormData(formData: FormData): ProductCreateInput {
     images: [],
     isFeatured: formData.get("isFeatured") === "on",
     isReservable: formData.get("isReservable") === "on",
-    isCustomizable: formData.get("isCustomizable") === "on"
+    isCustomizable: formData.get("isCustomizable") === "on",
+    isPublished: formData.get("isPublished") === "on"
   };
 }
 

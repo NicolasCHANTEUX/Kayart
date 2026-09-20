@@ -98,6 +98,29 @@ test('hide and show retain reserved and made-to-order states',async()=>{
  }
 });
 
+test('creating a product controls publishedAt via isPublished, independent of availability except draft/archived',async()=>{
+ let saved;
+ const repo=repository({product:{create:async(q)=>{saved=q.data;return {...base,...q.data,id:'new',images:[],attributes:[]};}}});
+ await repo.createProduct({...base,availability:'unavailable',isPublished:true});
+ assert.ok(saved.publishedAt instanceof Date);
+ await repo.createProduct({...base,availability:'available',isPublished:false});
+ assert.equal(saved.publishedAt,null);
+ await repo.createProduct({...base,availability:'draft',isPublished:true});
+ assert.equal(saved.publishedAt,null);
+});
+
+test('editing a product controls publishedAt via isPublished and preserves the original publish date',async()=>{
+ const publishedAt=new Date('2026-01-01T00:00:00Z');
+ const existing={...base,publishedAt,availability:'unavailable'};
+ let saved;
+ const tx={product:{findUnique:async()=>existing,update:async(q)=>{saved=q.data;return {...existing,...q.data,images:[],attributes:[]};}}};
+ const repo=repository({$transaction:async(fn)=>fn(tx)});
+ await repo.updateProduct({...base,availability:'unavailable',isPublished:true,deletedImageIds:[]});
+ assert.equal(saved.publishedAt,publishedAt);
+ await repo.updateProduct({...base,availability:'available',isPublished:false,deletedImageIds:[]});
+ assert.equal(saved.publishedAt,null);
+});
+
 test('used products retain their condition and private base models are omitted publicly',()=>{
  const mapper=load('src/server/catalog/catalog.mapper.ts');
  assert.equal(mapper.mapPrismaProduct({...base,condition:'used'}).condition,'used');

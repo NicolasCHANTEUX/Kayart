@@ -201,7 +201,8 @@ export async function createImperfectProductAction(formData: FormData) {
       images,
       isFeatured: false,
       isReservable: true,
-      isCustomizable: false
+      isCustomizable: false,
+      isPublished: true
     });
   } catch (error) {
     if (error instanceof ProductFormError) {

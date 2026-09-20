@@ -304,7 +304,12 @@ export const prismaCatalogRepository: CatalogRepository = {
         isReservable: input.isReservable,
         name: input.name,
         priceCents: input.priceCents,
-        publishedAt: input.availability === "draft" ? null : new Date(),
+        publishedAt:
+          input.availability === "draft" || input.availability === "archived"
+            ? null
+            : input.isPublished
+              ? new Date()
+              : null,
         shortDescription: input.shortDescription,
         sku: input.sku,
         slug: input.slug,
@@ -436,12 +441,11 @@ export const prismaCatalogRepository: CatalogRepository = {
           name: input.name,
           priceCents: input.preservePrices ? existing.priceCents : input.priceCents,
           publishedAt:
-            input.availability === "draft" ||
-            input.availability === "unavailable" ||
-            input.availability === "archived"
+            input.availability === "draft" || input.availability === "archived"
               ? null
-              : ["draft", "unavailable", "archived"].includes(existing.availability)
-                ? new Date() : existing.publishedAt,
+              : input.isPublished
+                ? (existing.publishedAt ?? new Date())
+                : null,
           shortDescription: input.shortDescription,
           sku: input.sku,
           slug: input.slug,

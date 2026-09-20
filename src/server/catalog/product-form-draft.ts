@@ -14,6 +14,7 @@ export type ProductFormDraft = {
   discountPercent?: string;
   isCustomizable?: boolean;
   isFeatured?: boolean;
+  isPublished?: boolean;
   isReservable?: boolean;
   name?: string;
   shortDescription?: string;
@@ -43,7 +44,7 @@ const textFields = [
   "weight"
 ] as const;
 
-const booleanFields = ["isCustomizable", "isFeatured", "isReservable"] as const;
+const booleanFields = ["isCustomizable", "isFeatured", "isPublished", "isReservable"] as const;
 
 export function createProductFormDraft(formData: FormData): ProductFormDraft {
   const draft: ProductFormDraft = {};
@@ -100,6 +101,7 @@ export function createProductFormDraftFromProduct(product: Product): ProductForm
     discountPercent: discountPercent ? String(discountPercent) : undefined,
     isCustomizable: product.isCustomizable,
     isFeatured: product.isFeatured,
+    isPublished: Boolean(product.publishedAt),
     isReservable: product.isReservable,
     name: product.name,
     shortDescription: product.shortDescription,
