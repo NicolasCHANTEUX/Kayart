@@ -10,6 +10,7 @@ const adminLinks = [
   { href: "/admin/produits", label: "Produits", compactLabel: "Produits" },
   { href: "/admin/commandes", label: "Commandes", compactLabel: "Commandes" },
   { href: "/admin/demandes", label: "Demandes clients", compactLabel: "Demandes" },
+  { href: "/admin/demandes?type=repair", label: "Demandes de réparation", compactLabel: "Demandes réparation" },
   { href: "/admin/livraison", label: "Livraison & réglages", compactLabel: "Réglages" }
 ];
 
