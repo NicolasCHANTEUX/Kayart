@@ -53,7 +53,7 @@ test('stock classification keeps services and made-to-order products out of phys
 });
 
 test('overview counts all orders and outstanding requests without loading private records', async () => {
-  const pendingCount = count => ({ count: async ({ where }) => { assert.equal(where.status.in.join(','), 'new,inProgress'); return count; } });
+  const pendingCount = count => ({ count: async ({ where }) => { assert.equal(where.status.in.join(','), 'new,inProgress'); assert.equal(where.deletedAt,null); return count; } });
   const tx = {
     product: { count: async () => 112 },
     order: { count: async query => { if (!query) return 87; assert.equal(query.where.isTest, true); return 80; } },

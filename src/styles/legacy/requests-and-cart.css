@@ -12,6 +12,13 @@
 .request-message { white-space: pre-wrap; overflow-wrap: anywhere; }
 .request-photos { display: flex; flex-wrap: wrap; gap: 12px; }
 .request-photos img { width: 160px; height: 120px; object-fit: contain; }
+.admin-request-card__content { transition: opacity .2s ease, filter .2s ease; }
+.admin-request-card--muted .admin-request-card__content { opacity: .55; filter: grayscale(1); }
+.admin-request-card__excerpt { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.admin-request-card__controls { padding-top: 12px; border-top: 1px solid var(--line); }
+.admin-request-card__controls .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 150px; }
+.admin-request-card__trash { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.admin-request-card .form-notice { margin-top: 12px; }
 .cart-layout { display: grid; gap: 24px; margin-top: 24px; }
 .cart-lines { list-style: none; padding: 0; display: grid; gap: 12px; }
 .cart-lines li { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; border: 1px solid var(--line); padding: 20px; }

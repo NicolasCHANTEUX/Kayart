@@ -32,7 +32,9 @@ test('private admin request reads and status writes authorize before database ac
   '@/server/requests/private-images':{}
  });
  await assert.rejects(service.listAdminRequests('contact',1),/DENIED/);
+ await assert.rejects(service.getAdminRequest('contact',randomUUID()),/DENIED/);
  await assert.rejects(service.updateAdminRequestStatus('contact','id','closed',new Date().toISOString(),'new'),/DENIED/);
+ await assert.rejects(service.setAdminRequestTrashed('contact','id',new Date().toISOString(),true),/DENIED/);
  assert.equal(accesses,0);
 });
 test('repeated submissions do not duplicate records or upload photos again',async()=>{
@@ -71,6 +73,66 @@ test('expired admin version rejects overwriting a concurrent update',async()=>{
  assert.equal(query.where.status,'new');
  assert.equal(query.where.updatedAt.gte.toISOString(),'2026-09-08T00:00:00.000Z');
  assert.equal(query.where.updatedAt.lt.toISOString(),'2026-09-08T00:00:00.001Z');
+});
+test('admin request list separates active requests from the recoverable trash',async()=>{
+ const id=randomUUID(),queries=[];
+ const row={id,name:'Client test',email:'client@example.invalid',phone:null,status:'closed',createdAt:new Date(),updatedAt:new Date(),deletedAt:null,subject:'Question',message:'Message complet'};
+ const service=load('src/server/requests/request-service.ts',{
+  '@/server/auth/session':{requireAdminSession:async()=>({role:'admin'})},
+  '@/server/db/prisma':{getPrismaClient:()=>({contactRequest:{findMany:async(query)=>{queries.push(query);return [row];}},requestMedia:{findMany:async()=>[]}})},
+  '@/server/requests/private-images':{}
+ });
+ const active=await service.listAdminRequests('contact',1,'closed');
+ const trash=await service.listAdminRequests('contact',1,undefined,true);
+ assert.equal(active.requests[0].deletedAt,null);
+ assert.equal(queries[0].where.status,'closed');
+ assert.equal(queries[0].where.deletedAt,null);
+ assert.equal(queries[1].where.deletedAt.not,null);
+ assert.equal(trash.requests.length,1);
+});
+test('admin request detail includes its private image references',async()=>{
+ const id=randomUUID(),imageId=randomUUID();
+ const row={id,name:'Client test',email:'client@example.invalid',phone:null,status:'new',createdAt:new Date(),updatedAt:new Date(),deletedAt:null,productType:'Pagaie',damageDescription:'Description complète'};
+ const service=load('src/server/requests/request-service.ts',{
+  '@/server/auth/session':{requireAdminSession:async()=>({role:'admin'})},
+  '@/server/db/prisma':{getPrismaClient:()=>({repairRequest:{findUnique:async()=>row},requestMedia:{findMany:async(query)=>{assert.equal(query.where.requestType,'repair');assert.equal(query.where.requestId,id);return [{mediaAssetId:imageId}];}}})},
+  '@/server/requests/private-images':{}
+ });
+ const detail=await service.getAdminRequest('repair',id);
+ assert.equal(detail.message,row.damageDescription);
+ assert.equal(detail.imageIds[0],imageId);
+});
+test('status saves return the new version and reject archived requests',async()=>{
+ const id=randomUUID(),before='2026-09-08T00:00:00.000Z',queries=[];
+ let count=1;
+ const service=load('src/server/requests/request-service.ts',{
+  '@/server/auth/session':{requireAdminSession:async()=>({role:'admin'})},
+  '@/server/db/prisma':{getPrismaClient:()=>({contactRequest:{updateMany:async(query)=>{queries.push(query);return {count};}}})},
+  '@/server/requests/private-images':{}
+ });
+ const saved=await service.updateAdminRequestStatus('contact',id,'closed',before,'new');
+ assert.equal(saved.status,'closed');
+ assert.equal(saved.updatedAt,queries[0].data.updatedAt.toISOString());
+ assert.equal(queries[0].where.deletedAt,null);
+ count=0;
+ await assert.rejects(service.updateAdminRequestStatus('contact',id,'answered',before,'new'),/changé/);
+});
+test('moving a request to trash and restoring it only update the request row',async()=>{
+ const id=randomUUID(),before='2026-09-08T00:00:00.000Z',queries=[];
+ const db={contactRequest:{updateMany:async(query)=>{queries.push(query);return {count:1};}}};
+ const service=load('src/server/requests/request-service.ts',{
+  '@/server/auth/session':{requireAdminSession:async()=>({role:'admin'})},
+  '@/server/db/prisma':{getPrismaClient:()=>db},'@/server/requests/private-images':{}
+ });
+ const trashed=await service.setAdminRequestTrashed('contact',id,before,true);
+ assert.equal(trashed.deletedAt,queries[0].data.deletedAt.toISOString());
+ assert.equal(queries[0].where.deletedAt,null);
+ assert.ok(queries[0].data.deletedAt instanceof Date);
+ const restored=await service.setAdminRequestTrashed('contact',id,trashed.updatedAt,false);
+ assert.equal(restored.deletedAt,null);
+ assert.equal(queries[1].where.deletedAt.not,null);
+ assert.equal(queries[1].data.deletedAt,null);
+ assert.equal(Object.keys(db).includes('requestMedia'),false);
 });
 test('request storage uses the correct header for new and legacy Supabase keys',()=>{
  for(const [key,authorization] of [['sb_secret_fixture',undefined],['legacy-service-role-jwt','Bearer legacy-service-role-jwt']]) {

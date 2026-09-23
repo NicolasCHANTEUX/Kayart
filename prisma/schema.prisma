@@ -317,8 +317,10 @@ model ContactRequest {
   status    RequestStatus @default(new)
   createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime?     @map("deleted_at") @db.Timestamptz(6)
 
   @@index([status])
+  @@index([deletedAt, createdAt(sort: Desc)], map: "contact_requests_deleted_at_created_at_idx")
   @@map("contact_requests")
 }
 
@@ -334,8 +336,10 @@ model RepairRequest {
   status            RequestStatus @default(new)
   createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt         DateTime?     @map("deleted_at") @db.Timestamptz(6)
 
   @@index([status])
+  @@index([deletedAt, createdAt(sort: Desc)], map: "repair_requests_deleted_at_created_at_idx")
   @@map("repair_requests")
 }
 
@@ -354,8 +358,10 @@ model CustomRequest {
   status             RequestStatus @default(new)
   createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt          DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt          DateTime?     @map("deleted_at") @db.Timestamptz(6)
 
   @@index([status])
+  @@index([deletedAt, createdAt(sort: Desc)], map: "custom_requests_deleted_at_created_at_idx")
   @@map("custom_requests")
 }
 
