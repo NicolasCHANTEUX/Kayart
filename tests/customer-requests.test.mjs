@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
+import sharp from 'sharp';
 import { load } from './helpers/load-module.mjs';
 function form(kind='contact') {
  const data=new FormData();
@@ -31,7 +32,7 @@ test('private admin request reads and status writes authorize before database ac
   '@/server/requests/private-images':{}
  });
  await assert.rejects(service.listAdminRequests('contact',1),/DENIED/);
- await assert.rejects(service.updateAdminRequestStatus('contact','id','closed',new Date().toISOString()),/DENIED/);
+ await assert.rejects(service.updateAdminRequestStatus('contact','id','closed',new Date().toISOString(),'new'),/DENIED/);
  assert.equal(accesses,0);
 });
 test('repeated submissions do not duplicate records or upload photos again',async()=>{
@@ -66,8 +67,61 @@ test('failed transactions clean only newly uploaded private objects',async()=>{
 test('expired admin version rejects overwriting a concurrent update',async()=>{
  let query;
  const service=load('src/server/requests/request-service.ts',{'@/server/auth/session':{requireAdminSession:async()=>({role:'admin'})},'@/server/db/prisma':{getPrismaClient:()=>({contactRequest:{updateMany:async(q)=>{query=q;return {count:0};}}})},'@/server/requests/private-images':{}});
- await assert.rejects(service.updateAdminRequestStatus('contact','id','closed','2026-09-08T00:00:00Z'),/changé/);
- assert.equal(query.where.updatedAt.toISOString(),'2026-09-08T00:00:00.000Z');
+ await assert.rejects(service.updateAdminRequestStatus('contact','id','closed','2026-09-08T00:00:00Z','new'),/changé/);
+ assert.equal(query.where.status,'new');
+ assert.equal(query.where.updatedAt.gte.toISOString(),'2026-09-08T00:00:00.000Z');
+ assert.equal(query.where.updatedAt.lt.toISOString(),'2026-09-08T00:00:00.001Z');
+});
+test('request storage uses the correct header for new and legacy Supabase keys',()=>{
+ for(const [key,authorization] of [['sb_secret_fixture',undefined],['legacy-service-role-jwt','Bearer legacy-service-role-jwt']]) {
+  const storage=load('src/server/requests/private-images.ts',{'@/server/catalog/product-image-storage':{}},{SUPABASE_URL:'https://fixture.supabase.co',SUPABASE_SECRET_KEY:key});
+  assert.equal(storage.requestStorageConfig().headers.apikey,key);
+  assert.equal(storage.requestStorageConfig().headers.Authorization,authorization);
+ }
+});
+test('a repair photo uploads privately, appears in admin, and can be read by an admin',async()=>{
+ const url='https://fixture.supabase.co',key='sb_secret_fixture',imageId=randomUUID(),requestId=randomUUID();
+ const objects=new Map(),calls=[];
+ const fakeFetch=async(address,options={})=>{
+  const endpoint=new URL(address).pathname;
+  calls.push({endpoint,method:options.method??'GET',headers:options.headers??{}});
+  if(endpoint==='/storage/v1/bucket/request-images')return Response.json({public:false});
+  if(endpoint.startsWith('/storage/v1/object/request-images/')&&options.method==='POST'){
+   objects.set(endpoint.slice('/storage/v1/object/request-images/'.length),Buffer.from(options.body));
+   return Response.json({Key:endpoint});
+  }
+  if(endpoint.startsWith('/storage/v1/object/authenticated/request-images/')){
+   const bytes=objects.get(endpoint.slice('/storage/v1/object/authenticated/request-images/'.length));
+   return bytes?new Response(bytes,{status:200}):new Response(null,{status:404});
+  }
+  throw new Error(`Unexpected storage request: ${endpoint}`);
+ };
+ const storage=load('src/server/requests/private-images.ts',{fetch:fakeFetch},{SUPABASE_URL:url,SUPABASE_SECRET_KEY:key});
+ const png=await sharp({create:{width:2,height:2,channels:3,background:'#4488aa'}}).png().toBuffer();
+ const stored=await storage.storePrivateRequestImages([new File([png],'damage.png',{type:'image/png'})]);
+ assert.equal(stored.length,1);
+ assert.match(stored[0].path,/^requests\/[0-9a-f-]{36}\.webp$/);
+ assert.equal((await sharp(objects.get(stored[0].path)).metadata()).format,'webp');
+ assert.equal(calls.some(call=>call.headers.Authorization),false);
+
+ const db={
+  repairRequest:{findMany:async()=>[{id:requestId,name:'Client test',email:'client@example.invalid',phone:null,status:'new',createdAt:new Date(),updatedAt:new Date(),productType:'Pagaie',damageDescription:'Une longue description du dommage.'}]},
+  requestMedia:{findMany:async()=>[{requestId,mediaAssetId:imageId}]},
+  mediaAsset:{findFirst:async()=>({id:imageId,path:stored[0].path,bucket:'request-images',visibility:'private'})}
+ };
+ const admin=load('src/server/requests/request-service.ts',{'@/server/auth/session':{requireAdminSession:async()=>({role:'admin'})},'@/server/db/prisma':{getPrismaClient:()=>db},'@/server/requests/private-images':{}});
+ const listed=await admin.listAdminRequests('repair',1);
+ assert.deepEqual(listed.requests[0].imageIds,[imageId]);
+ const route=load('src/app/api/admin/request-images/[id]/route.ts',{
+  fetch:fakeFetch,
+  '@/server/auth/session':{getCurrentAuthSession:async()=>({role:'admin'})},
+  '@/server/db/prisma':{getPrismaClient:()=>db},
+  '@/server/requests/private-images':{requestStorageConfig:storage.requestStorageConfig}
+ });
+ const response=await route.GET(new Request(`http://localhost/api/admin/request-images/${imageId}`),{params:Promise.resolve({id:imageId})});
+ assert.equal(response.status,200);
+ assert.equal(response.headers.get('Content-Type'),'image/webp');
+ assert.deepEqual(Buffer.from(await response.arrayBuffer()),objects.get(stored[0].path));
 });
 test('private photo endpoint denies unauthenticated requests before reading metadata',async()=>{
  let accessed=false;

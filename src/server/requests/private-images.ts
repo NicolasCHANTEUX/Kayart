@@ -1,12 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { normalizeProductImage } from "@/server/catalog/product-image-storage";
+import { supabaseServiceHeaders } from "@/server/supabase/service-headers";
 
 export type PrivateRequestImage = { path: string; sizeBytes: number; originalFilename: string };
 export function requestStorageConfig() {
   const url = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/rest\/v1\/?$/, "").replace(/\/+$/, "");
   const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url.startsWith("https://") || !key) throw new Error("Private request storage not configured.");
-  return { url, bucket: "request-images", headers: { apikey: key, Authorization: `Bearer ${key}` } };
+  return { url, bucket: "request-images", headers: supabaseServiceHeaders(key) };
 }
 export async function storePrivateRequestImages(files: File[]): Promise<PrivateRequestImage[]> {
   if (!files.length) return [];

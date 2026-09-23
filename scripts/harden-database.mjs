@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import pg from 'pg';
+import { supabaseServiceHeaders } from './supabase-service-headers.mjs';
 if (fs.existsSync('.env.local')) process.loadEnvFile('.env.local');
 const apply = process.argv.includes('--apply');
 if (!apply && !process.argv.includes('--check')) throw new Error('Use --check (read only) or --apply.');
@@ -35,7 +36,7 @@ try {
   const key=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;
   const bucket=process.env.SUPABASE_STORAGE_BUCKET||'product-images';
   const endpoint=url+'/storage/v1/bucket/'+encodeURIComponent(bucket);
-  const headers={apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json'};
+  const headers={...supabaseServiceHeaders(key),'Content-Type':'application/json'};
   if (apply) {
     const response=await fetch(endpoint,{method:'PUT',headers,body:JSON.stringify({public:true,file_size_limit:4194304,allowed_mime_types:['image/webp']}),signal:AbortSignal.timeout(10000)});
     if (!response.ok) throw new Error('Storage configuration failed: HTTP '+response.status);

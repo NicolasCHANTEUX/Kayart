@@ -1,10 +1,12 @@
 import fs from 'node:fs';
+import { supabaseServiceHeaders } from './supabase-service-headers.mjs';
 if(fs.existsSync('.env.local'))process.loadEnvFile('.env.local');
 const apply=process.argv.includes('--apply');
 if(!apply&&!process.argv.includes('--check'))throw new Error('Use --check or --apply.');
 const url=(process.env.SUPABASE_URL||process.env.NEXT_PUBLIC_SUPABASE_URL||'').replace(/\/rest\/v1\/?$/,'').replace(/\/+$/,'');
 const key=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;
-const headers={apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json'};
+if(!url.startsWith('https://')||!key)throw new Error('Supabase request storage is not configured.');
+const headers={...supabaseServiceHeaders(key),'Content-Type':'application/json'};
 const endpoint=url+'/storage/v1/bucket';
 const response=await fetch(endpoint,{headers});
 if(!response.ok)throw new Error('Bucket inspection failed: '+response.status);

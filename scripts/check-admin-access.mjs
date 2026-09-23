@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import pg from 'pg';
+import { supabaseServiceHeaders } from './supabase-service-headers.mjs';
 
 // Read only, one explicitly supplied account. Never print credentials or Auth tokens.
 const email = process.argv[process.argv.indexOf('--email') + 1]?.trim().toLowerCase();
@@ -23,7 +24,7 @@ try {
       const url = new URL(origin);
       if (url.protocol !== 'https:' || !url.hostname.endsWith('.supabase.co')) throw new Error('Unexpected Auth origin');
       url.pathname = `/auth/v1/admin/users/${accounts.rows[0].auth_user_id}`;url.search = '';url.hash = '';
-      const response = await fetch(url, { headers: { apikey: key, Authorization: `Bearer ${key}` }, redirect: 'error', signal: AbortSignal.timeout(10000) });
+      const response = await fetch(url, { headers: supabaseServiceHeaders(key), redirect: 'error', signal: AbortSignal.timeout(10000) });
       if (response.ok) {
         const user = await response.json();
         identity = { checked: true, boundUserExists: true, confirmed: Boolean(user.email_confirmed_at), matchingEmail: user.email?.trim().toLowerCase() === email };

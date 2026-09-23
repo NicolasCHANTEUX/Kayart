@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import pg from 'pg';
 import sharp from 'sharp';
+import { supabaseServiceHeaders } from './supabase-service-headers.mjs';
 if (!process.argv.includes('--integration-check')) throw new Error('Use --integration-check.');
 if (fs.existsSync('.env.local')) process.loadEnvFile('.env.local');
 const report = { database: {}, storage: {} };
@@ -32,7 +33,7 @@ try {
 
 const url = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '').replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
 const secret = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-const headers = { apikey: secret, Authorization: 'Bearer ' + secret };
+const headers = supabaseServiceHeaders(secret);
 const bucket = 'request-images', path = 'requests/' + randomUUID() + '.webp';
 const metadata = await fetch(url + '/storage/v1/bucket/' + bucket, { headers });
 assert.ok(metadata.ok); assert.equal((await metadata.json()).public, false);

@@ -52,11 +52,14 @@ export async function listAdminRequests(kind: RequestKind, page: number, status?
   };
 }
 
-export async function updateAdminRequestStatus(kind: RequestKind, id: string, status: CustomerRequestStatus, updatedAt: string) {
+export async function updateAdminRequestStatus(kind: RequestKind, id: string, status: CustomerRequestStatus, updatedAt: string, previousStatus: CustomerRequestStatus) {
   await requireAdminSession();
-  if (!requestStatuses.includes(status)) throw new Error("Statut invalide.");
+  if (!requestStatuses.includes(status) || !requestStatuses.includes(previousStatus)) throw new Error("Statut invalide.");
   const prisma = getPrismaClient();
-  const query = { where: { id, updatedAt: new Date(updatedAt) }, data: { status, updatedAt: new Date() } };
+  const timestamp = new Date(updatedAt);
+  if (!Number.isFinite(timestamp.getTime())) throw new Error("Version de la demande invalide.");
+  // PostgreSQL stores microseconds; JavaScript Date only retains milliseconds.
+  const query = { where: { id, status: previousStatus, updatedAt: { gte: timestamp, lt: new Date(timestamp.getTime() + 1) } }, data: { status, updatedAt: new Date() } };
   const result = kind === "contact" ? await prisma.contactRequest.updateMany(query) : kind === "repair" ? await prisma.repairRequest.updateMany(query) : await prisma.customRequest.updateMany(query);
   if (!result.count) throw new Error("Cette demande a changé. Rechargez la page avant de réessayer.");
 }

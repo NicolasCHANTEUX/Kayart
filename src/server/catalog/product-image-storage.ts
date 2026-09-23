@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import sharp from "sharp";
 import type { ProductImageUploadInput, ProductStoredImageInput } from "@/server/catalog/catalog.input";
+import { supabaseServiceHeaders } from "@/server/supabase/service-headers";
 
 export const maxImageSizeBytes = 4 * 1024 * 1024;
 const localReceiptKey = randomBytes(32);
@@ -46,7 +47,7 @@ export async function storeProductImages(productName: string, uploads: ProductIm
       if (!apiKey || !projectUrl.startsWith("https://")) throw new Error("Stockage images non configuré.");
       const response = await fetch(`${projectUrl}/storage/v1/object/${encodeURIComponent(bucket)}/${objectPath}`, {
         method: "POST", cache: "no-store", body: new Uint8Array(buffer),
-        headers: { apikey: apiKey, Authorization: `Bearer ${apiKey}`, "Content-Type": "image/webp", "x-upsert": "false", "Cache-Control": "max-age=31536000" }
+        headers: { ...supabaseServiceHeaders(apiKey), "Content-Type": "image/webp", "x-upsert": "false", "Cache-Control": "max-age=31536000" }
       });
       if (!response.ok) throw new Error("Impossible d'enregistrer l'image dans le stockage.");
       publicPath = `${projectUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${objectPath}`;
