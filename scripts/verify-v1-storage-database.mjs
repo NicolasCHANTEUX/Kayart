@@ -36,7 +36,10 @@ const secret = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_R
 const headers = supabaseServiceHeaders(secret);
 const bucket = 'request-images', path = 'requests/' + randomUUID() + '.webp';
 const metadata = await fetch(url + '/storage/v1/bucket/' + bucket, { headers });
-assert.ok(metadata.ok); assert.equal((await metadata.json()).public, false);
+assert.ok(metadata.ok);
+const bucketMetadata = await metadata.json();
+assert.equal(bucketMetadata.public, false);
+assert.ok(Number(bucketMetadata.file_size_limit) >= 5 * 1024 * 1024, 'Request image bucket must allow 5 Mo files.');
 const bytes = await sharp({ create: { width: 2, height: 2, channels: 3, background: '#4488aa' } }).webp().toBuffer();
 let uploaded = false;
 try {

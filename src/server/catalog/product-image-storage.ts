@@ -14,9 +14,9 @@ export function isAllowedProductImageType(name: string, type: string) {
     && [".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(extname(name).toLowerCase());
 }
 
-export async function normalizeProductImage(file: File): Promise<Buffer> {
-  if (!file.size || file.size > maxImageSizeBytes || !isAllowedProductImageType(file.name, file.type)) {
-    throw new Error("Image invalide : JPG, PNG, WebP ou GIF, 4 Mo maximum.");
+export async function normalizeProductImage(file: File, maxSizeBytes = maxImageSizeBytes): Promise<Buffer> {
+  if (!file.size || file.size > maxSizeBytes || !isAllowedProductImageType(file.name, file.type)) {
+    throw new Error(`Image invalide : JPG, PNG, WebP ou GIF, ${maxSizeBytes / (1024 * 1024)} Mo maximum.`);
   }
   const source = Buffer.from(await file.arrayBuffer());
   const decoder = sharp(source, { failOn: "warning", limitInputPixels: 24_000_000 });
@@ -26,7 +26,7 @@ export async function normalizeProductImage(file: File): Promise<Buffer> {
   }
   // Decode pixels and discard metadata and trailing content before publication.
   const normalized = await decoder.rotate().resize({ width: 2400, height: 2400, fit: "inside", withoutEnlargement: true }).webp({ quality: 88 }).toBuffer();
-  if (normalized.length > maxImageSizeBytes) throw new Error("Image convertie trop volumineuse.");
+  if (normalized.length > maxSizeBytes) throw new Error("Image convertie trop volumineuse.");
   return normalized;
 }
 

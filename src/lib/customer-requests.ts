@@ -1,4 +1,5 @@
 export const requestKinds = ["contact", "repair", "custom"] as const;
+export const maxRequestImageSizeBytes = 5 * 1024 * 1024;
 export type RequestKind = (typeof requestKinds)[number];
 export const requestKindLabels = { contact: "Contact", repair: "Réparation", custom: "Sur mesure" };
 export const requestStatuses = ["new", "inProgress", "answered", "closed"] as const;

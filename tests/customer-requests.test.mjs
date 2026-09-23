@@ -20,7 +20,9 @@ test('repair attachments enforce count and actual File sizes, other forms refuse
  const {parseCustomerRequest}=load('src/server/requests/request-input.ts');
  const tooMany=form('repair');for(let i=0;i<4;i++)tooMany.append('photos',new File(['x'],'x.png',{type:'image/png'}));
  assert.throws(()=>parseCustomerRequest(tooMany),e=>Boolean(e.issues.photos));
- const large=form('repair');large.append('photos',new File([new Uint8Array(1024*1024+1)],'big.png',{type:'image/png'}));
+ const accepted=form('repair');accepted.append('photos',new File([new Uint8Array(5*1024*1024)],'five.png',{type:'image/png'}));
+ assert.equal(parseCustomerRequest(accepted).files[0].size,5*1024*1024);
+ const large=form('repair');large.append('photos',new File([new Uint8Array(5*1024*1024+1)],'big.png',{type:'image/png'}));
  assert.throws(()=>parseCustomerRequest(large));
  const contact=form();contact.append('photos',new File(['x'],'x.png'));assert.throws(()=>parseCustomerRequest(contact));
 });
@@ -141,13 +143,19 @@ test('request storage uses the correct header for new and legacy Supabase keys',
   assert.equal(storage.requestStorageConfig().headers.Authorization,authorization);
  }
 });
+test('request storage rejects files above five megabytes before network access',async()=>{
+ let accessed=false;
+ const storage=load('src/server/requests/private-images.ts',{fetch:async()=>{accessed=true;return Response.json({public:false});},'@/server/catalog/product-image-storage':{}},{SUPABASE_URL:'https://fixture.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_fixture'});
+ await assert.rejects(storage.storePrivateRequestImages([new File([new Uint8Array(5*1024*1024+1)],'large.png',{type:'image/png'})]),/Invalid attachment sizes/);
+ assert.equal(accessed,false);
+});
 test('a repair photo uploads privately, appears in admin, and can be read by an admin',async()=>{
  const url='https://fixture.supabase.co',key='sb_secret_fixture',imageId=randomUUID(),requestId=randomUUID();
  const objects=new Map(),calls=[];
  const fakeFetch=async(address,options={})=>{
   const endpoint=new URL(address).pathname;
   calls.push({endpoint,method:options.method??'GET',headers:options.headers??{}});
-  if(endpoint==='/storage/v1/bucket/request-images')return Response.json({public:false});
+  if(endpoint==='/storage/v1/bucket/request-images')return Response.json({public:false,file_size_limit:5*1024*1024});
   if(endpoint.startsWith('/storage/v1/object/request-images/')&&options.method==='POST'){
    objects.set(endpoint.slice('/storage/v1/object/request-images/'.length),Buffer.from(options.body));
    return Response.json({Key:endpoint});
@@ -160,7 +168,9 @@ test('a repair photo uploads privately, appears in admin, and can be read by an 
  };
  const storage=load('src/server/requests/private-images.ts',{fetch:fakeFetch},{SUPABASE_URL:url,SUPABASE_SECRET_KEY:key});
  const png=await sharp({create:{width:2,height:2,channels:3,background:'#4488aa'}}).png().toBuffer();
- const stored=await storage.storePrivateRequestImages([new File([png],'damage.png',{type:'image/png'})]);
+ const acceptedImage=new File([png,new Uint8Array(5*1024*1024-png.length)],'damage.png',{type:'image/png'});
+ assert.equal(acceptedImage.size,5*1024*1024);
+ const stored=await storage.storePrivateRequestImages([acceptedImage]);
  assert.equal(stored.length,1);
  assert.match(stored[0].path,/^requests\/[0-9a-f-]{36}\.webp$/);
  assert.equal((await sharp(objects.get(stored[0].path)).metadata()).format,'webp');

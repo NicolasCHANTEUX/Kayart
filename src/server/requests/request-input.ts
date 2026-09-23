@@ -1,4 +1,4 @@
-import { requestKinds, type RequestKind } from "@/lib/customer-requests";
+import { maxRequestImageSizeBytes, requestKinds, type RequestKind } from "@/lib/customer-requests";
 export class RequestValidationError extends Error {
   constructor(public issues: Record<string, string>) { super("Vérifiez les champs indiqués."); }
 }
@@ -27,7 +27,7 @@ export function parseCustomerRequest(form: FormData) {
   const budgetHint = kind === "custom" ? text("budgetHint", 200) : "";
   if (form.get("privacyAcknowledged") !== "on") issues.privacyAcknowledged = "Confirmez avoir lu l’information sur vos données.";
   const files = form.getAll("photos").filter((v): v is File => typeof v !== "string" && v.size > 0);
-  if (files.length > 3 || files.some(f => f.size > 1024 * 1024) || (kind !== "repair" && files.length > 0)) issues.photos = "Trois photos maximum de 1 Mo chacune, pour les réparations uniquement.";
+  if (files.length > 3 || files.some(f => f.size > maxRequestImageSizeBytes) || (kind !== "repair" && files.length > 0)) issues.photos = "Trois photos maximum de 5 Mo chacune, pour les réparations uniquement.";
   if (Object.keys(issues).length) throw new RequestValidationError(issues);
   return { kind, submissionKey, name, email, phone, subject, message, productType, discipline, practiceLevel, constraints, budgetHint, files };
 }

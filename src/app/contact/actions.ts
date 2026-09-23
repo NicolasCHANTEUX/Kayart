@@ -24,6 +24,6 @@ export async function submitRequestAction(_previous: RequestFormState, form: For
   } catch (error) {
     if (error instanceof RequestValidationError) return { status: "error", message: error.message, errors: error.issues, values };
     if (error instanceof RateLimitError) return { status: "error", message: error.message, values };
-    return { status: "error", message: "L’envoi n’a pas pu être confirmé. Réessayez ou contactez l’atelier par email. Les photos doivent être des images fixes JPG, PNG, WebP ou GIF de 1 Mo maximum chacune.", values };
+    return { status: "error", message: "L’envoi n’a pas pu être confirmé. Réessayez ou contactez l’atelier par email. Les photos doivent être des images fixes JPG, PNG, WebP ou GIF de 5 Mo maximum chacune.", values };
   }
 }

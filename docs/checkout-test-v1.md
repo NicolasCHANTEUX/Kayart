@@ -28,7 +28,7 @@ Chaque produit a un mode : transport sur devis (valeur prudente par défaut), re
 
 Contact, réparation et sur-mesure enregistrent les demandes et leur accusé de lecture de l’information sur les données. L’administration `/admin/demandes` filtre et pagine les demandes, avec les états nouvelle, en cours, répondue et clôturée. Changer l’état ne transmet aucun message au client.
 
-Le bucket `request-images` doit être privé : `node scripts/configure-request-storage.mjs --check` vérifie sa présence ; `--apply` le crée/configure et refuse de réutiliser un bucket public. Jusqu’à trois photos fixes de 1 Mo, décodées et reconverties en WebP. Leur lecture passe par une route réservée aux administrateurs. Les limites anti-spam sont persistantes et les identifiants de limitation sont hachés par HMAC ; `REQUEST_RATE_LIMIT_SECRET` permet une clé dédiée.
+Le bucket `request-images` doit être privé et autoriser 5 Mo par fichier : `node scripts/configure-request-storage.mjs --check` vérifie sa configuration ; `--apply` le crée/configure et refuse de réutiliser un bucket public. Jusqu’à trois photos fixes de 5 Mo, décodées et reconverties en WebP. Leur lecture passe par une route réservée aux administrateurs. Les limites anti-spam sont persistantes et les identifiants de limitation sont hachés par HMAC ; `REQUEST_RATE_LIMIT_SECRET` permet une clé dédiée.
 
 ## Publication légale
 

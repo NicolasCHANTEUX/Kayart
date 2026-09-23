@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { normalizeProductImage } from "@/server/catalog/product-image-storage";
 import { supabaseServiceHeaders } from "@/server/supabase/service-headers";
+import { maxRequestImageSizeBytes } from "@/lib/customer-requests";
 
 export type PrivateRequestImage = { path: string; sizeBytes: number; originalFilename: string };
 export function requestStorageConfig() {
@@ -11,15 +12,16 @@ export function requestStorageConfig() {
 }
 export async function storePrivateRequestImages(files: File[]): Promise<PrivateRequestImage[]> {
   if (!files.length) return [];
-  if (files.length > 3 || files.some(file => file.size > 1024 * 1024)) throw new Error("Invalid attachment sizes.");
+  if (files.length > 3 || files.some(file => file.size > maxRequestImageSizeBytes)) throw new Error("Invalid attachment sizes.");
   const config = requestStorageConfig();
   const stored: PrivateRequestImage[] = [];
   try {
     // Check the bucket before sending any customer photo; never publish it accidentally.
     const bucket = await fetch(`${config.url}/storage/v1/bucket/${config.bucket}`, { headers: config.headers, cache: "no-store" });
-    if (!bucket.ok || (await bucket.json()).public !== false) throw new Error("Private bucket required.");
+    if (!bucket.ok) throw new Error("Private bucket required.");
+    if ((await bucket.json()).public !== false) throw new Error("Private bucket required.");
     for (const file of files) {
-      const buffer = await normalizeProductImage(file);
+      const buffer = await normalizeProductImage(file, maxRequestImageSizeBytes);
       const path = `requests/${randomUUID()}.webp`;
       const response = await fetch(`${config.url}/storage/v1/object/${config.bucket}/${path}`, { method: "POST", cache: "no-store", headers: { ...config.headers, "Content-Type": "image/webp", "x-upsert": "false" }, body: new Uint8Array(buffer) });
       if (!response.ok) throw new Error("Private upload failed.");
