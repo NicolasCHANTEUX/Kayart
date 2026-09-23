@@ -1,10 +1,11 @@
 ﻿import Link from "next/link";
+import { FeaturedProductsCarousel } from "@/components/catalog/featured-products-carousel";
 import { ProductCard } from "@/components/catalog/product-card";
 import { KayartHeroMark } from "@/components/layout/kayart-brand";
 import { listFeaturedProducts } from "@/server/catalog/catalog.service";
 
 export default async function HomePage() {
-  const products = (await listFeaturedProducts()).slice(0, 3);
+  const products = await listFeaturedProducts();
   return <div className="home-page">
     <section className="atelier-hero"><div className="container atelier-hero__grid">
       <div className="atelier-hero__copy">
@@ -18,7 +19,7 @@ export default async function HomePage() {
     </div></section>
     <section className="section collection-section"><div className="container home-content-panel">
       <div className="section__header"><div><div className="eyebrow">01 / La sélection</div><h2>Prêtes pour la suite.</h2></div><div><p>Pièces neuves, imparfaites et services atelier.</p><Link className="text-link" href="/boutique">Toute la boutique <span aria-hidden="true">↗</span></Link></div></div>
-      {products.length ? <div className="grid product-grid">{products.map(product => <ProductCard key={product.id} product={product}/>)}</div> : <div className="collection-empty"><p>Vous recherchez une pièce particulière ? Parlons de votre besoin.</p><Link className="text-link" href="/contact">Contacter l’atelier ↗</Link></div>}
+      {products.length > 2 ? <FeaturedProductsCarousel products={products} /> : products.length ? <div className="grid product-grid featured-products-static">{products.map(product => <ProductCard key={product.id} product={product}/>)}</div> : <div className="collection-empty"><p>Vous recherchez une pièce particulière ? Parlons de votre besoin.</p><Link className="text-link" href="/contact">Contacter l’atelier ↗</Link></div>}
     </div></section>
     <section className="atelier-services"><div className="container"><div className="section__header"><div><div className="eyebrow">02 / Au-delà de la boutique</div><h2>Une pièce. Une histoire.<br/>Et la suite à écrire.</h2></div><p>Votre matériel mérite un regard d’atelier.<br/>Votre projet aussi.</p></div>
       <div className="service-grid">
