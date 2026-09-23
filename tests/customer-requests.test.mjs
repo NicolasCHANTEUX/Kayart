@@ -105,6 +105,21 @@ test('admin request detail includes its private image references',async()=>{
  assert.equal(detail.message,row.damageDescription);
  assert.equal(detail.imageIds[0],imageId);
 });
+test('custom request detail keeps project information in separate fields',async()=>{
+ const id=randomUUID();
+ const row={id,name:'Client test',email:'client@example.invalid',phone:null,status:'new',createdAt:new Date(),updatedAt:new Date(),deletedAt:null,discipline:'Kayak',practiceLevel:'Confirmé',projectDescription:'Projet personnalisé décrit en détail.',constraints:'Longueur souhaitée : 2 m',budgetHint:'500 €'};
+ const service=load('src/server/requests/request-service.ts',{
+  '@/server/auth/session':{requireAdminSession:async()=>({role:'admin'})},
+  '@/server/db/prisma':{getPrismaClient:()=>({customRequest:{findUnique:async()=>row},requestMedia:{findMany:async()=>[]}})},
+  '@/server/requests/private-images':{}
+ });
+ const detail=await service.getAdminRequest('custom',id);
+ assert.equal(detail.discipline,row.discipline);
+ assert.equal(detail.practiceLevel,row.practiceLevel);
+ assert.equal(detail.constraints,row.constraints);
+ assert.equal(detail.budgetHint,row.budgetHint);
+ assert.equal(detail.message,row.projectDescription);
+});
 test('status saves return the new version and reject archived requests',async()=>{
  const id=randomUUID(),before='2026-09-08T00:00:00.000Z',queries=[];
  let count=1;

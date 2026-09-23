@@ -12,8 +12,11 @@ function mapAdminRequest(row: AdminRequestRow, imageIds: string[]) {
     createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), deletedAt: row.deletedAt?.toISOString() ?? null,
     subject: "subject" in row ? row.subject : "productType" in row ? row.productType || "Réparation" : row.discipline || "Projet sur mesure",
     productType: "productType" in row ? row.productType : null,
+    discipline: "discipline" in row ? row.discipline : null,
+    practiceLevel: "practiceLevel" in row ? row.practiceLevel : null,
+    constraints: "constraints" in row ? row.constraints : null,
+    budgetHint: "budgetHint" in row ? row.budgetHint : null,
     message: "message" in row ? row.message : "damageDescription" in row ? row.damageDescription : row.projectDescription,
-    details: "projectDescription" in row ? [row.practiceLevel && `Pratique : ${row.practiceLevel}`, row.constraints && `Contraintes : ${row.constraints}`, row.budgetHint && `Budget : ${row.budgetHint}`].filter(Boolean).join("\n") : "",
     imageIds };
 }
 
