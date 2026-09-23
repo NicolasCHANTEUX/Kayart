@@ -12,6 +12,8 @@
 .request-message { white-space: pre-wrap; overflow-wrap: anywhere; }
 .request-photos { display: flex; flex-wrap: wrap; gap: 12px; }
 .request-photos img { width: 160px; height: 120px; object-fit: contain; }
+.admin-page .request-type-tabs,.admin-page .request-view-tabs { gap: 8px; margin: 12px 0; }
+.admin-page .request-type-tabs .button[aria-current="page"],.admin-page .request-view-tabs .button[aria-current="page"] { background: var(--carbon); border-color: var(--carbon); color: #fff; }
 .admin-request-card__content { min-width: 0; transition: opacity .2s ease, filter .2s ease; }
 .admin-request-card--muted .admin-request-card__content { opacity: .55; filter: grayscale(1); }
 .admin-page .admin-request-card--list { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 310px); align-items: center; min-height: 0; gap: 20px; padding: 16px 20px; }

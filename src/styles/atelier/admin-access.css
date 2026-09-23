@@ -1,26 +1,44 @@
+.admin-navigation__short { display: none; }
 
-
-/* Keep staff destinations visible instead of hiding them behind the public menu. */
-.admin-quick-access { background:var(--carbon); color:#fff; }
-.admin-quick-access__inner { display:flex; align-items:center; flex-wrap:wrap; gap:8px 16px; padding-block:8px; }
-.admin-quick-access__label { font-size:12px; font-weight:700; }
-.admin-quick-access nav { display:flex; flex-wrap:wrap; gap:6px; }
-.admin-quick-access a { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:44px; padding:10px 14px; border:1px solid #69758d; border-radius:6px; font-size:12px; }
-.admin-quick-access a:hover { background:#303d59; }
-.admin-quick-access a:focus-visible { outline-color:#fff; }
-@media(max-width:800px) {
- .admin-quick-access__inner { display:block; padding-block:8px; }
- .admin-quick-access__label { display:block; margin-bottom:6px; }
- .admin-quick-access nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
- .admin-quick-access a { font-size:11px; padding:10px; }
- .admin-navigation { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; padding:8px 12px; overflow:visible; }
- .admin-navigation a { justify-content:center; align-items:center; padding:6px; white-space:normal; min-height:44px; font-size:11px; line-height:1.25; text-align:center; }
- .admin-navigation .admin-navigation__label,.admin-navigation a>span { display:none; }
- .admin-navigation .admin-navigation__back { margin-top:0; border-top:0; }
+@media (max-width: 800px) {
+  .admin-shell .admin-navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    min-height: 50px;
+    padding: 5px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .admin-shell .admin-navigation::-webkit-scrollbar { display: none; }
+  .admin-shell .admin-navigation a {
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    min-height: 38px;
+    padding: 7px 12px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .admin-shell .admin-navigation a[aria-current="page"] { border-color: var(--carbon); }
+  .admin-shell .admin-navigation__label,
+  .admin-shell .admin-navigation__full,
+  .admin-shell .admin-navigation__arrow,
+  .admin-shell .admin-navigation__back { display: none; }
+  .admin-shell .admin-navigation__short { display: inline; }
 }
-@media(max-width:360px) {
- .site-header__inner { gap:10px; }
- .brand { min-width:86px; gap:0; }
- .brand__name { font-size:20px; } .brand .brand__mark { display:none; }
- .site-header .header-actions { gap:6px; }
+
+@media (max-width: 360px) {
+  .site-header__inner { gap: 10px; }
+  .brand { min-width: 86px; gap: 0; }
+  .brand__name { font-size: 20px; }
+  .brand .brand__mark { display: none; }
+  .site-header .header-actions { gap: 6px; }
 }

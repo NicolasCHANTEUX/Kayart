@@ -43,13 +43,16 @@ test('login preserves denied admin destination for explanation and keeps normal 
 });
 
 for (const role of [null, 'customer', 'admin']) {
-  test(`staff shortcuts are rendered only for admin sessions: ${role ?? 'anonymous'}`, async () => {
+  test(`dashboard entry is available only to admin sessions: ${role ?? 'anonymous'}`, async () => {
     const { SiteHeader } = load('src/components/layout/site-header.tsx', {
       'next/link': link, 'next/navigation': { usePathname: () => '/' },
       '@/app/connexion/actions': { logoutAction: async () => {} },
       '@/server/auth/session': { getCurrentAuthSession: async () => role ? session(role) : null }
     });
     const html = renderToStaticMarkup(await SiteHeader());
-    for (const path of ['/admin', '/admin/produits', '/admin/commandes', '/admin/demandes', '/admin/livraison']) assert.equal(html.includes(`href="${path}"`), role === 'admin');
+    assert.equal(html.includes('href="/admin"'), role === 'admin');
+    assert.equal(html.includes('>Dashboard</a>'), role === 'admin');
+    for (const path of ['/admin/produits', '/admin/commandes', '/admin/demandes', '/admin/livraison']) assert.equal(html.includes(`href="${path}"`), false);
+    assert.equal(html.includes('admin-quick-access'), false);
   });
 }
