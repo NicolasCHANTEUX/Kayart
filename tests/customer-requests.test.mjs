@@ -101,6 +101,7 @@ test('admin request detail includes its private image references',async()=>{
   '@/server/requests/private-images':{}
  });
  const detail=await service.getAdminRequest('repair',id);
+ assert.equal(detail.productType,row.productType);
  assert.equal(detail.message,row.damageDescription);
  assert.equal(detail.imageIds[0],imageId);
 });

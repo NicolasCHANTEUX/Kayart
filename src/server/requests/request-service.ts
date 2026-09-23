@@ -11,6 +11,7 @@ function mapAdminRequest(row: AdminRequestRow, imageIds: string[]) {
   return { id: row.id, name: row.name, email: row.email, phone: row.phone, status: row.status,
     createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), deletedAt: row.deletedAt?.toISOString() ?? null,
     subject: "subject" in row ? row.subject : "productType" in row ? row.productType || "Réparation" : row.discipline || "Projet sur mesure",
+    productType: "productType" in row ? row.productType : null,
     message: "message" in row ? row.message : "damageDescription" in row ? row.damageDescription : row.projectDescription,
     details: "projectDescription" in row ? [row.practiceLevel && `Pratique : ${row.practiceLevel}`, row.constraints && `Contraintes : ${row.constraints}`, row.budgetHint && `Budget : ${row.budgetHint}`].filter(Boolean).join("\n") : "",
     imageIds };

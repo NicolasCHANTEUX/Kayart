@@ -7,7 +7,7 @@ export async function getAdminOverview() {
   if (process.env.KAYART_DATA_SOURCE !== "prisma") {
     const repo = getCatalogRepository();
     const [products, orders] = await Promise.all([repo.listProducts(), repo.listAdminOrders()]);
-    return { products: products.length, orders: orders.length, testOrders: orders.filter(order => order.isTest).length, openRequests: 0 };
+    return { products: products.length, orders: orders.length, testOrders: orders.filter(order => order.isTest).length, openRequests: 0, openRepairRequests: 0 };
   }
   // Counts do not load order contents or customer contact details.
   return getPrismaClient().$transaction(async tx => {
@@ -16,6 +16,6 @@ export async function getAdminOverview() {
       tx.product.count(), tx.order.count(), tx.order.count({ where: { isTest: true } }),
       tx.contactRequest.count({ where }), tx.repairRequest.count({ where }), tx.customRequest.count({ where })
     ]);
-    return { products, orders, testOrders, openRequests: contact + repair + custom };
+    return { products, orders, testOrders, openRequests: contact + repair + custom, openRepairRequests: repair };
   }, { isolationLevel: "RepeatableRead" });
 }

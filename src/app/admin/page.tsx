@@ -27,6 +27,10 @@ export default async function AdminPage() {
             <div><h2>Demandes clients</h2><p>Nouvelles ou en cours.</p></div>
             <span className="admin-overview__count" aria-label={`${overview.openRequests} demandes nouvelles ou en cours`}>{overview.openRequests}</span>
           </Link>
+          <Link className="feature-card" href="/admin/demandes?type=repair">
+            <div><h2>Demandes de réparation</h2><p>Pièces, dommages et photos jointes.</p></div>
+            <span className="admin-overview__count" aria-label={`${overview.openRepairRequests} réparations nouvelles ou en cours`}>{overview.openRepairRequests}</span>
+          </Link>
         </div>
         <p className="admin-overview__note">Les commandes Stripe de test réservent du stock.</p>
       </div>

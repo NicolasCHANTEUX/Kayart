@@ -64,7 +64,7 @@ test('overview counts all orders and outstanding requests without loading privat
     '@/server/db/prisma': { getPrismaClient: () => ({ $transaction: async (fn, options) => { assert.equal(options.isolationLevel, 'RepeatableRead'); return fn(tx); } }) }
   });
   const result = await service.getAdminOverview();
-  assert.equal(result.products, 112); assert.equal(result.orders, 87); assert.equal(result.testOrders, 80); assert.equal(result.openRequests, 7);
+  assert.equal(result.products, 112); assert.equal(result.orders, 87); assert.equal(result.testOrders, 80); assert.equal(result.openRequests, 7); assert.equal(result.openRepairRequests, 2);
 });
 
 const publicEnv = { KAYART_INDEXING_ENABLED: 'true', NEXT_PUBLIC_SITE_URL: 'https://catalogue.fixture.fr', VERCEL_ENV: 'production' };
