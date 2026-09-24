@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, useFormStatus } from "react-dom";
 import {
   deleteProductAction,
+  permanentlyDeleteProductAction,
   hideProductAction,
   showProductAction,
   updateProductStockAction
@@ -24,6 +25,7 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
   const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
   const [isStockOpen, setIsStockOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isPermanentDeleteOpen, setIsPermanentDeleteOpen] = useState(false);
   const [stockQuantity, setStockQuantity] = useState(String(product.stockQuantity ?? 0));
   const canEditStock = canPersist && product.condition !== "service";
   // Unavailable/archived products need the "restock" action regardless of publishedAt:
@@ -85,8 +87,8 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
     }
 
     const triggerRect = triggerRef.current?.getBoundingClientRect();
-    const menuWidth = 176;
-    const menuHeight = 218;
+    const menuWidth = 220;
+    const menuHeight = 264;
     const viewportPadding = 12;
 
     if (triggerRect) {
@@ -166,6 +168,43 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
             >
               Archiver
             </button>
+            <button
+              className="row-actions__item row-actions__item--danger"
+              disabled={!canPersist}
+              onClick={() => {
+                setIsMenuOpen(false);
+                setIsPermanentDeleteOpen(true);
+              }}
+              type="button"
+            >
+              Supprimer définitivement
+            </button>
+          </div>,
+          document.body
+        )
+      : null;
+
+  const permanentDeleteModal =
+    isPermanentDeleteOpen && canUsePortal
+      ? createPortal(
+          <div className="modal-backdrop" role="presentation">
+            <div aria-modal="true" aria-labelledby="permanent-product-delete-title" className="admin-modal admin-modal--danger" role="dialog">
+              <div>
+                <span className="modal-eyebrow">Suppression définitive</span>
+                <h2 id="permanent-product-delete-title">{product.name}</h2>
+                <p>Le produit sera effacé sans possibilité de restauration. Ses images seront effacées si aucun autre contenu ne les utilise. Les commandes garderont le nom, la référence et le prix enregistrés.</p>
+                <p>Un paiement en cours, une réservation ou un produit imparfait lié empêchera la suppression. Vous pourrez alors archiver le produit.</p>
+              </div>
+              <form action={permanentlyDeleteProductAction} className="modal-form">
+                <input name="id" type="hidden" value={product.id} />
+                <div className="modal-actions">
+                  <button className="button button--ghost" onClick={() => setIsPermanentDeleteOpen(false)} type="button">
+                    Annuler
+                  </button>
+                  <PermanentDeleteButton />
+                </div>
+              </form>
+            </div>
           </div>,
           document.body
         )
@@ -264,6 +303,12 @@ export function ProductRowActions({ canPersist, product }: ProductRowActionsProp
       {menu}
       {stockModal}
       {deleteModal}
+      {permanentDeleteModal}
     </>
   );
+}
+
+function PermanentDeleteButton() {
+  const { pending } = useFormStatus();
+  return <button className="button button--danger" disabled={pending} type="submit">{pending ? "Suppression…" : "Supprimer définitivement"}</button>;
 }

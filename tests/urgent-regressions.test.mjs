@@ -4,8 +4,8 @@ import sharp from 'sharp';
 import { load } from './helpers/load-module.mjs';
 
 const base = { id:'product', name:'Produit test', slug:'produit-test', sku:'TEST', categoryId:'category', condition:'new', availability:'available', priceCents:1990, compareAtPriceCents:null, stockQuantity:1, description:'Description technique existante.', shortDescription:'Test', attributes:[{label:'Poids',value:'0.5',unit:'kg'},{label:'Dimensions',value:'20 cm'},{label:'Matière',value:'Carbone'}], images:[], isFeatured:false,isCustomizable:false,isReservable:false, publishedAt:new Date(), category:null };
-function repository(prisma, env={KAYART_ENABLE_MANUAL_ORDERS:'true'}) {
-  return load('src/server/catalog/catalog.repository.ts', {'@/server/db/prisma':{getPrismaClient:()=>prisma}},env).prismaCatalogRepository;
+function repository(prisma, env={KAYART_ENABLE_MANUAL_ORDERS:'true'}, mocks={}) {
+  return load('src/server/catalog/catalog.repository.ts', {'@/server/db/prisma':{getPrismaClient:()=>prisma},...mocks},env).prismaCatalogRepository;
 }
 
 test('all admin service operations deny access before accessing the repository',async()=>{
@@ -14,7 +14,7 @@ test('all admin service operations deny access before accessing the repository',
   '@/server/auth/session':{requireAdminSession:async()=>{throw new Error('AUTH_REQUIRED');}},
   '@/server/catalog/catalog.repository':{getCatalogRepository:()=>{touched++;throw new Error('PRIVATE_READ');}}
  });
- for(const name of ['listCategories','createCategory','updateCategory','deleteCategory','listAdminProducts','listAdminOrders','findAdminProductById','createProduct','updateProduct','updateProductStock','updateProductVisibility','deleteProduct','createAdminOrder','markAdminOrderPaid','deleteAdminOrder']) {
+ for(const name of ['listCategories','createCategory','updateCategory','deleteCategory','listAdminProducts','listAdminOrders','findAdminProductById','createProduct','updateProduct','updateProductStock','updateProductVisibility','deleteProduct','permanentlyDeleteProduct','createAdminOrder','markAdminOrderPaid','deleteAdminOrder']) {
    await assert.rejects(service[name]({id:'private'}),/AUTH_REQUIRED/,name);
  }
  assert.equal(touched,0);
@@ -84,6 +84,57 @@ test('archiving retains order links and reservations without any deletion',async
  let query;
  await repository({product:{update:async(q)=>{query=q;}}}).deleteProduct({id:'product'});
  assert.equal(query.data.availability,'archived');assert.equal(query.data.publishedAt,null);
+});
+
+test('permanent deletion removes the product, settled holds and only orphaned images',async()=>{
+ const calls=[];
+ const images=[{mediaAsset:{id:'own',bucket:'local-public',path:'/uploads/products/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222.webp'}},{mediaAsset:{id:'shared',bucket:'local-public',path:'/uploads/products/33333333-3333-3333-3333-333333333333/44444444-4444-4444-4444-444444444444.webp'}}];
+ const tx={
+  product:{findUnique:async q=>{assert.equal(q.select.checkoutHolds.where.status,'active');return {id:'product',checkoutHolds:[],reservations:[],imperfectProducts:[],images};},delete:async q=>{calls.push('product');assert.equal(q.where.id,'product');}},
+  checkoutHold:{deleteMany:async q=>{calls.push('holds');assert.equal(q.where.status.not,'active');}},
+  mediaAsset:{deleteMany:async q=>{calls.push(q.where.id);assert.deepEqual(Object.keys(q.where).sort(),['blogPosts','id','productImages','requestMedia']);return {count:q.where.id==='own'?1:0};}}
+ };
+ const cleaned=[];
+ const repo=repository({$transaction:async fn=>fn(tx)},undefined,{'./product-image-storage':{removeStoredProductImage:async image=>{cleaned.push(image.path);return true;}}});
+ assert.equal((await repo.permanentlyDeleteProduct({id:'product'})).imageCleanupFailed,false);
+ assert.deepEqual(calls,['holds','product','own','shared']);
+ assert.deepEqual(cleaned,[images[0].mediaAsset.path]);
+});
+
+test('permanent deletion refuses active payments, reservations and imperfect dependants',async()=>{
+ for(const relation of ['checkoutHolds','reservations','imperfectProducts']) {
+  let writes=0;
+  const product={id:'product',checkoutHolds:[],reservations:[],imperfectProducts:[],images:[]};product[relation]=[{id:'linked'}];
+  const tx={product:{findUnique:async()=>product,delete:async()=>{writes++;}},checkoutHold:{deleteMany:async()=>{writes++;}}};
+  const repo=repository({$transaction:async fn=>fn(tx)});
+  await assert.rejects(repo.permanentlyDeleteProduct({id:'product'}),relation==='checkoutHolds'?/paiement est en cours/:relation==='reservations'?/réservations/:/produit imparfait/);
+  assert.equal(writes,0,relation);
+ }
+});
+
+test('permanent deletion reports image cleanup failure after deleting the product',async()=>{
+ const tx={product:{findUnique:async()=>({id:'product',checkoutHolds:[],reservations:[],imperfectProducts:[],images:[{mediaAsset:{id:'image',bucket:'local-public',path:'path'}}]}),delete:async()=>{}},checkoutHold:{deleteMany:async()=>{}},mediaAsset:{deleteMany:async()=>({count:1})}};
+ const repo=repository({$transaction:async fn=>fn(tx)},undefined,{'./product-image-storage':{removeStoredProductImage:async()=>false}});
+ assert.equal((await repo.permanentlyDeleteProduct({id:'product'})).imageCleanupFailed,true);
+});
+
+test('product image cleanup deletes only generated product paths',async()=>{
+ const objectPath='products/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222.webp';
+ const localDeletes=[];
+ const local=load('src/server/catalog/product-image-storage.ts',{'node:fs/promises':{unlink:async path=>{localDeletes.push(path);}}});
+ assert.equal(await local.removeStoredProductImage({bucket:'local-public',path:`/uploads/${objectPath}`}),true);
+ assert.equal(localDeletes[0].endsWith(objectPath.replaceAll('/','\\')),true);
+ assert.equal(await local.removeStoredProductImage({bucket:'local-public',path:'/uploads/../private/photo.webp'}),false);
+ assert.equal(localDeletes.length,1);
+
+ let request;
+ const remote=load('src/server/catalog/product-image-storage.ts',{
+  fetch:async(url,options)=>{request={url,options};return {ok:true};}
+ },{SUPABASE_URL:'https://project.supabase.co',SUPABASE_SECRET_KEY:'test-secret'});
+ assert.equal(await remote.removeStoredProductImage({bucket:'product-images',path:`https://project.supabase.co/storage/v1/object/public/product-images/${objectPath}`}),true);
+ assert.equal(request.options.method,'DELETE');
+ assert.equal(JSON.parse(request.options.body).prefixes[0],objectPath);
+ assert.equal(await remote.removeStoredProductImage({bucket:'product-images',path:`https://other.invalid/storage/v1/object/public/product-images/${objectPath}`}),false);
 });
 
 test('hide and show retain reserved and made-to-order states',async()=>{

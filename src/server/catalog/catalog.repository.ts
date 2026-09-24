@@ -25,6 +25,7 @@ import type { Category, Product } from "@/types/catalog";
 import type { AdminOrder } from "@/types/orders";
 import { isManualAdminOrder, requireManualOrders } from "@/server/catalog/order-safety";
 import { planProductImages } from "./product-image-plan";
+import { removeStoredProductImage } from "./product-image-storage";
 import { ProductFormError } from "./catalog.input";
 
 export type CatalogRepository = {
@@ -42,6 +43,7 @@ export type CatalogRepository = {
   updateProductStock(input: ProductStockUpdateInput): Promise<Product>;
   updateProductVisibility(input: ProductVisibilityUpdateInput): Promise<Product>;
   deleteProduct(input: ProductDeleteInput): Promise<void>;
+  permanentlyDeleteProduct(input: ProductDeleteInput): Promise<{ imageCleanupFailed: boolean }>;
   createAdminOrder(input: AdminOrderCreateInput): Promise<AdminOrder>;
   markAdminOrderPaid(input: AdminOrderActionInput): Promise<AdminOrder>;
   deleteAdminOrder(input: AdminOrderActionInput): Promise<void>;
@@ -137,6 +139,10 @@ export const mockCatalogRepository: CatalogRepository = {
   },
 
   async deleteProduct() {
+    throw new Error("La suppression produit nécessite KAYART_DATA_SOURCE=prisma.");
+  },
+
+  async permanentlyDeleteProduct() {
     throw new Error("La suppression produit nécessite KAYART_DATA_SOURCE=prisma.");
   },
 
@@ -561,6 +567,47 @@ export const prismaCatalogRepository: CatalogRepository = {
       where: { id: input.id },
       data: { availability: "archived", publishedAt: null, updatedAt: new Date() }
     });
+  },
+
+  async permanentlyDeleteProduct(input) {
+    const prisma = getPrismaClient();
+    const orphanedImages = await prisma.$transaction(async tx => {
+      const product = await tx.product.findUnique({
+        where: { id: input.id },
+        select: {
+          id: true,
+          checkoutHolds: { where: { status: "active" }, select: { id: true }, take: 1 },
+          reservations: { select: { id: true }, take: 1 },
+          imperfectProducts: { select: { id: true }, take: 1 },
+          images: { select: { mediaAsset: { select: { id: true, bucket: true, path: true } } } }
+        }
+      });
+      if (!product) throw new ProductFormError({ id: "Produit introuvable." });
+      if (product.checkoutHolds.length) throw new ProductFormError({ id: "Un paiement est en cours pour ce produit. Attendez sa confirmation ou son expiration avant de le supprimer." });
+      if (product.reservations.length) throw new ProductFormError({ id: "Ce produit possède des réservations. Archivez-le pour conserver leur historique." });
+      if (product.imperfectProducts.length) throw new ProductFormError({ id: "Ce produit sert de modèle à un produit imparfait. Archivez-le ou retirez d’abord ce lien." });
+
+      // Order items keep their name, SKU and price snapshot when productId becomes null.
+      await tx.checkoutHold.deleteMany({ where: { productId: input.id, status: { not: "active" } } });
+      await tx.product.delete({ where: { id: input.id } });
+      const orphaned: Array<{ bucket: string; path: string }> = [];
+      for (const image of product.images) {
+        const asset = image.mediaAsset;
+        const removed = await tx.mediaAsset.deleteMany({
+          where: {
+            id: asset.id,
+            productImages: { none: {} },
+            blogPosts: { none: {} },
+            requestMedia: { none: {} }
+          }
+        });
+        if (removed.count) orphaned.push({ bucket: asset.bucket, path: asset.path });
+      }
+      return orphaned;
+    });
+
+    const cleanupResults = await Promise.allSettled(orphanedImages.map(removeStoredProductImage));
+    return { imageCleanupFailed: cleanupResults.some(result => result.status === "rejected" || !result.value) };
   },
 
   async createAdminOrder(input) {

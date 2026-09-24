@@ -58,6 +58,12 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
           {params.updated === "deleted" ? (
             <p className="form-notice form-notice--success">Produit archivé. Historique et réservations conservés.</p>
           ) : null}
+          {params.updated === "removed" ? (
+            <p className="form-notice form-notice--success">Produit supprimé définitivement. Les commandes conservent leurs informations.</p>
+          ) : null}
+          {params.updated === "removed-image-warning" ? (
+            <p className="form-notice form-notice--error">Produit supprimé, mais certaines images n’ont pas pu être effacées du stockage.</p>
+          ) : null}
           {params.updated === "imperfect" ? (
             <p className="form-notice form-notice--success">Produit imparfait créé.</p>
           ) : null}

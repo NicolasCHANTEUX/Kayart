@@ -1,5 +1,5 @@
 import { createHmac, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, unlink, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import sharp from "sharp";
 import type { ProductImageUploadInput, ProductStoredImageInput } from "@/server/catalog/catalog.input";
@@ -60,6 +60,36 @@ export async function storeProductImages(productName: string, uploads: ProductIm
     results.push({ bucket, path: publicPath, originalFilename: upload.file.name.slice(0, 255), altText: productName, mimeType: "image/webp", sizeBytes: buffer.length, isPrimary: upload.isPrimary, position: upload.position });
   }
   return results;
+}
+
+export async function removeStoredProductImage(image: { bucket: string; path: string }): Promise<boolean> {
+  const productPathPattern = /^products\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.webp$/u;
+  if (image.bucket === "local-public") {
+    if (!image.path.startsWith("/uploads/")) return false;
+    const objectPath = image.path.slice("/uploads/".length);
+    if (!productPathPattern.test(objectPath)) return false;
+    try {
+      await unlink(join(process.cwd(), "public", "uploads", ...objectPath.split("/")));
+      return true;
+    } catch (error) {
+      return (error as NodeJS.ErrnoException).code === "ENOENT";
+    }
+  }
+
+  const apiKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const projectUrl = (process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").replace(/\/rest\/v1\/?$/u, "").replace(/\/+$/u, "");
+  if (!apiKey || !projectUrl.startsWith("https://")) return false;
+  const publicPrefix = `${projectUrl}/storage/v1/object/public/${encodeURIComponent(image.bucket)}/`;
+  if (!image.path.startsWith(publicPrefix)) return false;
+  const objectPath = image.path.slice(publicPrefix.length);
+  if (!productPathPattern.test(objectPath)) return false;
+  const response = await fetch(`${projectUrl}/storage/v1/object/${encodeURIComponent(image.bucket)}`, {
+    method: "DELETE",
+    cache: "no-store",
+    headers: { ...supabaseServiceHeaders(apiKey), "Content-Type": "application/json" },
+    body: JSON.stringify({ prefixes: [objectPath] })
+  });
+  return response.ok;
 }
 
 function receiptKey() {

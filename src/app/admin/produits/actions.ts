@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   CategoryFormError,
@@ -28,6 +29,7 @@ import {
   createProduct,
   deleteCategory,
   deleteProduct,
+  permanentlyDeleteProduct,
   findAdminProductById,
   updateCategory,
   updateProduct,
@@ -294,6 +296,27 @@ export async function deleteProductAction(formData: FormData) {
   }
 
   redirect("/admin/produits?updated=deleted");
+}
+
+export async function permanentlyDeleteProductAction(formData: FormData) {
+  await requireSameOriginAction();
+  await requireAdminSession();
+
+  let imageCleanupFailed = false;
+  try {
+    const input = parseProductDeleteFormData(formData);
+    ({ imageCleanupFailed } = await permanentlyDeleteProduct(input));
+  } catch (error) {
+    if (error instanceof ProductFormError) {
+      redirect(`/admin/produits?error=${encodeURIComponent(error.message)}`);
+    }
+    redirect(`/admin/produits?error=${encodeURIComponent("Impossible de supprimer ce produit. Vérifiez qu'aucune réservation ou tentative de paiement ne le concerne.")}`);
+  }
+
+  revalidatePath("/admin/produits");
+  revalidatePath("/boutique");
+  revalidatePath("/");
+  redirect(`/admin/produits?updated=${imageCleanupFailed ? "removed-image-warning" : "removed"}`);
 }
 
 export async function hideProductAction(formData: FormData) {

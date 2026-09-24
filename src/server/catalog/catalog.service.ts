@@ -90,6 +90,11 @@ export async function deleteProduct(input: ProductDeleteInput) {
   return getCatalogRepository().deleteProduct(input);
 }
 
+export async function permanentlyDeleteProduct(input: ProductDeleteInput) {
+  await requireAdminSession();
+  return getCatalogRepository().permanentlyDeleteProduct(input);
+}
+
 export async function createAdminOrder(input: AdminOrderCreateInput) {
   await requireAdminSession();
   return getCatalogRepository().createAdminOrder(input);
