@@ -231,7 +231,7 @@ function getPriceHint(product: Product) {
     return "Prix remisé pour une pièce unique neuve avec défaut visuel.";
   }
 
-  return "Prix TTC indicatif pour le produit présenté.";
+  return "Prix TTC pour le produit présenté.";
 }
 
 function getStockTone(product: Product) {

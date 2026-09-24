@@ -9,8 +9,8 @@ export default async function HomePage() {
   return <div className="home-page">
     <section className="atelier-hero"><div className="container atelier-hero__grid">
       <div className="atelier-hero__copy">
-        <div className="eyebrow"><span className="status-dot"/> Atelier carbone indépendant</div>
-        <h1>Du carbone.<br/><em>Du caractère.</em></h1>
+        <div className="eyebrow"><span className="status-dot"/> Atelier composite indépendant</div>
+        <h1>Du composite.<br/><em>Du caractère.</em></h1>
         <p>Des pièces pour votre pratique. Un atelier pour réparer, fabriquer et donner forme à vos idées.</p>
         <div className="hero-actions"><Link className="button button--primary" href="/boutique">Explorer la boutique <span aria-hidden="true">↗</span></Link><Link className="text-link" href="/savoir-faire">L’atelier KayArt <span aria-hidden="true">→</span></Link></div>
         <div className="hero-footnote"><span>Conception · Fabrication · Réparation</span><span className="mono">KAYART / CARBON IN MOTION</span></div>
