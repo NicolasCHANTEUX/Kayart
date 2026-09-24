@@ -8,6 +8,7 @@ type PreviewImage = {
   name: string;
   size: number;
   url: string;
+  rotation: 0 | 90 | 180 | 270;
 };
 
 type DirectUploadTarget = { receipt: string };
@@ -180,7 +181,8 @@ export function ProductImageUploader({
         file,
         name: file.name,
         size: file.size,
-        url: URL.createObjectURL(file)
+        url: URL.createObjectURL(file),
+        rotation: 0 as const
       }))
     ];
 
@@ -225,6 +227,14 @@ export function ProductImageUploader({
     syncInputFiles(reordered);
     setImages(reordered);
     setCoverIndex(current => current === index ? target : current === target ? index : current);
+  }
+
+  function rotateImage(index: number) {
+    const nextImages = images.map((image, imageIndex) => imageIndex === index
+      ? { ...image, rotation: ((image.rotation + 90) % 360) as PreviewImage["rotation"] }
+      : image);
+    imagesRef.current = nextImages;
+    setImages(nextImages);
   }
 
 
@@ -284,7 +294,12 @@ export function ProductImageUploader({
         <div className="image-uploader-grid" aria-label="Images sélectionnées">
           {images.map((image, index) => (
             <div className="image-uploader-item" key={`${image.name}-${image.size}-${image.file.lastModified}`}>
-              <ProductImageView alt="" src={image.url} />
+              <input name="imageRotation" type="hidden" value={image.rotation} />
+              <div className="image-uploader-item__preview">
+                <div className="image-uploader-item__preview-image" style={{ transform: `rotate(${image.rotation}deg)` }}>
+                  <ProductImageView alt="" src={image.url} />
+                </div>
+              </div>
               <button
                 aria-pressed={coverIndex === index}
                 className="cover-button"
@@ -307,6 +322,7 @@ export function ProductImageUploader({
               </button>
               <p>{image.name}</p>
               <div className="actions-row">
+                <button type="button" disabled={isDisabled} aria-label={`Tourner ${image.name} de 90 degrés`} onClick={() => rotateImage(index)}>↻ Tourner 90°</button>
                 <button type="button" disabled={isDisabled || index === 0} aria-label={`Avancer ${image.name}`} onClick={() => moveImage(index, -1)}>Avancer</button>
                 <button type="button" disabled={isDisabled || index === images.length - 1} aria-label={`Reculer ${image.name}`} onClick={() => moveImage(index, 1)}>Reculer</button>
               </div>
@@ -335,6 +351,7 @@ async function uploadImagesToSupabase(images: PreviewImage[], coverIndex: number
     body.set("image", image.file);
     body.set("position", String(index));
     body.set("isPrimary", String(index === coverIndex));
+    body.set("rotation", String(image.rotation));
     const response = await fetch("/api/admin/product-images/upload", { method: "POST", body });
     const payload = await response.json().catch(() => ({})) as { receipt?: string; error?: string };
     if (!response.ok || !payload.receipt) throw new Error(payload.error ?? "Envoi impossible.");

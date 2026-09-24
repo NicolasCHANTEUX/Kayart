@@ -29,7 +29,10 @@ export async function POST(request: Request) {
     if (!(file instanceof File) || form.getAll("image").length !== 1) return NextResponse.json({ error: "Une image est requise." }, { status: 400 });
     const position = Number(form.get("position"));
     if (!Number.isInteger(position) || position < 0 || position > 5) return NextResponse.json({ error: "Position invalide." }, { status: 400 });
-    const [image] = await storeProductImages("", [{ file, position, isPrimary: form.get("isPrimary") === "true" }]);
+    const rawRotation = form.get("rotation");
+    const rotation = rawRotation === null ? 0 : Number(rawRotation);
+    if ((typeof rawRotation !== "string" && rawRotation !== null) || ![0, 90, 180, 270].includes(rotation)) return NextResponse.json({ error: "Rotation invalide." }, { status: 400 });
+    const [image] = await storeProductImages("", [{ file, position, isPrimary: form.get("isPrimary") === "true", rotation: rotation as 0 | 90 | 180 | 270 }]);
     return NextResponse.json({ receipt: signProductImageReceipt(image, session.user.id) });
   } catch (error) {
     return NextResponse.json({ error: error instanceof RateLimitError ? "Trop d'envois. Réessayez plus tard." : "Envoi impossible. Utilisez une image fixe JPG, PNG, WebP ou GIF valide de 4 Mo maximum." }, { status: error instanceof RateLimitError ? 429 : 400 });

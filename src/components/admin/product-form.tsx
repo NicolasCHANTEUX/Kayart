@@ -66,6 +66,10 @@ export function ProductForm({
   const [imageOrder, setImageOrder] = useState(() => [...existingImages].sort((a, b) => a.position - b.position).map(image => image.id));
   const [selectedCover, setSelectedCover] = useState(existingImages.find(image => image.isPrimary)?.id ?? "");
   const [deletedImageIds, setDeletedImageIds] = useState<string[]>([]);
+  const [rotatingImageId, setRotatingImageId] = useState<string | null>(null);
+  const rotatingImageIdRef = useRef<string | null>(null);
+  const [rotatedImageUrls, setRotatedImageUrls] = useState<Record<string, string>>({});
+  const [rotationError, setRotationError] = useState<string | null>(null);
   const [unlockedStep, setUnlockedStep] = useState(0);
   const [stepError, setStepError] = useState<string | null>(null);
   const isReadyToSubmit = canPersist && unlockedStep === steps.length - 1;
@@ -131,6 +135,10 @@ export function ProductForm({
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    if (rotatingImageIdRef.current) {
+      event.preventDefault();
+      return;
+    }
     if (isSubmittingRef.current) {
       event.preventDefault();
       return;
@@ -165,6 +173,29 @@ export function ProductForm({
     setDeletedImageIds((currentIds) => (
       currentIds.includes(imageId) ? currentIds : [...currentIds, imageId]
     ));
+  }
+
+  async function rotateExistingImage(imageId: string) {
+    if (!productId || rotatingImageIdRef.current) return;
+    rotatingImageIdRef.current = imageId;
+    setRotatingImageId(imageId);
+    setRotationError(null);
+    try {
+      const response = await fetch("/api/admin/product-images/rotate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, imageId })
+      });
+      const result: { url?: string; error?: string } = await response.json();
+      if (!response.ok || !result.url) throw new Error(result.error ?? "Rotation impossible.");
+      const rotatedUrl = result.url;
+      setRotatedImageUrls(current => ({ ...current, [imageId]: rotatedUrl }));
+    } catch (error) {
+      setRotationError(error instanceof Error ? error.message : "Rotation impossible.");
+    } finally {
+      rotatingImageIdRef.current = null;
+      setRotatingImageId(null);
+    }
   }
 
   function stageClassName(index: number) {
@@ -452,10 +483,11 @@ export function ProductForm({
                 >
                   {"\u00d7"}
                 </button>
-                <ProductImageView alt={image.altText ?? ""} src={image.url} />
+                <ProductImageView alt={image.altText ?? ""} src={rotatedImageUrls[image.id] ?? image.url} />
                 <figcaption>
                   <button type="button" className="button button--ghost" aria-pressed={coverImageId === image.id} onClick={() => setSelectedCover(image.id)}>{coverImageId === image.id ? "Couverture" : "Choisir comme couverture"}</button>
                   <div className="actions-row">
+                    <button type="button" disabled={Boolean(rotatingImageId)} aria-label={`Tourner l'image ${index + 1} de 90 degrés`} onClick={() => void rotateExistingImage(image.id)}>{rotatingImageId === image.id ? <><span className="loading-spinner" aria-hidden="true" /> Rotation...</> : "↻ Tourner 90°"}</button>
                     <button type="button" aria-label={`Avancer l'image ${index + 1}`} disabled={index === 0} onClick={() => moveImage(image.id, -1)}>Avancer</button>
                     <button type="button" aria-label={`Reculer l'image ${index + 1}`} disabled={index === visibleExistingImages.length - 1} onClick={() => moveImage(image.id, 1)}>Reculer</button>
                   </div>
@@ -465,13 +497,14 @@ export function ProductForm({
           </div>
         ) : null}
         {deletedImageIds.length ? <button type="button" className="button button--ghost" onClick={() => setDeletedImageIds([])}>Annuler les retraits d'images</button> : null}
+        {rotationError ? <p className="form-notice form-notice--error" role="alert">{rotationError}</p> : null}
         {productId ? <label><input type="checkbox" checked={coverImageId === "new"} onChange={event => setSelectedCover(event.currentTarget.checked ? "new" : visibleExistingImages[0]?.id ?? "")} />Utiliser une nouvelle image comme couverture (choisir son étoile ci-dessous)</label> : null}
-        <p>{visibleExistingImages.length} image(s) conservée(s), six images maximum au total. Les changements seront appliqués à l'enregistrement.</p>
+        <p>{visibleExistingImages.length} image(s) conservée(s), six images maximum au total. La rotation des images existantes est enregistrée immédiatement ; les autres changements seront appliqués à l'enregistrement.</p>
         <ProductImageUploader disabled={isStepLocked(5)} maxFiles={6 - visibleExistingImages.length} />
       </fieldset>
 
       <div className="form-actions">
-        <ProductFormSubmitButton canPersist={canPersist} isReadyToSubmit={isReadyToSubmit} submitLabel={submitLabel} />
+        <ProductFormSubmitButton canPersist={canPersist} isReadyToSubmit={isReadyToSubmit} isRotating={Boolean(rotatingImageId)} submitLabel={submitLabel} />
       </div>
     </form>
   );
@@ -480,10 +513,12 @@ export function ProductForm({
 function ProductFormSubmitButton({
   canPersist,
   isReadyToSubmit,
+  isRotating,
   submitLabel
 }: {
   canPersist: boolean;
   isReadyToSubmit: boolean;
+  isRotating: boolean;
   submitLabel: string;
 }) {
   const { pending } = useFormStatus();
@@ -491,7 +526,7 @@ function ProductFormSubmitButton({
   return (
     <button
       className="button button--primary form-actions__submit"
-      disabled={!isReadyToSubmit || pending}
+      disabled={!isReadyToSubmit || pending || isRotating}
       type={isReadyToSubmit ? "submit" : "button"}
     >
       {pending ? (

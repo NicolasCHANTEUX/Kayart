@@ -230,6 +230,8 @@
  .admin-page .drop-zone { min-height:110px; padding:12px; }
  .admin-page .image-uploader-grid,.admin-page .existing-images { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
  .admin-page .image-uploader-item img,.admin-page .existing-image img { height:96px; min-height:0; object-fit:contain; }
+ .admin-page .image-uploader-item__preview,.admin-page .image-uploader-item__preview-image,.admin-page .image-uploader-item__preview-image img { height:96px; }
+ .admin-page .image-uploader-item__preview-image,.admin-page .image-uploader-item__preview-image img { width:96px; }
  .admin-page .form-actions { padding:12px; gap:10px; }
  .admin-page .request-list { gap:12px; margin:16px 0; }
  .admin-page .request-filter { gap:8px; margin:12px 0; }

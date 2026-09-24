@@ -28,6 +28,7 @@ export type ProductImageUploadInput = {
   file: File;
   isPrimary: boolean;
   position: number;
+  rotation?: 0 | 90 | 180 | 270;
 };
 
 export type ProductCreateInput = {
@@ -499,14 +500,20 @@ export function parseAdminOrderActionFormData(formData: FormData): AdminOrderAct
 export function parseProductImageFormData(formData: FormData): ProductImageUploadInput[] {
   const issues: Record<string, string> = {};
   const files = formData.getAll("images").filter(isUploadedFile);
+  const rotationValues = formData.getAll("imageRotation");
   const coverImageIndex = Number(readText(formData, "coverImageIndex"));
   const primaryIndex = Number.isInteger(coverImageIndex) && coverImageIndex >= 0 ? coverImageIndex : 0;
 
   if (files.length > 6) {
     issues.images = "Un produit peut recevoir 6 images maximum.";
   }
+  if (files.length && rotationValues.length && rotationValues.length !== files.length) {
+    issues.images = "Les orientations des images sont invalides.";
+  }
 
   const uploads = files.map((file, index) => {
+    const rotation = rotationValues.length ? Number(rotationValues[index]) : 0;
+    if (![0, 90, 180, 270].includes(rotation)) issues.images = "L’orientation d’une image est invalide.";
     if (!isAllowedProductImageType(file.name, file.type)) {
       issues.images = "Seuls les fichiers JPG, PNG, WebP ou GIF sont acceptés.";
     }
@@ -518,7 +525,8 @@ export function parseProductImageFormData(formData: FormData): ProductImageUploa
     return {
       file,
       isPrimary: index === primaryIndex,
-      position: index
+      position: index,
+      rotation: rotation as 0 | 90 | 180 | 270
     };
   });
 
