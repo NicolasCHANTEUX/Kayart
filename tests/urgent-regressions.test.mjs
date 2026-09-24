@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import sharp from 'sharp';
 import { load } from './helpers/load-module.mjs';
 
@@ -123,7 +124,7 @@ test('product image cleanup deletes only generated product paths',async()=>{
  const localDeletes=[];
  const local=load('src/server/catalog/product-image-storage.ts',{'node:fs/promises':{unlink:async path=>{localDeletes.push(path);}}});
  assert.equal(await local.removeStoredProductImage({bucket:'local-public',path:`/uploads/${objectPath}`}),true);
- assert.equal(localDeletes[0].endsWith(objectPath.replaceAll('/','\\')),true);
+ assert.equal(localDeletes[0],path.join(process.cwd(),'public','uploads',...objectPath.split('/')));
  assert.equal(await local.removeStoredProductImage({bucket:'local-public',path:'/uploads/../private/photo.webp'}),false);
  assert.equal(localDeletes.length,1);
 
