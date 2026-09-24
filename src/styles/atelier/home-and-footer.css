@@ -25,7 +25,10 @@
 .grid,.product-grid { gap:20px; grid-template-columns:repeat(3,minmax(0,1fr)); }
 .featured-carousel__viewport { overflow:hidden; touch-action:pan-y; }
 .featured-carousel__track { display:flex; gap:20px; transform:translateX(calc((100% + 20px) / -3)); transition:transform 450ms ease; }
-.featured-carousel__slide { flex:0 0 calc((100% - 40px) / 3); min-width:0; }
+.featured-carousel__slide { display:flex; flex:0 0 calc((100% - 40px) / 3); min-width:0; }
+.featured-carousel__slide .product-card { display:flex; flex:1; flex-direction:column; }
+.featured-carousel__slide .product-card__body { display:flex; flex:1; flex-direction:column; }
+.featured-carousel__slide .product-card__bottom { margin-top:auto; }
 .featured-carousel__controls { display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:12px; }
 .featured-carousel__count { margin-right:4px; color:var(--metal); font-size:12px; font-variant-numeric:tabular-nums; }
 .featured-carousel__control,.featured-carousel__pause { display:inline-flex; justify-content:center; align-items:center; min-width:44px; min-height:44px; padding:6px 10px; border:1px solid var(--line); border-radius:4px; background:var(--paper); color:var(--carbon); font:inherit; cursor:pointer; }

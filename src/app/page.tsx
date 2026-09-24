@@ -19,7 +19,7 @@ export default async function HomePage() {
     </div></section>
     <section className="section collection-section"><div className="container home-content-panel">
       <div className="section__header"><div><div className="eyebrow">01 / La sélection</div><h2>Prêtes pour la suite.</h2></div><div><p>Pièces neuves, imparfaites et services atelier.</p><Link className="text-link" href="/boutique">Toute la boutique <span aria-hidden="true">↗</span></Link></div></div>
-      {products.length > 2 ? <FeaturedProductsCarousel products={products} /> : products.length ? <div className="grid product-grid featured-products-static">{products.map(product => <ProductCard key={product.id} product={product}/>)}</div> : <div className="collection-empty"><p>Vous recherchez une pièce particulière ? Parlons de votre besoin.</p><Link className="text-link" href="/contact">Contacter l’atelier ↗</Link></div>}
+      {products.length > 2 ? <FeaturedProductsCarousel products={products} /> : products.length ? <div className="grid product-grid featured-products-static" style={{ gridTemplateColumns: `repeat(${products.length}, minmax(0, 1fr))` }}>{products.map(product => <ProductCard key={product.id} product={product}/>)}</div> : <div className="collection-empty"><p>Vous recherchez une pièce particulière ? Parlons de votre besoin.</p><Link className="text-link" href="/contact">Contacter l’atelier ↗</Link></div>}
     </div></section>
     <section className="atelier-services"><div className="container"><div className="section__header"><div><div className="eyebrow">02 / Au-delà de la boutique</div><h2>Une pièce. Une histoire.<br/>Et la suite à écrire.</h2></div><p>Votre matériel mérite un regard d’atelier.<br/>Votre projet aussi.</p></div>
       <div className="service-grid">

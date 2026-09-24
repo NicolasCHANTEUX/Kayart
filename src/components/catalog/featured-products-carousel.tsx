@@ -66,11 +66,14 @@ export function FeaturedProductsCarousel({ products }: { products: Product[] }) 
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(media.matches);
+    const update = () => {
+      setReducedMotion(media.matches);
+      if (media.matches && movingRef.current) moveTo(1, false);
+    };
     update();
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
-  }, []);
+  }, [moveTo]);
 
   useEffect(() => {
     if (!canSlide || paused || interacting || reducedMotion) return;
@@ -112,17 +115,19 @@ export function FeaturedProductsCarousel({ products }: { products: Product[] }) 
   };
 
   const currentNumber = ((position - 1 + products.length) % products.length) + 1;
-  const renderSlide = (product: Product, key: string, duplicate = false) =>
-    <div className="featured-carousel__slide" key={key} aria-hidden={duplicate ? true : undefined} inert={duplicate}>
+  const renderSlide = (product: Product, key: string, trackIndex: number) => {
+    const visible = trackIndex >= position && trackIndex < position + visibleCount;
+    return <div className="featured-carousel__slide" key={key} aria-hidden={!visible} inert={!visible}>
       <ProductCard product={product} />
     </div>;
+  };
 
-  return <div className="featured-carousel" role="region" aria-roledescription="carrousel" aria-label="Produits mis en avant">
-    <div className="featured-carousel__viewport" ref={viewportRef} onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} onClickCapture={preventClickAfterSwipe}>
+  return <div className="featured-carousel" role="region" aria-roledescription="carrousel" aria-label="Produits mis en avant" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
+    <div className="featured-carousel__viewport" ref={viewportRef} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} onClickCapture={preventClickAfterSwipe}>
       <div className="featured-carousel__track" ref={trackRef} onTransitionEnd={event => { if (event.target === trackRef.current && event.propertyName === "transform") onTransitionEnd(); }} style={step ? { transform: `translate3d(-${position * step}px, 0, 0)`, transition: animate ? undefined : "none" } : undefined}>
-        {renderSlide(products[products.length - 1], `before-${products[products.length - 1].id}`, true)}
-        {products.map(product => renderSlide(product, product.id))}
-        {products.slice(0, 3).map(product => renderSlide(product, `after-${product.id}`, true))}
+        {renderSlide(products[products.length - 1], `before-${products[products.length - 1].id}`, 0)}
+        {products.map((product, index) => renderSlide(product, product.id, index + 1))}
+        {products.slice(0, 3).map((product, index) => renderSlide(product, `after-${product.id}`, products.length + index + 1))}
       </div>
     </div>
     {canSlide ? <div className="featured-carousel__controls">
