@@ -34,6 +34,7 @@
 .featured-carousel__control,.featured-carousel__pause { display:inline-flex; justify-content:center; align-items:center; min-width:44px; min-height:44px; padding:6px 10px; border:1px solid var(--line); border-radius:4px; background:var(--paper); color:var(--carbon); font:inherit; cursor:pointer; }
 .featured-carousel__control { font-size:21px; }
 .featured-carousel__pause { font-size:12px; }
+.featured-carousel__pause-icon,.featured-carousel__pagination { display:none; }
 .featured-carousel__control:hover,.featured-carousel__pause:hover { border-color:var(--carbon); }
 .featured-carousel__control:focus-visible,.featured-carousel__pause:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .home-page .collection-section .section__header p { color:#000; }
