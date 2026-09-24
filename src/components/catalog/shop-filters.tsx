@@ -18,7 +18,7 @@ export function ShopFilters({ filters, categories }: ShopFiltersProps) {
       <div className="shop-filters__search">
         <label htmlFor={`${panelId}-search`}>Rechercher</label>
         <span className="shop-filters__search-field">
-          <input id={`${panelId}-search`} type="search" name="q" maxLength={120} defaultValue={filters.q} placeholder="Nom, référence…" />
+          <input id={`${panelId}-search`} type="search" name="q" maxLength={120} defaultValue={filters.q} placeholder="Produit, description, catégorie…" />
           <button type="submit" aria-label="Rechercher les produits">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
           </button>

@@ -9,9 +9,39 @@ test('shop database queries paginate published products and combine user filters
   const result=await service.searchShop({q:'carbone',category:'pagaies',condition:'used',stock:'1',sort:'price-desc',page:'2'});
   assert.equal(query.take,12);assert.equal(query.skip,12);assert.equal(query.where.publishedAt.not,null);assert.equal(query.where.availability,'available');
   assert.equal(query.where.condition,'used');assert.equal(query.where.category.slug,'pagaies');assert.equal(query.where.stockQuantity.gt,0);
-  assert.equal(query.where.OR[0].name.contains,'carbone');assert.deepEqual(query.where,countWhere);
+  assert.equal(query.where.AND[0].OR[0].name.contains,'carbone');assert.deepEqual(query.where,countWhere);
+  assert.equal(query.where.AND[0].OR.find(item => item.shortDescription)?.shortDescription.contains,'carbone');
+  assert.equal(query.where.AND[0].OR.find(item => item.category)?.category.is.OR[0].name.contains,'carbone');
+  assert.equal(query.where.AND[0].OR.find(item => item.attributes)?.attributes.some.OR[1].value.contains,'carbone');
+  assert.equal(query.where.AND[0].OR.find(item => item.images)?.images.some.mediaAsset.is.altText.contains,'carbone');
+  assert.equal(query.where.AND[0].OR.find(item => item.baseProduct)?.baseProduct.is.publishedAt.not,null);
   assert.equal(query.orderBy[0].priceCents.nulls,'last');assert.equal(result.pages,3);
   await service.searchShop({page:'9999'});assert.equal(query.skip,24);assert.equal(query.where.availability.notIn.includes('draft'),true);
+});
+test('shop search finds words across descriptions, category, specifications, defects, images, and base products', async () => {
+  const base={categoryId:'cat',categoryName:'Pagaies',condition:'new',availability:'available',stockQuantity:1,sku:'KT',slug:'kayak',publishedAt:'2026-09-01',shortDescription:'',description:'',attributes:[],images:[]};
+  const rows=[
+    {...base,id:'a',name:'Kayak sprint',shortDescription:'Composite léger',description:'Fibre carbone',defectDescription:'Rayure rouge',attributes:[{label:'Taille',value:'M',unit:'cm'}],images:[{altText:'Finition brillante'}]},
+    {...base,id:'b',name:'Pagaie simple',sku:'PAG-B',slug:'pagaie-simple',description:'Bois naturel'},
+    {...base,id:'c',name:'Pagaie imparfaite',sku:'PAG-C',slug:'pagaie-imparfaite',baseProduct:{name:'Modèle Horizon',sku:'HOR-1',slug:'modele-horizon',shortDescription:'Fabrication artisanale',description:'',categoryName:'Pagaies',attributes:[],images:[]}}
+  ];
+  const service=load('src/server/catalog/search.ts',{'./catalog.repository':{getCatalogRepository:()=>({listPublishedProducts:async()=>rows,listCategories:async()=>[{id:'cat',slug:'pagaies',name:'Pagaies',description:'Matériel nautique',isActive:true}]})}}, {KAYART_DATA_SOURCE:'mock'});
+  for (const term of ['léger','rouge','taille','brillante','artisanale','horizon']) {
+    assert.deepEqual((await service.searchShop({q:term})).products.map(product=>product.id),[term==='artisanale'||term==='horizon'?'c':'a']);
+  }
+  assert.deepEqual((await service.searchShop({q:'nautique'})).products.map(product=>product.id),['a','b','c']);
+  assert.deepEqual((await service.searchShop({q:'carbone rouge'})).products.map(product=>product.id),['a']);
+  assert.deepEqual((await service.searchShop({q:'pagaie b'})).products.map(product=>product.id),['b']);
+});
+test('database shop search matches separate words in separate product fields', async () => {
+  let where;
+  const tx={product:{count:async input=>{where=input.where;return 0;},findMany:async()=>[]},category:{findMany:async()=>[]}};
+  const service=load('src/server/catalog/search.ts',{'@/server/db/prisma':{getPrismaClient:()=>({$transaction:async fn=>fn(tx)})}});
+  await service.searchShop({q:'carbone rouge'});
+  assert.equal(where.AND.length,2);
+  assert.equal(where.AND[0].OR[0].name.contains,'carbone');
+  assert.equal(where.AND[1].OR.find(item=>item.defectDescription)?.defectDescription.contains,'rouge');
+  assert.equal(where.AND[0].OR.find(item=>item.baseProduct)?.baseProduct.is.availability.notIn.includes('draft'),true);
 });
 test('mock shop sorts priced articles before quotes and preserves combined filters', async () => {
   const base={categoryId:'cat',condition:'new',availability:'available',stockQuantity:1,description:'Carbone',sku:'PAG',publishedAt:'2026-09-01'};
