@@ -487,7 +487,7 @@ export function ProductForm({
                 <figcaption>
                   <button type="button" className="button button--ghost" aria-pressed={coverImageId === image.id} onClick={() => setSelectedCover(image.id)}>{coverImageId === image.id ? "Couverture" : "Choisir comme couverture"}</button>
                   <div className="actions-row">
-                    <button type="button" disabled={Boolean(rotatingImageId)} aria-label={`Tourner l'image ${index + 1} de 90 degrés`} onClick={() => void rotateExistingImage(image.id)}>{rotatingImageId === image.id ? <><span className="loading-spinner" aria-hidden="true" /> Rotation...</> : "↻ Tourner 90°"}</button>
+                    <button type="button" disabled={Boolean(rotatingImageId)} aria-label={`Tourner l'image ${index + 1} de 90 degrés`} onClick={() => void rotateExistingImage(image.id)}>{rotatingImageId === image.id ? <><span className="loading-spinner" aria-hidden="true" /> Rotation...</> : "↻"}</button>
                     <button type="button" aria-label={`Avancer l'image ${index + 1}`} disabled={index === 0} onClick={() => moveImage(image.id, -1)}>Avancer</button>
                     <button type="button" aria-label={`Reculer l'image ${index + 1}`} disabled={index === visibleExistingImages.length - 1} onClick={() => moveImage(image.id, 1)}>Reculer</button>
                   </div>

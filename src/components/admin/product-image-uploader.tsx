@@ -322,7 +322,7 @@ export function ProductImageUploader({
               </button>
               <p>{image.name}</p>
               <div className="actions-row">
-                <button type="button" disabled={isDisabled} aria-label={`Tourner ${image.name} de 90 degrés`} onClick={() => rotateImage(index)}>↻ Tourner 90°</button>
+                <button type="button" disabled={isDisabled} aria-label={`Tourner ${image.name} de 90 degrés`} onClick={() => rotateImage(index)}>↻</button>
                 <button type="button" disabled={isDisabled || index === 0} aria-label={`Avancer ${image.name}`} onClick={() => moveImage(index, -1)}>Avancer</button>
                 <button type="button" disabled={isDisabled || index === images.length - 1} aria-label={`Reculer ${image.name}`} onClick={() => moveImage(index, 1)}>Reculer</button>
               </div>
