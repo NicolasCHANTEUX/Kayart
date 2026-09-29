@@ -4,6 +4,7 @@ import { requireAdminSession } from "@/server/auth/session";
 import { checkoutTransaction } from "@/server/checkout/transactions";
 import { getPrismaClient } from "@/server/db/prisma";
 import { getInvoiceEligibility } from "@/server/invoicing/invoice-service";
+import { isMissingInvoicingSchemaError } from "@/server/invoicing/invoice-schema";
 import type { AdminOrder, AdminOrderDetail } from "@/types/orders";
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -21,19 +22,6 @@ export async function getAdminOrderDetail(id: string): Promise<AdminOrderDetail 
   const order = await prisma.order.findUnique({
     where: { id },
     include: {
-      invoice: {
-        select: {
-          id: true,
-          invoiceNumber: true,
-          issuedAt: true,
-          archiveStatus: true,
-          subtotalExclTaxCents: true,
-          shippingExclTaxCents: true,
-          totalExclTaxCents: true,
-          taxCents: true,
-          totalInclTaxCents: true
-        }
-      },
       items: true,
       shippingZone: {
         select: { name: true }
@@ -43,7 +31,16 @@ export async function getAdminOrderDetail(id: string): Promise<AdminOrderDetail 
 
   if (!order) return null;
 
-  const entityIds = order.invoice ? [order.id, order.invoice.id] : [order.id];
+  let invoiceSchemaReady = true;
+  let invoice: Awaited<ReturnType<typeof findInvoiceForOrder>> = null;
+  try {
+    invoice = await findInvoiceForOrder(prisma, order.id);
+  } catch (error) {
+    if (!isMissingInvoicingSchemaError(error)) throw error;
+    invoiceSchemaReady = false;
+  }
+
+  const entityIds = invoice ? [order.id, invoice.id] : [order.id];
   const historyRows = await prisma.auditLog.findMany({
     where: {
       entityId: { in: entityIds },
@@ -67,18 +64,23 @@ export async function getAdminOrderDetail(id: string): Promise<AdminOrderDetail 
     shippingZoneName: order.shippingZone?.name ?? null,
     stripeCheckoutSessionId: order.stripeCheckoutSessionId,
     stripePaymentIntentId: order.stripePaymentIntentId,
-    invoice: order.invoice ? {
-      id: order.invoice.id,
-      invoiceNumber: order.invoice.invoiceNumber,
-      issuedAt: order.invoice.issuedAt.toISOString(),
-      archiveStatus: order.invoice.archiveStatus,
-      subtotalExclTaxCents: order.invoice.subtotalExclTaxCents,
-      shippingExclTaxCents: order.invoice.shippingExclTaxCents,
-      totalExclTaxCents: order.invoice.totalExclTaxCents,
-      taxCents: order.invoice.taxCents,
-      totalInclTaxCents: order.invoice.totalInclTaxCents
+    invoice: invoice ? {
+      id: invoice.id,
+      invoiceNumber: invoice.invoiceNumber,
+      issuedAt: invoice.issuedAt.toISOString(),
+      archiveStatus: invoice.archiveStatus,
+      subtotalExclTaxCents: invoice.subtotalExclTaxCents,
+      shippingExclTaxCents: invoice.shippingExclTaxCents,
+      totalExclTaxCents: invoice.totalExclTaxCents,
+      taxCents: invoice.taxCents,
+      totalInclTaxCents: invoice.totalInclTaxCents
     } : null,
-    invoiceEligibility: getInvoiceEligibility(order),
+    invoiceEligibility: invoiceSchemaReady
+      ? getInvoiceEligibility(order)
+      : {
+          eligible: false,
+          reason: "La migration de facturation 20260929_invoices n’est pas encore appliquée à cette base de données."
+        },
     history: historyRows.map((entry) => ({
       id: entry.id,
       action: entry.action,
@@ -86,6 +88,23 @@ export async function getAdminOrderDetail(id: string): Promise<AdminOrderDetail 
       metadata: metadataRecord(entry.metadata)
     }))
   };
+}
+
+function findInvoiceForOrder(prisma: ReturnType<typeof getPrismaClient>, orderId: string) {
+  return prisma.invoice.findUnique({
+    where: { orderId },
+    select: {
+      id: true,
+      invoiceNumber: true,
+      issuedAt: true,
+      archiveStatus: true,
+      subtotalExclTaxCents: true,
+      shippingExclTaxCents: true,
+      totalExclTaxCents: true,
+      taxCents: true,
+      totalInclTaxCents: true
+    }
+  });
 }
 
 export async function advanceTestOrder(id: string, expectedStatus: string) {

@@ -4,6 +4,7 @@ import { getPrismaClient } from "@/server/db/prisma";
 import { checkoutTransaction } from "@/server/checkout/transactions";
 import { getInvoiceConfig } from "./invoice-config";
 import { renderInvoicePdf } from "./invoice-pdf";
+import { isMissingInvoicingSchemaError } from "./invoice-schema";
 import { storeInvoicePdf } from "./invoice-storage";
 import type { InvoicePdfInput } from "./invoice-types";
 
@@ -78,6 +79,11 @@ export async function issueInvoice(orderId: string, actorUserId: string) {
   try {
     invoice = await reserveInvoice(orderId, actorUserId);
   } catch (error) {
+    if (isMissingInvoicingSchemaError(error)) {
+      throw new InvoiceIssuanceError(
+        "La migration de facturation 20260929_invoices n’est pas appliquée à cette base de données."
+      );
+    }
     if (isPrismaUniqueConflict(error)) {
       const existing = await getPrismaClient().invoice.findUnique({ where: { orderId } });
       if (existing) return archiveInvoice(existing, actorUserId);

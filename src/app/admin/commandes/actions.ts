@@ -14,7 +14,7 @@ import {
 import { requireAdminSession } from "@/server/auth/session";
 import { requireSameOriginAction } from "@/server/security/request-guards";
 import { advanceTestOrder } from "@/server/checkout/admin-orders";
-import { issueInvoice } from "@/server/invoicing/invoice-service";
+import { InvoiceIssuanceError, issueInvoice } from "@/server/invoicing/invoice-service";
 import { recordAdminAudit } from "@/server/audit/admin-audit";
 import { revalidatePath } from "next/cache";
 
@@ -27,7 +27,9 @@ export async function issueInvoiceAction(formData: FormData) {
     orderId = input.id;
     await issueInvoice(orderId, session.user.id);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Impossible d'émettre la facture pour le moment.";
+    const message = error instanceof InvoiceIssuanceError
+      ? error.message
+      : "Impossible d'émettre la facture pour le moment.";
     const path = /^[0-9a-f-]{36}$/i.test(orderId) ? `/admin/commandes/${orderId}` : "/admin/commandes";
     redirect(`${path}?error=${encodeURIComponent(message)}`);
   }

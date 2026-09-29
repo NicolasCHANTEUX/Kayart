@@ -13,6 +13,8 @@ npx prisma migrate deploy
 
 La migration `20260929_invoices` crée les factures, le compteur annuel `FA`, les contraintes d’intégrité, l’index d’audit, les protections RLS et le verrou d’immutabilité. **Ne pas utiliser `prisma db push`** : il ne remplace pas le SQL spécialisé de la migration. Si le rôle `kayart_app` est provisionné séparément, réappliquer ensuite [sa procédure](runtime-role-activation.md) afin de garantir les droits minimaux décrits dans `database/runtime-role.sql`.
 
+Déployer cette migration avant, ou dans la même livraison que, le code applicatif. Si le code arrive momentanément avant la migration, la fiche commande reste consultable mais la facturation y est désactivée avec un message explicite ; ce repli ne remplace pas `prisma migrate deploy`.
+
 ## 2. Configurer des valeurs réelles
 
 Conserver `KAYART_INVOICING_ENABLED=false` jusqu’au dernier contrôle. Renseigner les variables exactes suivantes dans l’environnement serveur :

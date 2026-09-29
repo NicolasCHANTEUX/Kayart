@@ -89,6 +89,70 @@ test('invoice eligibility refuses tests and incomplete buyers before allocating 
   assert.match(service.getInvoiceEligibility(invoiceOrder({ paymentStatus: 'pending', paidAt: null })).reason, /payée|paiement/i);
 });
 
+test('order detail remains available when the invoicing migration has not been deployed', async () => {
+  const id = randomUUID();
+  let orderQuery;
+  let invoiceReads = 0;
+  const mappedOrder = {
+    id,
+    orderNumber: 'KA-2026-0042',
+    guestEmail: 'buyer@example.test',
+    customerName: 'Test buyer',
+    status: 'paid',
+    paymentStatus: 'paid',
+    currency: 'EUR',
+    subtotalCents: 2400,
+    shippingCents: 0,
+    totalCents: 2400,
+    customerNote: null,
+    paidAt: '2026-09-29T12:34:00.000Z',
+    createdAt: '2026-09-29T12:30:00.000Z',
+    isManual: true,
+    isTest: false,
+    fulfillmentMethod: 'pickup',
+    items: []
+  };
+  const row = {
+    id,
+    updatedAt: new Date('2026-09-29T12:35:00.000Z'),
+    billingAddress: null,
+    shippingAddress: null,
+    shippingZone: null,
+    stripeCheckoutSessionId: null,
+    stripePaymentIntentId: null
+  };
+  const prisma = {
+    order: {
+      findUnique: async (query) => {
+        orderQuery = query;
+        return row;
+      }
+    },
+    invoice: {
+      findUnique: async () => {
+        invoiceReads++;
+        throw Object.assign(new Error('The table public.invoices does not exist.'), { code: 'P2021' });
+      }
+    },
+    auditLog: { findMany: async () => [] }
+  };
+  const service = load('src/server/checkout/admin-orders.ts', {
+    '@/server/auth/session': { requireAdminSession: async () => ({ user: { id: randomUUID() } }) },
+    '@/server/db/prisma': { getPrismaClient: () => prisma },
+    '@/server/catalog/catalog.mapper': { mapPrismaAdminOrder: () => mappedOrder },
+    '@/server/invoicing/invoice-service': { getInvoiceEligibility: () => ({ eligible: true, reason: null }) },
+    '@/server/checkout/transactions': { checkoutTransaction: async () => { throw new Error('unexpected transaction'); } }
+  });
+
+  const detail = await service.getAdminOrderDetail(id);
+  assert.equal(invoiceReads, 1);
+  assert.equal(orderQuery.include.invoice, undefined);
+  assert.equal(detail.orderNumber, 'KA-2026-0042');
+  assert.equal(detail.invoice, null);
+  assert.equal(detail.invoiceEligibility.eligible, false);
+  assert.match(detail.invoiceEligibility.reason, /20260929_invoices/);
+});
+
 test('tax snapshots derive HT from configured TTC values without inventing VAT', () => {
   const franchiseService = load('src/server/invoicing/invoice-service.ts', {}, validInvoiceEnv);
   const franchise = franchiseService.buildInvoiceSnapshots(invoiceOrder());
