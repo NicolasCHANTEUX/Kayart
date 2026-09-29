@@ -109,16 +109,52 @@ export function AdminOrderCreator({ canPersist, products }: AdminOrderCreatorPro
             </div>
 
             <form action={canPersist ? createAdminOrderAction : undefined} className="modal-form order-form">
+              <fieldset className="order-customer-fields">
+                <legend>Client et facturation</legend>
               <div className="order-form-grid">
                 <label>
-                  Email client
+                  Nom ou raison sociale
+                  <input autoComplete="name" maxLength={120} name="customerName" required type="text" />
+                </label>
+                <label>
+                  E-mail client
                   <input
-                    defaultValue="vente-directe@kayart.local"
+                    autoComplete="email"
+                    maxLength={254}
                     name="guestEmail"
                     placeholder="client@example.com"
+                    required
                     type="email"
                   />
                 </label>
+                <label>
+                  Adresse de facturation
+                  <input autoComplete="address-line1" maxLength={200} name="billingLine1" required type="text" />
+                </label>
+                <label>
+                  Complément d'adresse
+                  <input autoComplete="address-line2" maxLength={200} name="billingLine2" type="text" />
+                </label>
+                <label>
+                  Code postal
+                  <input autoComplete="postal-code" maxLength={20} name="billingPostalCode" required type="text" />
+                </label>
+                <label>
+                  Ville
+                  <input autoComplete="address-level2" maxLength={100} name="billingCity" required type="text" />
+                </label>
+                <label>
+                  Pays (code ISO)
+                  <input autoComplete="country" defaultValue="FR" maxLength={2} minLength={2} name="billingCountry" required type="text" />
+                </label>
+                <label>
+                  SIREN client (si professionnel)
+                  <input maxLength={80} name="buyerRegistration" type="text" />
+                </label>
+              </div>
+              </fieldset>
+
+              <div className="order-form-grid order-form-grid--note">
                 <label>
                   Note interne
                   <input name="customerNote" placeholder="Payée en espèces, virement en attente..." type="text" />

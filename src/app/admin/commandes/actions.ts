@@ -14,7 +14,27 @@ import {
 import { requireAdminSession } from "@/server/auth/session";
 import { requireSameOriginAction } from "@/server/security/request-guards";
 import { advanceTestOrder } from "@/server/checkout/admin-orders";
+import { issueInvoice } from "@/server/invoicing/invoice-service";
+import { recordAdminAudit } from "@/server/audit/admin-audit";
 import { revalidatePath } from "next/cache";
+
+export async function issueInvoiceAction(formData: FormData) {
+  await requireSameOriginAction();
+  const session = await requireAdminSession();
+  let orderId = "";
+  try {
+    const input = parseAdminOrderActionFormData(formData);
+    orderId = input.id;
+    await issueInvoice(orderId, session.user.id);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Impossible d'émettre la facture pour le moment.";
+    const path = /^[0-9a-f-]{36}$/i.test(orderId) ? `/admin/commandes/${orderId}` : "/admin/commandes";
+    redirect(`${path}?error=${encodeURIComponent(message)}`);
+  }
+  revalidatePath("/admin/commandes");
+  revalidatePath(`/admin/commandes/${orderId}`);
+  redirect(`/admin/commandes/${orderId}?issued=1`);
+}
 
 export async function advanceTestOrderAction(formData: FormData) {
   await requireSameOriginAction();
@@ -27,11 +47,12 @@ export async function advanceTestOrderAction(formData: FormData) {
 
 export async function createAdminOrderAction(formData: FormData) {
   await requireSameOriginAction();
-  await requireAdminSession();
+  const session = await requireAdminSession();
 
   try {
     const input = parseAdminOrderFormData(formData);
-    await createAdminOrder(input);
+    const order = await createAdminOrder(input);
+    await recordAdminAudit({ actorUserId: session.user.id, action: "order.created", entityType: "Order", entityId: order.id, metadata: { orderNumber: order.orderNumber, source: "manual" } });
   } catch (error) {
     const message =
       error instanceof OrderFormError || error instanceof Error
@@ -46,11 +67,12 @@ export async function createAdminOrderAction(formData: FormData) {
 
 export async function markAdminOrderPaidAction(formData: FormData) {
   await requireSameOriginAction();
-  await requireAdminSession();
+  const session = await requireAdminSession();
 
   try {
     const input = parseAdminOrderActionFormData(formData);
-    await markAdminOrderPaid(input);
+    const order = await markAdminOrderPaid(input);
+    await recordAdminAudit({ actorUserId: session.user.id, action: "order.payment_confirmed", entityType: "Order", entityId: order.id, metadata: { orderNumber: order.orderNumber, paymentStatus: order.paymentStatus } });
   } catch (error) {
     const message =
       error instanceof OrderFormError || error instanceof Error
@@ -65,11 +87,12 @@ export async function markAdminOrderPaidAction(formData: FormData) {
 
 export async function deleteAdminOrderAction(formData: FormData) {
   await requireSameOriginAction();
-  await requireAdminSession();
+  const session = await requireAdminSession();
 
   try {
     const input = parseAdminOrderActionFormData(formData);
     await deleteAdminOrder(input);
+    await recordAdminAudit({ actorUserId: session.user.id, action: "order.cancelled", entityType: "Order", entityId: input.id, metadata: { source: "manual" } });
   } catch (error) {
     const message =
       error instanceof OrderFormError || error instanceof Error
