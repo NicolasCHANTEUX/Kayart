@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductImageView } from "@/components/catalog/product-image";
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useActionState, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { useFormStatus } from "react-dom";
 import { ProductImageUploader } from "@/components/admin/product-image-uploader";
 import {
@@ -12,11 +12,18 @@ import {
 } from "@/lib/catalog";
 import { skuFromName, slugify } from "@/lib/slug";
 import { sanitizeMoneyInput } from "@/lib/money";
-import type { ProductFormDraft } from "@/server/catalog/product-form-draft";
+import {
+  initialProductFormActionState,
+  type ProductFormActionState,
+  type ProductFormDraft
+} from "@/server/catalog/product-form-draft";
 import type { Category, ProductCondition, ProductImage } from "@/types/catalog";
 
 type ProductFormProps = {
-  action?: (formData: FormData) => Promise<void>;
+  action?: (
+    previousState: ProductFormActionState,
+    formData: FormData
+  ) => Promise<ProductFormActionState>;
   canPersist: boolean;
   categories: Category[];
   conditionOptions?: ProductCondition[];
@@ -51,6 +58,10 @@ export function ProductForm({
 }: ProductFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const isSubmittingRef = useRef(false);
+  const [actionState, formAction] = useActionState(
+    action ?? unavailableProductAction,
+    initialProductFormActionState
+  );
   const [name, setName] = useState(defaultValues?.name ?? "");
   const [slug, setSlug] = useState(defaultValues?.slug ?? "");
   const [sku, setSku] = useState(defaultValues?.sku ?? "");
@@ -88,6 +99,23 @@ export function ProductForm({
   useEffect(() => {
     refreshUnlockState();
   }, [name, slug, sku, basePrice, discountPercent]);
+
+  useEffect(() => {
+    if (actionState.status !== "error") {
+      return;
+    }
+
+    isSubmittingRef.current = false;
+    const firstInvalidField = Object.keys(actionState.errors ?? {})[0];
+    const control = firstInvalidField
+      ? formRef.current?.elements.namedItem(firstInvalidField)
+      : null;
+
+    if (control instanceof HTMLElement) {
+      control.focus();
+      control.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [actionState]);
 
   function refreshUnlockState(form = formRef.current) {
     if (!form) {
@@ -204,14 +232,27 @@ export function ProductForm({
 
   return (
     <form
-      action={action}
+      action={action ? formAction : undefined}
       className="admin-form"
       onChange={(event) => handleFormInput(event.currentTarget)}
       onInput={(event) => handleFormInput(event.currentTarget)}
       onSubmit={handleSubmit}
       ref={formRef}
     >
-      {errorMessage ? <p className="form-notice form-notice--error">{errorMessage}</p> : null}
+      {actionState.status === "error" ? (
+        <div className="form-notice form-notice--error" role="alert">
+          <p>{actionState.message}</p>
+          {Object.keys(actionState.errors ?? {}).length > 1 ? (
+            <ul>
+              {Object.entries(actionState.errors ?? {}).map(([field, message]) => (
+                <li key={field}>{message}</li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      ) : errorMessage ? (
+        <p className="form-notice form-notice--error" role="alert">{errorMessage}</p>
+      ) : null}
       {stepError ? <p className="form-notice form-notice--error">{stepError}</p> : null}
       {productId ? <input name="id" type="hidden" value={productId} /> : null}
       {baseModelName ? <p>Modèle d’origine : <strong>{baseModelName}</strong></p> : null}
@@ -508,6 +549,14 @@ export function ProductForm({
       </div>
     </form>
   );
+}
+
+async function unavailableProductAction(
+  previousState: ProductFormActionState,
+  formData: FormData
+) {
+  void formData;
+  return previousState;
 }
 
 function ProductFormSubmitButton({

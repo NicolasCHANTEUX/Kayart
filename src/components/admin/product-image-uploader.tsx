@@ -38,6 +38,7 @@ export function ProductImageUploader({
   const disabledRef = useRef(disabled);
   const maxFilesRef = useRef(maxFiles);
   const isDirectUploadReadyRef = useRef(false);
+  const uploadedImagesRef = useRef<DirectUploadTarget[]>([]);
   const isUploadingRef = useRef(false);
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [coverIndex, setCoverIndex] = useState(0);
@@ -56,6 +57,13 @@ export function ProductImageUploader({
     }
   }, []);
 
+  const invalidatePreparedUploads = useCallback(() => {
+    uploadedImagesRef.current = [];
+    inputRef.current?.form
+      ?.querySelectorAll<HTMLInputElement>('input[data-direct-upload-field="true"]')
+      .forEach((field) => field.remove());
+  }, []);
+
   const prepareDirectUploadAndSubmit = useCallback(async (form: HTMLFormElement, selectedImages: PreviewImage[]) => {
     setUploadError(null);
     setIsUploading(true);
@@ -63,6 +71,7 @@ export function ProductImageUploader({
 
     try {
       const uploadedImages = await uploadImagesToSupabase(selectedImages, coverIndexRef.current);
+      uploadedImagesRef.current = uploadedImages;
       attachUploadedImageFields(form, uploadedImages);
 
       syncInputFiles([]);
@@ -106,6 +115,11 @@ export function ProductImageUploader({
 
       if (isDirectUploadReadyRef.current) {
         isDirectUploadReadyRef.current = false;
+        return;
+      }
+
+      if (uploadedImagesRef.current.length > 0) {
+        attachUploadedImageFields(currentForm, uploadedImagesRef.current);
         return;
       }
 
@@ -175,6 +189,8 @@ export function ProductImageUploader({
       return;
     }
 
+    invalidatePreparedUploads();
+
     const nextImages = [
       ...images,
       ...nextFiles.map((file) => ({
@@ -193,6 +209,7 @@ export function ProductImageUploader({
 
 
   function removeImage(indexToRemove: number) {
+    invalidatePreparedUploads();
     const removedImage = images[indexToRemove];
     const nextImages = images.filter((_, index) => index !== indexToRemove);
 
@@ -222,6 +239,7 @@ export function ProductImageUploader({
   function moveImage(index: number, direction: number) {
     const target = index + direction;
     if (target < 0 || target >= images.length) return;
+    invalidatePreparedUploads();
     const reordered = [...images];
     [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
     syncInputFiles(reordered);
@@ -230,6 +248,7 @@ export function ProductImageUploader({
   }
 
   function rotateImage(index: number) {
+    invalidatePreparedUploads();
     const nextImages = images.map((image, imageIndex) => imageIndex === index
       ? { ...image, rotation: ((image.rotation + 90) % 360) as PreviewImage["rotation"] }
       : image);
@@ -304,7 +323,10 @@ export function ProductImageUploader({
                 aria-pressed={coverIndex === index}
                 className="cover-button"
                 disabled={isDisabled}
-                onClick={() => setCoverIndex(index)}
+                onClick={() => {
+                  invalidatePreparedUploads();
+                  setCoverIndex(index);
+                }}
                 type="button"
               >
                 {coverIndex === index ? "\u2605" : "\u2606"}

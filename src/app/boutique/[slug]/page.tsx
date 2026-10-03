@@ -8,6 +8,7 @@ import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductPrice } from "@/components/catalog/product-price";
 import { productAvailabilityLabels, productConditionLabels } from "@/lib/catalog";
 import { formatStock, getDiscountPercent } from "@/lib/format";
+import { productContactHref } from "@/lib/contact";
 import { findProductBySlug } from "@/server/catalog/catalog.service";
 import type { Product } from "@/types/catalog";
 
@@ -57,6 +58,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const description = product.description || model?.description || "";
   const discountPercent = getDiscountPercent(product);
   const primaryAction = getPrimaryAction(product);
+  const questionHref = productContactHref(product);
 
   return (
     <section className="section product-detail-section">
@@ -118,7 +120,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <div className="actions-row product-actions">
             {product.availability === "available" && product.condition !== "service" && !product.isCustomizable && product.priceCents !== null && (product.stockQuantity ?? 0) > 0 ? <AddToCart productId={product.id} maxQuantity={product.stockQuantity!} /> : <Link className="button button--primary" href={primaryAction.href}>{primaryAction.label}</Link>}
-            <Link className="button button--ghost" href="/contact">
+            <Link className="button button--ghost" href={questionHref}>
               Poser une question
             </Link>
           </div>
@@ -187,7 +189,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 }
 
 function getPrimaryAction(product: Product) {
-  const href = `/contact?produit=${encodeURIComponent(product.name)}&reference=${encodeURIComponent(product.sku)}`;
+  const href = productContactHref(product);
   if (product.availability === "reserved") {
     return { href, label: "Pièce réservée — contacter l’atelier" };
   }

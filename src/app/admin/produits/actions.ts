@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -18,11 +17,7 @@ import {
   parseProductVisibilityFormData,
   ProductFormError
 } from "@/server/catalog/catalog.input";
-import {
-  createProductFormDraft,
-  encodeProductFormDraft,
-  productFormDraftCookieName
-} from "@/server/catalog/product-form-draft";
+import type { ProductFormActionState } from "@/server/catalog/product-form-draft";
 import { storeProductImages } from "@/server/catalog/product-image-storage";
 import {
   createCategory,
@@ -106,7 +101,10 @@ export async function deleteCategoryAction(formData: FormData) {
   redirect("/admin/produits?updated=category-deleted");
 }
 
-export async function createProductAction(formData: FormData) {
+export async function createProductAction(
+  _previousState: ProductFormActionState,
+  formData: FormData
+): Promise<ProductFormActionState> {
   await requireSameOriginAction();
   await requireAdminSession();
 
@@ -119,24 +117,19 @@ export async function createProductAction(formData: FormData) {
       images
     });
   } catch (error) {
-    await saveProductDraft(formData);
-
-    if (error instanceof ProductFormError) {
-      redirect(`/admin/produits/nouveau?error=${encodeURIComponent(error.message)}`);
-    }
-
-    redirect(
-      `/admin/produits/nouveau?error=${encodeURIComponent(
-        "Impossible d'enregistrer le produit pour le moment."
-      )}`
+    return productFormFailure(
+      error,
+      "Impossible d'enregistrer le produit pour le moment."
     );
   }
 
-  await clearProductDraft();
   redirect("/admin/produits");
 }
 
-export async function createImperfectProductAction(formData: FormData) {
+export async function createImperfectProductAction(
+  _previousState: ProductFormActionState,
+  formData: FormData
+): Promise<ProductFormActionState> {
   await requireSameOriginAction();
   await requireAdminSession();
 
@@ -207,14 +200,9 @@ export async function createImperfectProductAction(formData: FormData) {
       isPublished: true
     });
   } catch (error) {
-    if (error instanceof ProductFormError) {
-      redirect(`/admin/produits/imparfait/nouveau?error=${encodeURIComponent(error.message)}`);
-    }
-
-    redirect(
-      `/admin/produits/imparfait/nouveau?error=${encodeURIComponent(
-        "Impossible d'enregistrer le produit imparfait pour le moment."
-      )}`
+    return productFormFailure(
+      error,
+      "Impossible d'enregistrer le produit imparfait pour le moment."
     );
   }
 
@@ -243,15 +231,12 @@ export async function updateProductStockAction(formData: FormData) {
   redirect("/admin/produits?updated=stock");
 }
 
-export async function updateProductAction(formData: FormData) {
+export async function updateProductAction(
+  _previousState: ProductFormActionState,
+  formData: FormData
+): Promise<ProductFormActionState> {
   await requireSameOriginAction();
   await requireAdminSession();
-
-  const productId = formData.get("id");
-  const redirectPath =
-    typeof productId === "string" && productId
-      ? `/admin/produits/${productId}/modifier`
-      : "/admin/produits";
 
   try {
     const input = parseProductUpdateFormData(formData);
@@ -262,14 +247,9 @@ export async function updateProductAction(formData: FormData) {
       images
     });
   } catch (error) {
-    if (error instanceof ProductFormError) {
-      redirect(`${redirectPath}?error=${encodeURIComponent(error.message)}`);
-    }
-
-    redirect(
-      `${redirectPath}?error=${encodeURIComponent(
-        "Impossible de modifier le produit pour le moment."
-      )}`
+    return productFormFailure(
+      error,
+      "Impossible de modifier le produit pour le moment."
     );
   }
 
@@ -380,24 +360,17 @@ async function resolveProductImages(productName: string, formData: FormData) {
   ];
 }
 
-async function saveProductDraft(formData: FormData) {
-  const cookieStore = await cookies();
-  const secure = process.env.NODE_ENV === "production";
+function productFormFailure(error: unknown, fallbackMessage: string): ProductFormActionState {
+  if (error instanceof ProductFormError) {
+    return {
+      status: "error",
+      message: error.message,
+      errors: error.issues
+    };
+  }
 
-  cookieStore.set(productFormDraftCookieName, encodeProductFormDraft(createProductFormDraft(formData)), {
-    httpOnly: true,
-    maxAge: 60 * 30,
-    path: "/admin/produits/nouveau",
-    sameSite: "lax",
-    secure
-  });
-}
-
-async function clearProductDraft() {
-  const cookieStore = await cookies();
-
-  cookieStore.set(productFormDraftCookieName, "", {
-    maxAge: 0,
-    path: "/admin/produits/nouveau"
-  });
+  return {
+    status: "error",
+    message: fallbackMessage
+  };
 }
