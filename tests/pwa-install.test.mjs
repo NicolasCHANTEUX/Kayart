@@ -35,6 +35,9 @@ test('the root install experience registers the worker and waits for a user gest
   assert.match(prompt, /beforeinstallprompt/);
   assert.match(prompt, /kayart:pwa-install-ready/);
   assert.match(prompt, /revealSavedPrompt\(\)/);
+  assert.match(prompt, /getChromeInstallationCandidate\(\)/);
+  assert.match(prompt, /Installer et créer un raccourci/);
+  assert.match(prompt, /Comment installer l’application/);
   assert.match(prompt, /await prompt\.prompt\(\)/);
   assert.match(prompt, /pathname !== "\/"/);
 });
