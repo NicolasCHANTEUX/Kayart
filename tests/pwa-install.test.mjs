@@ -30,8 +30,11 @@ test('the root install experience registers the worker and waits for a user gest
 
   assert.match(layout, /<PwaInstallPrompt \/>/);
   assert.match(layout, /manifest: "\/manifest\.webmanifest"/);
+  assert.match(layout, /window\.__kayartInstallPrompt = event/);
+  assert.match(layout, /navigator\.serviceWorker\.register\("\/sw\.js"/);
   assert.match(prompt, /beforeinstallprompt/);
-  assert.match(prompt, /serviceWorker\.register\("\/sw\.js"/);
+  assert.match(prompt, /kayart:pwa-install-ready/);
+  assert.match(prompt, /revealSavedPrompt\(\)/);
   assert.match(prompt, /await prompt\.prompt\(\)/);
   assert.match(prompt, /pathname !== "\/"/);
 });

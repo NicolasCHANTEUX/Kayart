@@ -13,6 +13,13 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<InstallChoice>;
 };
 
+declare global {
+  interface Window {
+    __kayartInstallPrompt?: BeforeInstallPromptEvent;
+    __kayartPwaBootstrap?: boolean;
+  }
+}
+
 const dismissedKey = "kayart-pwa-install-dismissed";
 
 export function PwaInstallPrompt() {
@@ -21,9 +28,22 @@ export function PwaInstallPrompt() {
   const [canInstall, setCanInstall] = useState(false);
 
   useEffect(() => {
+    function revealSavedPrompt() {
+      if (!window.__kayartInstallPrompt) {
+        return;
+      }
+
+      installPrompt.current = window.__kayartInstallPrompt;
+
+      if (!wasDismissedThisSession()) {
+        setCanInstall(true);
+      }
+    }
+
     function handleInstallPrompt(event: Event) {
       event.preventDefault();
       installPrompt.current = event as BeforeInstallPromptEvent;
+      window.__kayartInstallPrompt = event as BeforeInstallPromptEvent;
 
       if (!wasDismissedThisSession()) {
         setCanInstall(true);
@@ -32,20 +52,18 @@ export function PwaInstallPrompt() {
 
     function handleInstalled() {
       installPrompt.current = null;
+      delete window.__kayartInstallPrompt;
       setCanInstall(false);
     }
 
+    revealSavedPrompt();
     window.addEventListener("beforeinstallprompt", handleInstallPrompt);
+    window.addEventListener("kayart:pwa-install-ready", revealSavedPrompt);
     window.addEventListener("appinstalled", handleInstalled);
-
-    if ("serviceWorker" in navigator) {
-      void navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {
-        // The site remains fully usable when service workers are unavailable.
-      });
-    }
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
+      window.removeEventListener("kayart:pwa-install-ready", revealSavedPrompt);
       window.removeEventListener("appinstalled", handleInstalled);
     };
   }, []);
@@ -74,6 +92,7 @@ export function PwaInstallPrompt() {
     await prompt.prompt();
     const choice = await prompt.userChoice;
     installPrompt.current = null;
+    delete window.__kayartInstallPrompt;
     setCanInstall(false);
 
     if (choice.outcome === "dismissed") {

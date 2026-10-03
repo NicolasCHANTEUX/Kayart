@@ -10,6 +10,23 @@ import { getIndexableOrigin } from "@/config/seo";
 import "./globals.css";
 import "./atelier-v2.css";
 
+const pwaInstallBootstrap = `
+  (() => {
+    if (window.__kayartPwaBootstrap) return;
+    window.__kayartPwaBootstrap = true;
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      window.__kayartInstallPrompt = event;
+      window.dispatchEvent(new Event("kayart:pwa-install-ready"));
+    });
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});
+      }, { once: true });
+    }
+  })();
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -43,6 +60,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="fr">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: pwaInstallBootstrap }} />
         {/* Discovered from the initial HTML instead of three levels deep inside a CSS @import, so the browser can start the font fetch immediately. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
