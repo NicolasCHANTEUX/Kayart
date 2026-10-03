@@ -79,6 +79,12 @@
 .manifesto-grid p:not(.lead) { font-size:14px; line-height:1.6; margin-bottom:16px; }
 .manifesto-visual { position:relative; height:clamp(190px,24vw,300px); margin:28px 0 0; overflow:hidden; }
 .manifesto-visual__image { object-fit:cover; object-position:center; }
+.pwa-install-prompt { position:fixed; right:24px; bottom:24px; z-index:60; width:min(380px,calc(100vw - 32px)); padding:22px; border:1px solid #4e5669; border-top:4px solid var(--yellow); border-radius:6px; background:var(--carbon); color:#fff; box-shadow:0 18px 48px #0006; }
+.pwa-install-prompt__close { position:absolute; top:8px; right:10px; width:36px; height:36px; border:0; background:transparent; color:#d8dbea; font-size:24px; cursor:pointer; }
+.pwa-install-prompt__eyebrow { display:block; margin-bottom:8px; padding-right:32px; color:var(--yellow); font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.pwa-install-prompt strong { display:block; padding-right:28px; font-size:20px; line-height:1.2; }
+.pwa-install-prompt p { margin:10px 0 16px; color:#d8dbea; font-size:13px; line-height:1.5; }
+.pwa-install-prompt .button { width:100%; }
 .site-footer { position:relative; background:#0d0f15; color:#fff; border-top:0; padding:4px 0 0; }
 .site-footer::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--brand-stripe); }
 .site-footer a:focus-visible { outline:2px solid var(--yellow); outline-offset:4px; }

@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { RouteLoadingIndicator } from "@/components/layout/route-loading-indicator";
 import { PageBackground } from "@/components/layout/page-background";
+import { PwaInstallPrompt } from "@/components/pwa/pwa-install-prompt";
 import { siteConfig } from "@/config/site";
 import { getIndexableOrigin } from "@/config/seo";
 import "./globals.css";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
+  manifest: "/manifest.webmanifest",
   robots: getIndexableOrigin() ? { index: true, follow: true } : { index: false, follow: false },
   appleWebApp: {
     capable: true,
@@ -59,6 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <main id="main-content" tabIndex={-1}>{children}</main>
           <SiteFooter />
         </div>
+        <PwaInstallPrompt />
       </body>
     </html>
   );
