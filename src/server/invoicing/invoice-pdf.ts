@@ -13,8 +13,20 @@ const PAGE_HEIGHT = 841.89;
 const MARGIN = 48;
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
 const FOOTER_TOP = 55;
-const BODY_SIZE = 9;
-const BODY_LINE = 12;
+const CARD_SIZE = 8.3;
+const CARD_LINE = 9.7;
+const BRAND_MARK_VIEWBOX_WIDTH = 1000;
+const BRAND_MARK_K_TOP = 149;
+const BRAND_MARK_K_BOTTOM = 803;
+const BRAND_MARK_GAP = 1;
+
+const brandMarkPaths = [
+  { color: rgb(16 / 255, 91 / 255, 198 / 255), path: "M0 0h1000v950H0z" },
+  { color: rgb(200 / 255, 7 / 255, 3 / 255), path: "M0 0h230l420 230-90 140 220 580H240L410 610 310 380 0 230z" },
+  { color: rgb(136 / 255, 58 / 255, 125 / 255), path: "m0 230 310 150-100 220L0 525zM335 110 780 0H505l135 215zM435 400l565 310v240H780L520 650 230 950l225-410z" },
+  { color: rgb(1, 213 / 255, 0), path: "M230 0h275l135 215zM0 710l455-245-225 485H0zM1000 240 815 325l-45 140 45 155 185 90zM405 950l47-200 54 200z" },
+  { color: rgb(1, 1, 1), path: "M376 149H540L443 434 715 149H922L589 475 699 803H499L419 509 318 803H155Z" }
+] as const;
 
 const colors = {
   accent: rgb(16 / 255, 91 / 255, 198 / 255),
@@ -61,13 +73,13 @@ export async function renderInvoicePdf(invoiceLike: InvoicePdfInput): Promise<Ui
     pages.push(page);
     drawBrandStripe(page);
     if (first) {
-      page.drawText("KAYART", { x: MARGIN, y: PAGE_HEIGHT - 65, size: 27, font: bold, color: colors.carbon });
-      page.drawText("FACTURE", { x: PAGE_WIDTH - MARGIN - 118, y: PAGE_HEIGHT - 57, size: 18, font: bold, color: colors.carbon });
-      drawRight(page, invoice.invoiceNumber, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 76, bold, 10, colors.accent);
-      page.drawText(`Date d'émission : ${formatDate(invoice.issuedAt)}`, { x: MARGIN, y: PAGE_HEIGHT - 100, size: BODY_SIZE, font: regular, color: colors.metal });
-      page.drawText(`Date de vente : ${formatDate(invoice.saleDate)}`, { x: MARGIN + 190, y: PAGE_HEIGHT - 100, size: BODY_SIZE, font: regular, color: colors.metal });
-      drawRight(page, `Commande ${invoice.orderNumber}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 100, regular, BODY_SIZE, colors.metal);
-      y = PAGE_HEIGHT - 130;
+      drawInvoiceWordmark(page, bold);
+      drawRight(page, "FACTURE", PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 65, bold, 18, colors.carbon);
+      drawRight(page, `N° ${invoice.invoiceNumber}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 87, bold, 11, colors.accent);
+      drawRight(page, `Date d'émission : ${formatDate(invoice.issuedAt)}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 109, regular, 8.2, colors.metal);
+      drawRight(page, `Date de vente : ${formatDate(invoice.saleDate)}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 122, regular, 8.2, colors.metal);
+      drawRight(page, `Commande : ${invoice.orderNumber}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 135, regular, 8.2, colors.metal);
+      y = PAGE_HEIGHT - 143;
     } else {
       page.drawText("KAYART", { x: MARGIN, y: PAGE_HEIGHT - 47, size: 14, font: bold, color: colors.carbon });
       drawRight(page, `Facture ${invoice.invoiceNumber}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 47, bold, 9, colors.carbon);
@@ -95,31 +107,55 @@ export async function renderInvoicePdf(invoiceLike: InvoicePdfInput): Promise<Ui
     const cardWidth = (CONTENT_WIDTH - gutter) / 2;
     const sellerLines = sellerDisplayLines(invoice.sellerSnapshot);
     const buyerLines = buyerDisplayLines(invoice.buyerSnapshot);
-    const sellerWrapped = sellerLines.flatMap((line) => wrapText(line, regular, BODY_SIZE, cardWidth - 24));
-    const buyerWrapped = buyerLines.flatMap((line) => wrapText(line, regular, BODY_SIZE, cardWidth - 24));
-    const height = Math.max(102, 39 + Math.max(sellerWrapped.length, buyerWrapped.length) * BODY_LINE);
+    const sellerWrapped = sellerLines.flatMap((line) => wrapText(line, regular, CARD_SIZE, cardWidth - 24));
+    const buyerWrapped = buyerLines.flatMap((line) => wrapText(line, regular, CARD_SIZE, cardWidth - 24));
+    const height = Math.max(90, 36 + Math.max(sellerWrapped.length, buyerWrapped.length) * CARD_LINE);
     ensureSpace(height + 18);
     drawCard(MARGIN, y, cardWidth, height, "VENDEUR", sellerWrapped);
-    drawCard(MARGIN + cardWidth + gutter, y, cardWidth, height, "CLIENT", buyerWrapped);
-    y -= height + 24;
+    drawCard(MARGIN + cardWidth + gutter, y, cardWidth, height, "FACTURÉ À", buyerWrapped);
+    y -= height + 8;
+    if (invoice.buyerSnapshot.shippingAddress && !sameAddress(invoice.buyerSnapshot.billingAddress, invoice.buyerSnapshot.shippingAddress)) {
+      drawDelivery(invoice.buyerSnapshot.shippingAddress);
+    } else {
+      y -= 12;
+    }
+  }
+
+  function drawDelivery(address: InvoiceAddressSnapshot) {
+    const titleWidth = 68;
+    const displayLines = [
+      address.name,
+      address.line1,
+      address.line2,
+      `${address.postalCode} ${address.city} - ${address.country}`
+    ].filter((line): line is string => Boolean(line));
+    const lines = displayLines.flatMap((line) => wrapText(line, regular, 8.3, CONTENT_WIDTH - titleWidth - 24));
+    const height = Math.max(48, 16 + lines.length * 10);
+    ensureSpace(height + 18);
+    page.drawRectangle({ x: MARGIN, y: y - height, width: CONTENT_WIDTH, height, color: colors.fiber, borderColor: colors.line, borderWidth: 0.6 });
+    page.drawText("LIVRÉ À", { x: MARGIN + 12, y: y - 19, size: 8, font: bold, color: colors.accent });
+    lines.forEach((line, index) => {
+      page.drawText(line, { x: MARGIN + titleWidth, y: y - 18 - index * 10, size: 8.3, font: index === 0 ? bold : regular, color: colors.carbon });
+    });
+    y -= height + 14;
   }
 
   function drawCard(x: number, top: number, width: number, height: number, title: string, lines: string[]) {
     page.drawRectangle({ x, y: top - height, width, height, color: colors.fiber, borderColor: colors.line, borderWidth: 0.6 });
     page.drawText(title, { x: x + 12, y: top - 21, size: 8, font: bold, color: colors.accent });
-    let lineY = top - 39;
+    let lineY = top - 37;
     lines.forEach((line, index) => {
-      page.drawText(line, { x: x + 12, y: lineY, size: BODY_SIZE, font: index === 0 ? bold : regular, color: colors.carbon });
-      lineY -= BODY_LINE;
+      page.drawText(line, { x: x + 12, y: lineY, size: CARD_SIZE, font: index === 0 ? bold : regular, color: colors.carbon });
+      lineY -= CARD_LINE;
     });
   }
 
   function drawLinesTable() {
     ensureSpace(56);
-    drawSectionTitle("DÉTAIL DES PRODUITS");
+    drawSectionTitle("DÉTAIL DES PRODUITS", 17);
     drawTableHeader();
     invoice.linesSnapshot.forEach((line, index) => drawTableLine(line, index));
-    y -= 16;
+    y -= 10;
   }
 
   function drawTableHeader() {
@@ -196,9 +232,9 @@ export async function renderInvoicePdf(invoiceLike: InvoicePdfInput): Promise<Ui
 
   function drawTotals() {
     const breakdownRows = invoice.taxSnapshot.regime === "vat" ? invoice.taxSnapshot.breakdown.length : 1;
-    const height = 85 + breakdownRows * 17;
+    const height = 92 + breakdownRows * 17;
     ensureSpace(height + 18);
-    const width = 235;
+    const width = 285;
     const x = PAGE_WIDTH - MARGIN - width;
     const top = y;
     page.drawRectangle({ x, y: top - height, width, height, color: colors.fiber, borderColor: colors.line, borderWidth: 0.6 });
@@ -218,10 +254,10 @@ export async function renderInvoicePdf(invoiceLike: InvoicePdfInput): Promise<Ui
       drawTotalRow("TVA", 0, rowY);
       rowY -= 17;
     }
-    page.drawLine({ start: { x: x + 12, y: rowY + 8 }, end: { x: x + width - 12, y: rowY + 8 }, thickness: 1, color: colors.carbon });
-    page.drawText("TOTAL TTC", { x: x + 12, y: rowY - 8, size: 11, font: bold, color: colors.carbon });
-    drawRight(page, formatMoney(invoice.totalInclTaxCents, invoice.currency), x + width - 12, rowY - 8, bold, 12, colors.accent);
-    y -= height + 24;
+    page.drawLine({ start: { x: x + 12, y: rowY + 5 }, end: { x: x + width - 12, y: rowY + 5 }, thickness: 1.35, color: colors.carbon });
+    page.drawText("TOTAL TTC", { x: x + 12, y: rowY - 14, size: 11, font: bold, color: colors.carbon });
+    drawRight(page, formatMoney(invoice.totalInclTaxCents, invoice.currency), x + width - 12, rowY - 14, bold, 12, colors.accent);
+    y -= height + 20;
 
     function drawTotalRow(label: string, cents: number, baseline: number, strong = false) {
       page.drawText(label, { x: x + 12, y: baseline, size: 8.5, font: strong ? bold : regular, color: colors.carbon });
@@ -230,13 +266,47 @@ export async function renderInvoicePdf(invoiceLike: InvoicePdfInput): Promise<Ui
   }
 
   function drawPayment() {
-    const paymentLines = [
-      `Mode : ${invoice.paymentSnapshot.method}`,
-      `Payée le : ${formatDate(invoice.paymentSnapshot.paidAt)}`,
-      ...(invoice.paymentSnapshot.dueDate ? [`Échéance : ${formatDate(invoice.paymentSnapshot.dueDate)}`] : []),
-      `Conditions : ${invoice.paymentSnapshot.terms}`
+    const rows = [
+      { label: "Mode de paiement", value: invoice.paymentSnapshot.method },
+      { label: "Date de paiement", value: formatDate(invoice.paymentSnapshot.paidAt) },
+      ...(invoice.paymentSnapshot.dueDate ? [{ label: "Échéance", value: formatDate(invoice.paymentSnapshot.dueDate) }] : []),
+      { label: "Conditions", value: invoice.paymentSnapshot.terms }
     ];
-    drawFlowSection("PAIEMENT", paymentLines.join("\n"));
+    const labelWidth = 120;
+    const rowData = rows.map((row) => ({ ...row, lines: wrapText(row.value, regular, 8.3, CONTENT_WIDTH - labelWidth - 24) }));
+    const height = 10 + rowData.reduce((sum, row) => sum + Math.max(15, row.lines.length * 10 + 5), 0);
+    ensureSpace(height + 38);
+    drawPaymentTitle();
+    const top = y;
+    page.drawRectangle({ x: MARGIN, y: top - height, width: CONTENT_WIDTH, height, borderColor: colors.line, borderWidth: 0.6 });
+    let cursorY = top - 17;
+    rowData.forEach((row) => {
+      page.drawText(row.label, { x: MARGIN + 12, y: cursorY, size: 8, font: bold, color: colors.metal });
+      row.lines.forEach((line, lineIndex) => {
+        page.drawText(line, { x: MARGIN + labelWidth, y: cursorY - lineIndex * 10, size: 8.3, font: regular, color: colors.carbon });
+      });
+      const rowHeight = Math.max(15, row.lines.length * 10 + 5);
+      cursorY -= rowHeight;
+    });
+    y -= height + 12;
+  }
+
+  function drawPaymentTitle() {
+    const badge = "FACTURE ACQUITTÉE";
+    const badgeWidth = bold.widthOfTextAtSize(badge, 7.2) + 18;
+    page.drawText("PAIEMENT", { x: MARGIN, y, size: 9, font: bold, color: colors.accent });
+    page.drawRectangle({
+      x: PAGE_WIDTH - MARGIN - badgeWidth,
+      y: y - 1,
+      width: badgeWidth,
+      height: 13,
+      color: colors.fiber,
+      borderColor: colors.accent,
+      borderWidth: 0.7
+    });
+    drawRight(page, badge, PAGE_WIDTH - MARGIN - 9, y + 1.5, bold, 7.2, colors.accent);
+    page.drawLine({ start: { x: MARGIN, y: y - 7 }, end: { x: PAGE_WIDTH - MARGIN, y: y - 7 }, thickness: 0.8, color: colors.line });
+    y -= 18;
   }
 
   function drawLegalDetails() {
@@ -245,46 +315,27 @@ export async function renderInvoicePdf(invoiceLike: InvoicePdfInput): Promise<Ui
       invoice.taxSnapshot.statement,
       invoice.taxSnapshot.legalNotices
     ].filter(Boolean).join("\n");
-    drawFlowSection("MENTIONS FISCALES ET LÉGALES", text);
-  }
-
-  function drawFlowSection(title: string, text: string) {
     ensureSpace(46);
-    drawSectionTitle(title);
-    const lines = wrapText(text, regular, 8.3, CONTENT_WIDTH - 20);
-    const padding = 10;
-    let boxTop = y;
-    let boxPage = page;
-    let boxLineCount = 0;
-    let cursorY = y - padding - 8;
-    const closeBox = () => {
-      const height = Math.max(30, padding * 2 + boxLineCount * 11);
-      boxPage.drawRectangle({ x: MARGIN, y: boxTop - height, width: CONTENT_WIDTH, height, borderColor: colors.line, borderWidth: 0.6 });
-      y = boxTop - height;
-    };
+    drawSectionTitle("MENTIONS FISCALES ET LÉGALES");
+    const lines = wrapText(text, regular, 7.6, CONTENT_WIDTH);
+    let cursorY = y - 2;
     for (const line of lines) {
-      if (cursorY - 11 < FOOTER_TOP) {
-        closeBox();
+      if (cursorY - 10 < FOOTER_TOP) {
         addPage(false);
-        page.drawText(`${title} (suite)`, { x: MARGIN, y, size: 9, font: bold, color: colors.accent });
+        page.drawText("MENTIONS FISCALES ET LÉGALES (suite)", { x: MARGIN, y, size: 9, font: bold, color: colors.accent });
         y -= 18;
-        boxTop = y;
-        boxPage = page;
-        boxLineCount = 0;
-        cursorY = y - padding - 8;
+        cursorY = y;
       }
-      page.drawText(line || " ", { x: MARGIN + padding, y: cursorY, size: 8.3, font: regular, color: colors.carbon });
-      cursorY -= 11;
-      boxLineCount += 1;
+      page.drawText(line || " ", { x: MARGIN, y: cursorY, size: 7.6, font: regular, color: colors.metal });
+      cursorY -= 10;
     }
-    closeBox();
-    y -= 18;
+    y = cursorY - 14;
   }
 
-  function drawSectionTitle(title: string) {
+  function drawSectionTitle(title: string, spacing = 22) {
     page.drawText(title, { x: MARGIN, y, size: 9, font: bold, color: colors.accent });
     page.drawLine({ start: { x: MARGIN, y: y - 7 }, end: { x: PAGE_WIDTH - MARGIN, y: y - 7 }, thickness: 0.8, color: colors.line });
-    y -= 22;
+    y -= spacing;
   }
 
   function drawFooters() {
@@ -292,6 +343,7 @@ export async function renderInvoicePdf(invoiceLike: InvoicePdfInput): Promise<Ui
     pages.forEach((currentPage, index) => {
       currentPage.drawLine({ start: { x: MARGIN, y: 39 }, end: { x: PAGE_WIDTH - MARGIN, y: 39 }, thickness: 0.5, color: colors.line });
       currentPage.drawText(`${footerName} - SIRET ${invoice.sellerSnapshot.siret}`, { x: MARGIN, y: 24, size: 7, font: regular, color: colors.metal });
+      drawCentered(currentPage, invoice.invoiceNumber, PAGE_WIDTH / 2, 24, regular, 7, colors.metal);
       drawRight(currentPage, `Page ${index + 1} / ${pages.length}`, PAGE_WIDTH - MARGIN, 24, regular, 7, colors.metal);
     });
   }
@@ -440,7 +492,7 @@ function formatMoney(cents: number, currency: string) {
 }
 
 function formatTaxRate(rateBps: number | null) {
-  if (rateBps === null) return "-";
+  if (rateBps === null) return "N/A";
   return `${new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 2 }).format(rateBps / 100)} %`;
 }
 
@@ -461,7 +513,7 @@ function buyerDisplayLines(buyer: InvoiceBuyerSnapshot) {
   const billing = addressLines(buyer.billingAddress).filter((line, index) =>
     index !== 0 || (line !== buyer.name && line !== buyer.companyName)
   );
-  const lines = [
+  return [
     buyer.companyName || buyer.name,
     ...(buyer.companyName && buyer.companyName !== buyer.name ? [buyer.name] : []),
     ...billing,
@@ -469,10 +521,6 @@ function buyerDisplayLines(buyer: InvoiceBuyerSnapshot) {
     ...(buyer.vatNumber ? [`TVA intracommunautaire : ${buyer.vatNumber}`] : []),
     ...(buyer.email ? [buyer.email] : [])
   ];
-  if (buyer.shippingAddress && !sameAddress(buyer.billingAddress, buyer.shippingAddress)) {
-    lines.push("Livraison :", ...addressLines(buyer.shippingAddress));
-  }
-  return lines;
 }
 
 function addressLines(address: InvoiceAddressSnapshot) {
@@ -522,6 +570,29 @@ function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): 
 
 function drawRight(page: PDFPage, text: string, right: number, y: number, font: PDFFont, size: number, color = colors.carbon) {
   page.drawText(text, { x: right - font.widthOfTextAtSize(text, size), y, size, font, color });
+}
+
+function drawInvoiceWordmark(page: PDFPage, font: PDFFont) {
+  const fontSize = 27;
+  const baseline = PAGE_HEIGHT - 65;
+  const textHeight = font.heightAtSize(fontSize, { descender: false });
+  const markScale = textHeight / (BRAND_MARK_K_BOTTOM - BRAND_MARK_K_TOP);
+  const markWidth = BRAND_MARK_VIEWBOX_WIDTH * markScale;
+  const markTop = baseline + BRAND_MARK_K_BOTTOM * markScale;
+  brandMarkPaths.forEach(({ path, color }) => {
+    page.drawSvgPath(path, { x: MARGIN, y: markTop, scale: markScale, color });
+  });
+  page.drawText("AYART", {
+    x: MARGIN + markWidth + BRAND_MARK_GAP,
+    y: baseline,
+    size: fontSize,
+    font,
+    color: colors.carbon
+  });
+}
+
+function drawCentered(page: PDFPage, text: string, center: number, y: number, font: PDFFont, size: number, color = colors.carbon) {
+  page.drawText(text, { x: center - font.widthOfTextAtSize(text, size) / 2, y, size, font, color });
 }
 
 function drawBrandStripe(page: PDFPage) {
