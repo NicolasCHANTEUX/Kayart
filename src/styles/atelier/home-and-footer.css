@@ -77,6 +77,9 @@
 .manifesto-grid em { color:var(--accent); }
 .manifesto-grid p { color:#000; }
 .manifesto-grid p:not(.lead) { font-size:14px; line-height:1.6; margin-bottom:16px; }
+.manifesto-visual { position:relative; height:clamp(190px,24vw,300px); margin:28px 0 0; overflow:hidden; border:1px solid var(--line); border-radius:4px; background:#f7f9fc; }
+.manifesto-visual::after { content:""; position:absolute; right:0; bottom:0; left:0; height:4px; background:var(--brand-stripe); pointer-events:none; }
+.manifesto-visual__image { object-fit:cover; object-position:center; }
 .site-footer { position:relative; background:#0d0f15; color:#fff; border-top:0; padding:4px 0 0; }
 .site-footer::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--brand-stripe); }
 .site-footer a:focus-visible { outline:2px solid var(--yellow); outline-offset:4px; }

@@ -107,6 +107,7 @@
  .service-tile { padding:16px; min-height:0; } .service-tile h3 { font-size:23px; margin-top:14px; }
  .atelier-services .section__header>p { margin-top:12px; }
  .manifesto-grid h2 br { display:none; } .manifesto-grid p.lead { font-size:15px; }
+ .manifesto-visual { height:clamp(150px,44vw,210px); margin-top:18px; }
  .footer-cta__inner { grid-template-columns:1fr; gap:8px; padding-block:16px; }
  .footer-cta h2>span { margin-bottom:4px; font-size:10px; }
  .footer-cta h2 a { font-size:32px; }

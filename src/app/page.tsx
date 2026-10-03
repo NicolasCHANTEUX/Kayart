@@ -1,8 +1,10 @@
 ﻿import Link from "next/link";
 import { FeaturedProductsCarousel } from "@/components/catalog/featured-products-carousel";
+import Image from "next/image";
 import { ProductCard } from "@/components/catalog/product-card";
 import { KayartHeroMark } from "@/components/layout/kayart-brand";
 import { listFeaturedProducts } from "@/server/catalog/catalog.service";
+import atelierDiscussionImage from "../../public/brand/Atelier de kayak en pleine discussion.webp";
 
 export default async function HomePage() {
   const products = await listFeaturedProducts();
@@ -27,6 +29,6 @@ export default async function HomePage() {
         <Link href="/sur-mesure" className="service-tile service-tile--custom"><span className="mono">02 — IMAGINER</span><div className="service-cross-art" aria-hidden="true">+</div><h3>À votre mesure.</h3><p>Un usage précis, une forme en tête, une contrainte technique : donnons un point de départ à votre projet.</p><span className="service-tile__cta">Parler de mon projet <b aria-hidden="true">↗</b></span></Link>
       </div>
     </div></section>
-    <section className="section atelier-manifesto"><div className="container home-content-panel"><div className="eyebrow">03 / L’esprit KayArt</div><div className="manifesto-grid"><h2>Le bon matériel <br/>commence par <br/><em>un échange.</em></h2><div><p className="lead">Comprendre votre pratique. Choisir une pièce adaptée. Prendre le temps de discuter des contraintes avant de fabriquer ou de réparer.</p><p>C’est cette relation directe avec l’atelier que vous retrouvez chez KayArt, de la première question au retrait de votre pièce.</p><Link className="button button--ghost" href="/contact">Échanger avec l’atelier ↗</Link></div></div></div></section>
+    <section className="section atelier-manifesto"><div className="container home-content-panel"><div className="eyebrow">03 / L’esprit KayArt</div><div className="manifesto-grid"><h2>Le bon matériel <br/>commence par <br/><em>un échange.</em></h2><div><p className="lead">Comprendre votre pratique. Choisir une pièce adaptée. Prendre le temps de discuter des contraintes avant de fabriquer ou de réparer.</p><p>C’est cette relation directe avec l’atelier que vous retrouvez chez KayArt, de la première question au retrait de votre pièce.</p><Link className="button button--ghost" href="/contact">Échanger avec l’atelier ↗</Link></div></div><figure className="manifesto-visual"><Image alt="Un artisan KayArt échange avec une cliente autour d’une pagaie de kayak." className="manifesto-visual__image" fill sizes="(max-width: 800px) calc(100vw - 60px), 1100px" src={atelierDiscussionImage}/></figure></div></section>
   </div>;
 }
