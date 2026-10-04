@@ -95,6 +95,7 @@
 .footer-cta h2 { margin:0; line-height:1.15; }
 .footer-cta h2>span { display:block; margin-bottom:8px; color:#bcc1ce; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
 .footer-cta h2 a { display:inline-block; color:var(--yellow); font-size:clamp(32px,3.5vw,46px); letter-spacing:-.045em; }
+.footer-cta h2 a>span { display:inline-block; inline-size:.8em; font-family:Arial,sans-serif; line-height:1; letter-spacing:0; text-align:center; }
 .footer-cta__copy { max-width:360px; }
 .footer-cta__copy p { margin:0 0 8px; color:#bcc1ce; font-size:14px; line-height:1.65; }
 .footer-cta__link { display:inline-flex; align-items:center; gap:20px; min-height:44px; border-bottom:1px solid #ffffff40; font-size:13px; font-weight:600; }

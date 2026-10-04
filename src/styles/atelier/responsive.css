@@ -25,6 +25,7 @@
  .footer-legal a { min-height:32px; }
 }
 @media (max-width:800px) {
+ .route-loading-screen { min-height:calc(100vh - 60px); min-height:calc(100svh - 60px); }
  .footer-main { grid-template-columns:1fr 1fr; gap:24px; }
  .footer-identity { grid-column:1 / -1; }
  .footer-navigation a,.footer-contact a,.footer-legal a { min-height:44px; }

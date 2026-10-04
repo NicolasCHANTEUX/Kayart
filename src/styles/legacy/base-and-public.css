@@ -81,7 +81,13 @@ select {
 .route-loading-overlay .route-loading-indicator { display: none; }
 
 .route-loading-screen {
-  min-height: 58vh;
+  /*
+   * Keep the streamed footer outside the initial viewport while a route is
+   * waiting for its server data. Without this reservation the footer paints
+   * below a short loader, then jumps when the catalogue is inserted.
+   */
+  min-height: calc(100vh - 64px);
+  min-height: calc(100svh - 64px);
   display: grid;
   place-items: center;
   background: var(--ivory);
