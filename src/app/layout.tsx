@@ -20,9 +20,7 @@ const pwaInstallBootstrap = `
       window.dispatchEvent(new Event("kayart:pwa-install-ready"));
     });
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});
-      }, { once: true });
+      navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});
     }
   })();
 `;

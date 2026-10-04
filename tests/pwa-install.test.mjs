@@ -24,7 +24,7 @@ test('PWA manifest exposes a stable identity and raster install icons', async ()
   }
 });
 
-test('the root install experience registers the worker and waits for a user gesture', () => {
+test('the root install experience only appears when the native prompt is ready', () => {
   const layout = fs.readFileSync('src/app/layout.tsx', 'utf8');
   const prompt = fs.readFileSync('src/components/pwa/pwa-install-prompt.tsx', 'utf8');
 
@@ -35,11 +35,11 @@ test('the root install experience registers the worker and waits for a user gest
   assert.match(prompt, /beforeinstallprompt/);
   assert.match(prompt, /kayart:pwa-install-ready/);
   assert.match(prompt, /revealSavedPrompt\(\)/);
-  assert.match(prompt, /getChromeInstallationCandidate\(\)/);
-  assert.match(prompt, /Installer et créer un raccourci/);
-  assert.match(prompt, /Comment installer l’application/);
+  assert.match(prompt, /if \(!canInstall \|\| pathname !== "\/"\)/);
+  assert.match(prompt, />\s*Installer l’application\s*</);
   assert.match(prompt, /await prompt\.prompt\(\)/);
   assert.match(prompt, /pathname !== "\/"/);
+  assert.doesNotMatch(prompt, /Comment installer l’application/);
 });
 
 test('the service worker caches only the public offline shell', () => {
