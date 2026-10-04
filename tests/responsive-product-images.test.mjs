@@ -14,7 +14,9 @@ test('public product cards request responsive optimized images', () => {
   assert.match(image, /sizes && isOptimizablePublicProductImage\(src\)/);
   assert.match(image, /quality=\{80\}/);
   assert.match(card, /sizes=\{productCardImageSizes\}/);
-  assert.match(shop, /eager=\{index === 0\}/);
+  assert.match(card, /highPriority=\{highPriority\}/);
+  assert.match(shop, /eager=\{index < 3\}/);
+  assert.match(shop, /highPriority=\{index === 0\}/);
 });
 
 test('the product gallery keeps large delivery for visible and opened media only', () => {

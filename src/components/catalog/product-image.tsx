@@ -7,6 +7,7 @@ type ProductImageViewProps = {
   alt: string;
   thumbnail?: boolean;
   eager?: boolean;
+  highPriority?: boolean;
   brandedFallback?: boolean;
   sizes?: string;
 };
@@ -22,8 +23,9 @@ export function UnavailableImageArt() {
   </svg>;
 }
 
-export function ProductImageView({ src, alt, thumbnail = false, eager = false, brandedFallback = false, sizes }: ProductImageViewProps) {
+export function ProductImageView({ src, alt, thumbnail = false, eager = false, highPriority, brandedFallback = false, sizes }: ProductImageViewProps) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const shouldPrioritize = highPriority ?? eager;
   if (!src || failedSrc === src) return <span className={`image-unavailable${thumbnail ? " image-unavailable--thumbnail" : ""}${brandedFallback ? " image-unavailable--branded" : ""}`} role={thumbnail ? undefined : "img"} aria-label={thumbnail ? undefined : alt || "Visuel indisponible"}>
     {brandedFallback ? <svg className="unavailable-mark" viewBox="155 149 767 654" aria-hidden="true"><path fill="currentColor" d="M376 149H540L443 434 715 149H922L589 475 699 803H499L419 509 318 803H155Z" /></svg> : <UnavailableImageArt />}
     {thumbnail ? null : <span>Visuel indisponible</span>}
@@ -33,7 +35,7 @@ export function ProductImageView({ src, alt, thumbnail = false, eager = false, b
     return <Image
       alt={alt}
       decoding="async"
-      fetchPriority={eager ? "high" : "auto"}
+      fetchPriority={shouldPrioritize ? "high" : "auto"}
       fill
       loading={eager ? "eager" : "lazy"}
       onError={() => setFailedSrc(src)}
@@ -45,7 +47,7 @@ export function ProductImageView({ src, alt, thumbnail = false, eager = false, b
 
   // Native requests preserve session cookies for private images and support local blob previews.
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" fetchPriority={eager ? "high" : undefined} onError={() => setFailedSrc(src)} />;
+  return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" fetchPriority={shouldPrioritize ? "high" : undefined} onError={() => setFailedSrc(src)} />;
 }
 
 function isOptimizablePublicProductImage(src: string) {

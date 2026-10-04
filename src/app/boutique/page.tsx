@@ -56,7 +56,7 @@ export default async function ShopPage({ searchParams }: { searchParams?: Promis
         {!result.total ? <p className="shop-empty">Aucun produit ne correspond à ces critères. Modifiez les filtres ou <Link href="/boutique">affichez tout le catalogue</Link>.</p> : null}
         <div className="grid">
           {products.map((product, index) => (
-            <ProductCard eager={index === 0} key={product.id} product={product} />
+            <ProductCard eager={index < 3} highPriority={index === 0} key={product.id} product={product} />
           ))}
         </div>
         <Pagination path="/boutique" {...result} />
