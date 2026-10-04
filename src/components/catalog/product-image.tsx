@@ -1,5 +1,16 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
+
+type ProductImageViewProps = {
+  src?: string;
+  alt: string;
+  thumbnail?: boolean;
+  eager?: boolean;
+  brandedFallback?: boolean;
+  sizes?: string;
+};
+
 export function UnavailableImageArt() {
   return <svg className="unavailable-art" viewBox="0 0 64 64" fill="none" aria-hidden="true">
     <path d="M10 14H54V52H10Z" stroke="#105bc6" strokeWidth="3" />
@@ -10,14 +21,42 @@ export function UnavailableImageArt() {
     <path d="m44 24 6 6m0-6-6 6M20 44q12-10 24 0" stroke="#151720" strokeWidth="3" strokeLinecap="round" />
   </svg>;
 }
-export function ProductImageView({ src, alt, thumbnail = false, eager = false, brandedFallback = false }: { src?: string; alt: string; thumbnail?: boolean; eager?: boolean; brandedFallback?: boolean }) {
+
+export function ProductImageView({ src, alt, thumbnail = false, eager = false, brandedFallback = false, sizes }: ProductImageViewProps) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
   if (!src || failedSrc === src) return <span className={`image-unavailable${thumbnail ? " image-unavailable--thumbnail" : ""}${brandedFallback ? " image-unavailable--branded" : ""}`} role={thumbnail ? undefined : "img"} aria-label={thumbnail ? undefined : alt || "Visuel indisponible"}>
     {brandedFallback ? <svg className="unavailable-mark" viewBox="155 149 767 654" aria-hidden="true"><path fill="currentColor" d="M376 149H540L443 434 715 149H922L589 475 699 803H499L419 509 318 803H155Z" /></svg> : <UnavailableImageArt />}
     {thumbnail ? null : <span>Visuel indisponible</span>}
   </span>;
+
+  if (sizes && isOptimizablePublicProductImage(src)) {
+    return <Image
+      alt={alt}
+      decoding="async"
+      fetchPriority={eager ? "high" : "auto"}
+      fill
+      loading={eager ? "eager" : "lazy"}
+      onError={() => setFailedSrc(src)}
+      quality={80}
+      sizes={sizes}
+      src={src}
+    />;
+  }
+
   // Native requests preserve session cookies for private images and support local blob previews.
-  // Uploaded product images are already resized and encoded as WebP on the server.
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" onError={() => setFailedSrc(src)} />;
+  return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" fetchPriority={eager ? "high" : undefined} onError={() => setFailedSrc(src)} />;
+}
+
+function isOptimizablePublicProductImage(src: string) {
+  if (src.startsWith("/uploads/")) return true;
+
+  try {
+    const url = new URL(src);
+    return url.protocol === "https:"
+      && url.hostname.endsWith(".supabase.co")
+      && url.pathname.startsWith("/storage/v1/object/public/product-images/");
+  } catch {
+    return false;
+  }
 }

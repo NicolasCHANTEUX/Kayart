@@ -150,7 +150,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       <div className="product-gallery__stage">
         {currentImage ? (
           <button aria-label={`Agrandir l’image ${currentIndex + 1} de ${title}`} className="product-gallery__open" onClick={openLightbox} ref={openButtonRef} type="button">
-            <ProductImageView eager alt={currentImage.altText ?? title} src={currentImage.url} />
+            <ProductImageView eager alt={currentImage.altText ?? title} sizes="(max-width: 900px) calc(100vw - 32px), 640px" src={currentImage.url} />
             <span aria-hidden="true" className="product-gallery__expand"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M7 2H2v5M13 2h5v5M2 13v5h5m11-5v5h-5" /></svg>Agrandir</span>
           </button>
         ) : (
@@ -169,7 +169,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
         <div aria-label="Images du produit" className="product-gallery__thumbs">
           {sortedImages.map((image, index) => (
             <button aria-current={index === currentIndex ? "true" : undefined} aria-label={`Afficher l’image ${index + 1}`} className="product-gallery__thumb" key={image.id} onClick={() => selectImage(index)} type="button">
-              <ProductImageView thumbnail alt="" src={image.url} />
+              <ProductImageView thumbnail alt="" sizes="(max-width: 900px) 18vw, 120px" src={image.url} />
             </button>
           ))}
         </div>
@@ -183,7 +183,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           </div>
           <div className="product-lightbox__viewport" data-zoomed={zoom > 1} onDoubleClick={event => { if (!(event.target as Element).closest("button")) applyZoom(zoomRef.current === 1 ? 2.5 : 1, { x: event.clientX, y: event.clientY }); }} onPointerCancel={event => handlePointerEnd(event, true)} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerEnd} ref={viewportRef}>
             <div className="product-lightbox__media" style={{ transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})` }}>
-              <ProductImageView eager alt={currentImage.altText ?? title} src={currentImage.url} />
+              {isOpen ? <ProductImageView eager alt={currentImage.altText ?? title} sizes="100vw" src={currentImage.url} /> : null}
             </div>
             {hasMultipleImages ? (
               <>

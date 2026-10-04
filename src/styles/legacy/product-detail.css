@@ -113,6 +113,7 @@
 }
 
 .product-gallery__thumb {
+  position: relative;
   aspect-ratio: 1;
   overflow: hidden;
   border: 2px solid transparent;
