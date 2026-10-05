@@ -37,6 +37,31 @@ test('PWA manifest exposes a stable identity and raster install icons', async ()
   assert.equal(manifest.icons.some(icon => icon.type === 'image/svg+xml'), false);
 });
 
+test('the Windows favicon contains rounded transparent PNG sizes', async () => {
+  const favicon = fs.readFileSync('src/app/favicon.ico');
+  const count = favicon.readUInt16LE(4);
+
+  assert.deepEqual(
+    Array.from({ length: count }, (_, index) => favicon[6 + index * 16] || 256),
+    [16, 32, 48, 64, 128, 256],
+  );
+
+  for (let index = 0; index < count; index += 1) {
+    const entryOffset = 6 + index * 16;
+    const size = favicon[entryOffset] || 256;
+    const byteLength = favicon.readUInt32LE(entryOffset + 8);
+    const imageOffset = favicon.readUInt32LE(entryOffset + 12);
+    const image = favicon.subarray(imageOffset, imageOffset + byteLength);
+    const { data, info } = await sharp(image).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const alphaAt = (x, y) => data[(y * info.width + x) * info.channels + 3];
+
+    assert.equal(info.width, size);
+    assert.equal(info.height, size);
+    assert.ok(alphaAt(0, 0) <= 8, `${size}px favicon must have a transparent corner`);
+    assert.ok(alphaAt(size - 1, size - 1) <= 8, `${size}px favicon must have a transparent corner`);
+  }
+});
+
 test('the root install experience only appears when the native prompt is ready', () => {
   const layout = fs.readFileSync('src/app/layout.tsx', 'utf8');
   const prompt = fs.readFileSync('src/components/pwa/pwa-install-prompt.tsx', 'utf8');
