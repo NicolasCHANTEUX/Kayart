@@ -15,8 +15,6 @@ const rateLimitStore = new Map<string, RateLimitEntry>();
 const MAX_RATE_LIMIT_ENTRIES = 5000;
 const MAX_RATE_LIMIT_KEY_LENGTH = 512;
 const MAX_EMAIL_LENGTH = 254;
-const AUTH_CLIENT_LIMIT = 60;
-const AUTH_CLIENT_WINDOW_MS = 15 * 60 * 1000;
 
 export class RateLimitError extends Error {
   constructor() {
@@ -87,11 +85,6 @@ export function enforceRateLimit({ key, limit, windowMs }: RateLimitOptions) {
   }
 
   existing.count += 1;
-}
-
-export function enforceAuthRateLimit(clientKey: string, options: RateLimitOptions) {
-  enforceRateLimit({ key: clientKey, limit: AUTH_CLIENT_LIMIT, windowMs: AUTH_CLIENT_WINDOW_MS });
-  enforceRateLimit(options);
 }
 
 function assertSameOrigin({

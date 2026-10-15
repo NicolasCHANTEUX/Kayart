@@ -224,3 +224,27 @@ test('persistent rate limiting hashes identifiers and fails closed at the databa
  assert.match(queryValues[0],/^[a-f0-9]{64}$/);assert.equal(queryValues.includes('ip:192.0.2.1'),false);
  allow=false;await assert.rejects(limiter.enforcePersistentRequestLimit('ip:192.0.2.1',5,60000));
 });
+
+test('auth limits share counters across module instances and reject before the email attempt',async()=>{
+ const counters=new Map();
+ const calls=[];
+ const db={
+  $queryRaw:async(_,...values)=>{
+   const [key,,limit]=values;
+   calls.push({key,limit});
+   const next=(counters.get(key)??0)+1;
+   if(next>limit)return [];
+   counters.set(key,next);
+   return [{count:next}];
+  },
+  requestRateLimit:{deleteMany:async()=>{}}
+ };
+ const mocks={'@/server/db/prisma':{getPrismaClient:()=>db},'@/server/security/request-guards':{RateLimitError:class extends Error{}}};
+ const first=load('src/server/requests/request-rate-limit.ts',mocks,{REQUEST_RATE_LIMIT_SECRET:'test-only-secret'});
+ const second=load('src/server/requests/request-rate-limit.ts',mocks,{REQUEST_RATE_LIMIT_SECRET:'test-only-secret'});
+ for(let i=0;i<60;i++)await (i%2?second:first).enforcePersistentAuthLimit('auth:192.0.2.1',`login:192.0.2.1:user${i}@example.com`,8,900000);
+ const before=calls.length;
+ await assert.rejects(second.enforcePersistentAuthLimit('auth:192.0.2.1','login:192.0.2.1:next@example.com',8,900000));
+ assert.equal(calls.length,before+1);
+ await first.enforcePersistentAuthLimit('auth:192.0.2.2','login:192.0.2.2:other@example.com',8,900000);
+});

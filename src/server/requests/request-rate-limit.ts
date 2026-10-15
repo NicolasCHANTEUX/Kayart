@@ -18,3 +18,8 @@ export async function enforcePersistentRequestLimit(identifier: string, limit: n
   if (!accepted.length) throw new RateLimitError();
   await prisma.requestRateLimit.deleteMany({ where: { resetAt: { lt: new Date() } } });
 }
+
+export async function enforcePersistentAuthLimit(clientKey: string, emailKey: string, emailLimit: number, emailWindowMs: number) {
+  await enforcePersistentRequestLimit(clientKey, 60, 15 * 60 * 1000);
+  await enforcePersistentRequestLimit(emailKey, emailLimit, emailWindowMs);
+}

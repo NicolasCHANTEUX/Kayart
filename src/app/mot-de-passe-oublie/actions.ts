@@ -7,11 +7,11 @@ import {
   requestPasswordRecovery
 } from "@/server/auth/supabase-auth";
 import {
-  enforceAuthRateLimit,
   getActionClientKey,
   RateLimitError,
   requireSameOriginAction
 } from "@/server/security/request-guards";
+import { enforcePersistentAuthLimit } from "@/server/requests/request-rate-limit";
 
 export async function passwordRecoveryAction(formData: FormData) {
   await requireSameOriginAction();
@@ -20,11 +20,12 @@ export async function passwordRecoveryAction(formData: FormData) {
 
   try {
     email = readRequiredField(formData, "email").toLowerCase();
-    enforceAuthRateLimit(await getActionClientKey("auth"), {
-      key: await getActionClientKey("password-recovery", email),
-      limit: 5,
-      windowMs: 60 * 60 * 1000
-    });
+    await enforcePersistentAuthLimit(
+      await getActionClientKey("auth"),
+      await getActionClientKey("password-recovery", email),
+      5,
+      60 * 60 * 1000
+    );
 
     await requestPasswordRecovery(email);
   } catch (error) {

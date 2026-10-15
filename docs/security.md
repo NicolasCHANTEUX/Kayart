@@ -17,6 +17,7 @@ Le 13 septembre, le compte indiqué par l’exploitant a été trouvé admin, co
 - Transactions, prix serveur, idempotence et signatures Stripe pour les paiements de test.
 - RLS, contraintes, index et droits : voir [le durcissement DB](database-hardening.md) ; les fichiers ne prouvent pas l’état d’un nouvel environnement.
 - CSP et autres en-têtes présents ; `script-src 'unsafe-inline'` reste à remplacer par une stratégie nonce/hash testée avec Next avant de déclarer la CSP stricte.
+- Connexion, inscription et récupération de mot de passe utilisent `request_rate_limits` dans PostgreSQL. `DATABASE_URL` et un secret serveur de limitation (`REQUEST_RATE_LIMIT_SECRET` ou clé Supabase serveur) sont nécessaires ; les compteurs sont partagés entre instances. Les autres limites en mémoire restent locales au processus.
 - `unsafe-eval` est autorisé uniquement avec `NODE_ENV=development`, pour le runtime local de Next.js. Les tests vérifient son absence en production et l’ouverture réelle du menu administrateur en développement ; voir [le correctif](admin-menu-fix.md).
 - AuditLog existe au schéma sans journalisation applicative systématique ; conservation et purge des médias restent à définir.
 - Les tests automatisés et l’audit de dépendances ne constituent pas une certification de sécurité ni un test d’intrusion complet.

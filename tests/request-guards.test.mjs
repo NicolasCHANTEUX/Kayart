@@ -12,18 +12,9 @@ test('auth keys accept normal email and reject oversized identifiers before inse
   const guard = guards();
   const key = await guard.getActionClientKey('login', ' User@Example.com ');
   assert.equal(key, 'login:192.0.2.1:user@example.com');
-  guard.enforceAuthRateLimit('auth:192.0.2.1', { key, limit: 8, windowMs: 900000 });
+  guard.enforceRateLimit({ key, limit: 8, windowMs: 900000 });
   await assert.rejects(guard.getActionClientKey('login', 'a'.repeat(255)), guard.RateLimitError);
   assert.throws(() => guard.enforceRateLimit({ key: 'x'.repeat(513), limit: 1, windowMs: 900000 }), guard.RateLimitError);
-});
-
-test('rotating emails from one client reaches its quota without blocking another client', async () => {
-  const guard = guards();
-  for (let i = 0; i < 60; i++) {
-    guard.enforceAuthRateLimit('auth:192.0.2.1', { key: `login:192.0.2.1:user${i}@example.com`, limit: 8, windowMs: 900000 });
-  }
-  assert.throws(() => guard.enforceAuthRateLimit('auth:192.0.2.1', { key: 'login:192.0.2.1:next@example.com', limit: 8, windowMs: 900000 }), guard.RateLimitError);
-  guard.enforceAuthRateLimit('auth:192.0.2.2', { key: 'login:192.0.2.2:other@example.com', limit: 8, windowMs: 900000 });
 });
 
 test('store saturation fails closed without evicting active counters', () => {
@@ -42,4 +33,34 @@ test('expired entries make room for new keys', async () => {
   await new Promise((resolve) => setTimeout(resolve, 5));
   guard.enforceRateLimit({ key: 'new', limit: 1, windowMs: 60000 });
   guard.enforceRateLimit({ key: 'old', limit: 1, windowMs: 60000 });
+});
+
+test('all public auth actions check the shared limit before contacting the auth provider', async () => {
+  const cases = [
+    ['src/app/connexion/actions.ts', 'loginAction', 'signInWithPassword'],
+    ['src/app/inscription/actions.ts', 'signupAction', 'signUpWithPassword'],
+    ['src/app/mot-de-passe-oublie/actions.ts', 'passwordRecoveryAction', 'requestPasswordRecovery']
+  ];
+  for (const [file, action, provider] of cases) {
+    let contacted = false;
+    const guardsMock = {
+      requireSameOriginAction: async () => {},
+      getActionClientKey: async (scope) => `${scope}:192.0.2.1`,
+      RateLimitError: class extends Error {}
+    };
+    const module = load(file, {
+      'next/navigation': { redirect: (target) => { throw new Error(`REDIRECT:${target}`); } },
+      '@/server/security/request-guards': guardsMock,
+      '@/server/requests/request-rate-limit': { enforcePersistentAuthLimit: async () => { throw new guardsMock.RateLimitError(); } },
+      '@/server/auth/supabase-auth': { [provider]: async () => { contacted = true; } },
+      '@/server/auth/session': {},
+      '@/lib/safe-redirect': { sanitizeRedirectPath: () => '' }
+    });
+    const form = new FormData();
+    form.set('email', 'user@example.com');
+    form.set('password', 'password123');
+    form.set('passwordConfirmation', 'password123');
+    await assert.rejects(module[action](form), /REDIRECT:/);
+    assert.equal(contacted, false, action);
+  }
 });

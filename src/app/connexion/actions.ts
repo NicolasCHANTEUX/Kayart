@@ -13,11 +13,11 @@ import {
   signInWithPassword
 } from "@/server/auth/supabase-auth";
 import {
-  enforceAuthRateLimit,
   getActionClientKey,
   RateLimitError,
   requireSameOriginAction
 } from "@/server/security/request-guards";
+import { enforcePersistentAuthLimit } from "@/server/requests/request-rate-limit";
 
 export async function loginAction(formData: FormData) {
   await requireSameOriginAction();
@@ -28,11 +28,12 @@ export async function loginAction(formData: FormData) {
 
   try {
     email = readRequiredField(formData, "email").toLowerCase();
-    enforceAuthRateLimit(await getActionClientKey("auth"), {
-      key: await getActionClientKey("login", email),
-      limit: 8,
-      windowMs: 15 * 60 * 1000
-    });
+    await enforcePersistentAuthLimit(
+      await getActionClientKey("auth"),
+      await getActionClientKey("login", email),
+      8,
+      15 * 60 * 1000
+    );
 
     const password = readRequiredField(formData, "password");
     const passwordSession = await signInWithPassword(email, password);
