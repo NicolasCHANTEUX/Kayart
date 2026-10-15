@@ -1,4 +1,5 @@
 import { CheckoutPage } from "@/components/cart/checkout-page";
+import { getCurrentAuthSession } from "@/server/auth/session";
 
 export const metadata = {
   title: "Votre commande",
@@ -6,10 +7,11 @@ export const metadata = {
   robots: { index: false, follow: false }
 };
 
-export default function OrderPage() {
+export default async function OrderPage() {
+  const session = await getCurrentAuthSession();
   return <section className="section section--light"><div className="container">
     <div className="eyebrow">Panier / Commande</div>
     <h1 className="page-title">Préparer votre commande</h1>
-    <CheckoutPage />
+    <CheckoutPage accountEmail={session?.user.email ?? null} />
   </div></section>;
 }

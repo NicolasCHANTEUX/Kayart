@@ -6,8 +6,12 @@ import { getTestStripe, isTestCheckoutEnabled } from "@/server/checkout/stripe";
 import { checkoutTransaction } from "@/server/checkout/transactions";
 import type { CheckoutInput } from "@/server/checkout/checkout-input";
 import { releaseRejectedCheckout } from "@/server/checkout/settlement";
+import type { AuthenticatedUser } from "@/types/auth";
 
-export async function startTestCheckout(input: CheckoutInput) {
+export async function startTestCheckout(input: CheckoutInput, authenticatedUser: AuthenticatedUser | null = null) {
+  if (authenticatedUser && input.email.trim().toLowerCase() !== authenticatedUser.email.trim().toLowerCase()) {
+    throw new Error("Utilisez l’adresse email de votre compte pour cette commande.");
+  }
   if (!isTestCheckoutEnabled()) throw new Error("Le paiement de test n’est pas encore disponible. Contactez l’atelier.");
   const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
   const origin = new URL(configuredUrl).origin;
@@ -19,8 +23,20 @@ export async function startTestCheckout(input: CheckoutInput) {
     const existing = await tx.order.findUnique({ where: { checkoutKey }, include: { items: true, checkoutHolds: true } });
     if (existing) {
       if (existing.checkoutFingerprint !== fingerprint || existing.paymentStatus !== "pending") throw new Error("Cette tentative a changé ou est terminée. Revenez au panier.");
+      if (existing.customerId) {
+        const owner = authenticatedUser ? await tx.customer.findUnique({ where: { authUserId: authenticatedUser.id }, select: { id: true } }) : null;
+        if (owner?.id !== existing.customerId) throw new Error("Cette tentative appartient à un autre compte.");
+      } else if (authenticatedUser) {
+        throw new Error("Cette tentative invitée doit être reprise hors du compte.");
+      }
       return existing;
     }
+    const customer = authenticatedUser ? await tx.customer.upsert({
+      where: { authUserId: authenticatedUser.id },
+      create: { authUserId: authenticatedUser.id, email: authenticatedUser.email.trim().toLowerCase() },
+      update: { updatedAt: new Date() },
+      select: { id: true }
+    }) : null;
     const products = await tx.product.findMany({ where: { id: { in: input.items.map(item => item.productId) } } });
     const items = input.items.map(item => {
       const product = products.find(product => product.id === item.productId);
@@ -43,7 +59,7 @@ export async function startTestCheckout(input: CheckoutInput) {
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
     return tx.order.create({ data: {
       orderNumber: `KT-TEST-${randomUUID()}`, checkoutKey, checkoutFingerprint: fingerprint, isTest: true,
-      guestEmail: input.email, customerName: input.name, fulfillmentMethod: input.method, shippingZoneId: input.shippingZoneId,
+      customerId: customer?.id, guestEmail: input.email, customerName: input.name, fulfillmentMethod: input.method, shippingZoneId: input.shippingZoneId,
       shippingAddress: input.address ?? undefined, customerNote: input.method === "pickup" ? "Retrait gratuit à l’atelier, sur rendez-vous." : "Livraison selon la zone sélectionnée.",
       subtotalCents, shippingCents, totalCents: subtotalCents + shippingCents,
       items: { create: items.map(item => ({ productId: item.product.id, productName: item.product.name, productSku: item.product.sku, quantity: item.quantity, unitPriceCents: item.product.priceCents!, totalCents: item.totalCents })) },

@@ -6,7 +6,7 @@ import { formatMoneyCents } from "@/lib/format";
 import { attemptStorageKey, useCart } from "./use-cart";
 import { CartFeedback, CartTotals, DeliveryOptions, EmptyCart, OrderingUnavailable, PendingAttempt } from "./cart-shared";
 
-export function CheckoutPage() {
+export function CheckoutPage({ accountEmail = null }: { accountEmail?: string | null }) {
   const cart = useCart();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
@@ -61,8 +61,8 @@ export function CheckoutPage() {
           <div className="form-notice">Vous êtes dans le parcours de test KayArt. Aucun achat réel : utilisez uniquement des coordonnées de test.</div>
           <fieldset disabled={pending || !!cart.attemptKey}><legend>Vos coordonnées de test</legend>
             <label>Nom complet<input name="name" required maxLength={120} autoComplete="name" /></label>
-            <label>Email<input name="email" type="email" required maxLength={254} autoComplete="email" /></label>
-            <p className="cart-hint">Aucun compte n’est nécessaire pour poursuivre.</p>
+            <label>Email<input name="email" type="email" required maxLength={254} autoComplete="email" defaultValue={accountEmail ?? ""} readOnly={!!accountEmail} /></label>
+            <p className="cart-hint">{accountEmail ? "Cette commande sera liée à votre compte." : "Aucun compte n’est nécessaire pour poursuivre."}</p>
           </fieldset>
           <DeliveryOptions cart={cart} disabled={pending || !!cart.attemptKey} />
           {cart.delivery.method === "shipping" ? <fieldset disabled={pending || !!cart.attemptKey}><legend>Adresse de livraison de test</legend>

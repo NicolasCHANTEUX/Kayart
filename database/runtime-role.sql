@@ -3,7 +3,9 @@ GRANT USAGE ON SCHEMA public TO kayart_app;
 GRANT SELECT, INSERT, UPDATE ON public.products, public.orders, public.contact_requests, public.repair_requests, public.custom_requests TO kayart_app;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.categories, public.product_attributes, public.product_images, public.request_rate_limits TO kayart_app;
 GRANT SELECT, INSERT ON public.media_assets, public.order_items, public.request_media TO kayart_app;
-GRANT SELECT (id, auth_user_id, role) ON public.customers TO kayart_app;
+GRANT SELECT (id, auth_user_id, role, email, first_name, last_name, phone) ON public.customers TO kayart_app;
+GRANT INSERT (auth_user_id, email, first_name, last_name, phone) ON public.customers TO kayart_app;
+GRANT UPDATE (first_name, last_name, phone, updated_at) ON public.customers TO kayart_app;
 GRANT SELECT, INSERT, UPDATE ON public.shipping_zones, public.checkout_holds TO kayart_app;
 GRANT SELECT, INSERT ON public.stripe_events TO kayart_app;
 REVOKE ALL ON public.invoice_sequences, public.invoices, public.audit_logs FROM kayart_app;
@@ -22,5 +24,9 @@ BEGIN
 END; $policies$;
 DROP POLICY IF EXISTS kayart_server_role_lookup ON public.customers;
 CREATE POLICY kayart_server_role_lookup ON public.customers FOR SELECT TO kayart_app USING (true);
--- No DELETE on products, orders, invoices, audit logs, media or customer requests. No customer writes,
--- no access to auth/storage tables, no management roles or migration table grants.
+DROP POLICY IF EXISTS kayart_server_customer_insert ON public.customers;
+CREATE POLICY kayart_server_customer_insert ON public.customers FOR INSERT TO kayart_app WITH CHECK (role = 'customer');
+DROP POLICY IF EXISTS kayart_server_customer_profile_update ON public.customers;
+CREATE POLICY kayart_server_customer_profile_update ON public.customers FOR UPDATE TO kayart_app USING (true) WITH CHECK (true);
+-- No DELETE on products, orders, invoices, audit logs, media or customer requests.
+-- No customer role/identity updates, auth/storage access, management roles or migration table grants.

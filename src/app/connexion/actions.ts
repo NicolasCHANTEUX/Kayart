@@ -78,7 +78,7 @@ function getPostLoginRedirectPath(role: string, requestedRedirect: string) {
     return `/connexion?redirect=${encodeURIComponent(requestedRedirect)}`;
   }
 
-  return requestedRedirect || "/";
+  return requestedRedirect || "/compte";
 }
 
 function getLoginErrorMessage(error: unknown) {

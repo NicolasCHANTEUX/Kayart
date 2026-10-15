@@ -42,7 +42,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   }
 
   if (session) {
-    redirect(redirectPath || "/");
+    redirect(redirectPath || "/compte");
   }
 
   return (

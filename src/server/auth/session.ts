@@ -72,6 +72,16 @@ export async function requireAdminSession(): Promise<AuthenticatedSession> {
   return session;
 }
 
+export async function requireAccountSession(): Promise<AuthenticatedSession> {
+  const session = await getCurrentAuthSession();
+
+  if (!session) {
+    redirect("/connexion?redirect=%2Fcompte");
+  }
+
+  return session;
+}
+
 export async function resolveAuthenticatedSession(user: AuthenticatedUser): Promise<AuthenticatedSession> {
   const role = await getUserRole(user);
 

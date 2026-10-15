@@ -27,7 +27,7 @@ test('login preserves denied admin destination for explanation and keeps normal 
     ['customer', '/boutique', '/boutique'],
     ['admin', '/admin/commandes', '/admin/commandes'],
     ['admin', '', '/admin'],
-    ['customer', '//evil.invalid', '/']
+    ['customer', '//evil.invalid', '/compte']
   ]) {
     let persisted = false;
     const { loginAction } = load('src/app/connexion/actions.ts', {

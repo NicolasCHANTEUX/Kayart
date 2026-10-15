@@ -9,7 +9,7 @@ export async function SiteHeader() {
     <Link className="brand" href="/" aria-label="KayArt — accueil"><KayartBrand /></Link>
     <MainNavigation isAdmin={session?.role === "admin"} />
     <div className="header-actions">
-      {session ? <form action={logoutAction} className="header-actions__form"><button className="account-link" type="submit">Déconnexion</button></form> : <Link className="account-link" href="/connexion" aria-label="Connexion"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2" stroke="currentColor" strokeWidth="1.5"/></svg><span className="sr-only">Connexion</span></Link>}
+      {session ? <><Link className="account-link account-link--signed-in" href="/compte" aria-label="Mon compte"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2" stroke="currentColor" strokeWidth="1.5"/></svg><span>Mon compte</span></Link><form action={logoutAction} className="header-actions__form"><button className="account-link account-link--logout" type="submit">Déconnexion</button></form></> : <Link className="account-link" href="/connexion" aria-label="Connexion"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2" stroke="currentColor" strokeWidth="1.5"/></svg><span className="sr-only">Connexion</span></Link>}
       <CartLink/>
     </div>
   </div></header>;

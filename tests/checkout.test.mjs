@@ -7,11 +7,12 @@ import { load } from './helpers/load-module.mjs';
 const productId=randomUUID();
 function input(overrides={}) { return { checkoutKey:randomUUID(),email:'buyer@example.invalid',name:'Test buyer',method:'pickup',address:null,shippingZoneId:null,items:[{productId,quantity:1}],...overrides }; }
 function harness({stock=1, zones=[]}={}) {
- let state={products:[{id:productId,name:'Test piece',sku:'FIXTURE',publishedAt:new Date(),availability:'available',condition:'new',isCustomizable:false,priceCents:1990,stockQuantity:stock,deliveryMode:'shippable'}],orders:[],holds:[],events:[]};
+ let state={products:[{id:productId,name:'Test piece',sku:'FIXTURE',publishedAt:new Date(),availability:'available',condition:'new',isCustomizable:false,priceCents:1990,stockQuantity:stock,deliveryMode:'shippable'}],customers:[],orders:[],holds:[],events:[]};
  const sessions=new Map();let stripeCalls=0,lock=Promise.resolve();
  const getOrder=q=>state.orders.find(order=>q.where.id?order.id===q.where.id:order.checkoutKey===q.where.checkoutKey);
  const full=order=>order?structuredClone({...order,checkoutHolds:state.holds.filter(hold=>hold.orderId===order.id)}):null;
  const db={
+  customer:{findUnique:async q=>state.customers.find(c=>c.authUserId===q.where.authUserId)??null,upsert:async q=>{let customer=state.customers.find(c=>c.authUserId===q.where.authUserId);if(!customer){customer={id:randomUUID(),...q.create};state.customers.push(customer);}return {id:customer.id};}},
   product:{findMany:async()=>structuredClone(state.products),updateMany:async(q)=>{const row=state.products.find(p=>p.id===q.where.id&&p.stockQuantity>=q.where.stockQuantity.gte);if(!row)return {count:0};row.stockQuantity-=q.data.stockQuantity.decrement;return {count:1};},update:async(q)=>{const row=state.products.find(p=>p.id===q.where.id);row.stockQuantity+=q.data.stockQuantity.increment;return structuredClone(row);}},
   shippingZone:{findMany:async()=>zones},
   order:{findUnique:async q=>full(getOrder(q)),create:async({data})=>{const id=randomUUID(),order={...data,id,status:'pending',paymentStatus:'pending',stripeCheckoutSessionId:null,items:data.items.create};state.orders.push(order);for(const hold of data.checkoutHolds.create)state.holds.push({...hold,id:randomUUID(),orderId:id,status:'active'});return full(order);},update:async(q)=>{const row=getOrder(q);Object.assign(row,q.data);return full(row);},updateMany:async(q)=>{const row=getOrder(q);if(!row)return {count:0};Object.assign(row,q.data);return {count:1};}},
@@ -64,6 +65,21 @@ test('checkout uses server prices and free pickup, and retries reuse the Stripe 
 test('two checkouts cannot reserve the same last unit',async()=>{
  const h=harness();const results=await Promise.allSettled([h.service.startTestCheckout(input()),h.service.startTestCheckout(input())]);
  assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(h.state().products[0].stockQuantity,0);assert.equal(h.state().orders.length,1);
+});
+
+test('a connected checkout links only the verified account and preserves ownership on retry',async()=>{
+ const h=harness({stock:2}),request=input();
+ const buyer={id:randomUUID(),email:request.email};
+ await assert.rejects(h.service.startTestCheckout(request,{id:buyer.id,email:'other@example.invalid'}),/adresse email/);
+ assert.equal(h.state().orders.length,0);
+ await h.service.startTestCheckout(request,buyer);
+ assert.equal(h.state().orders[0].customerId,h.state().customers[0].id);
+ assert.equal(h.state().customers[0].authUserId,buyer.id);
+ await h.service.startTestCheckout(request,buyer);
+ assert.equal(h.stripeCalls(),1);
+ await assert.rejects(h.service.startTestCheckout(request,{id:randomUUID(),email:request.email}),/autre compte/);
+ await assert.rejects(h.service.startTestCheckout(request),/autre compte/);
+ assert.equal(h.state().orders.length,1);
 });
 
 test('reconciliation of an already paid attempt returns its confirmation session without releasing stock',async()=>{
