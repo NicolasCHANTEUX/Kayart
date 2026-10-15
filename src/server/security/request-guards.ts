@@ -12,6 +12,11 @@ type RateLimitEntry = {
 };
 
 const rateLimitStore = new Map<string, RateLimitEntry>();
+const MAX_RATE_LIMIT_ENTRIES = 5000;
+const MAX_RATE_LIMIT_KEY_LENGTH = 512;
+const MAX_EMAIL_LENGTH = 254;
+const AUTH_CLIENT_LIMIT = 60;
+const AUTH_CLIENT_WINDOW_MS = 15 * 60 * 1000;
 
 export class RateLimitError extends Error {
   constructor() {
@@ -62,12 +67,18 @@ export function getRequestClientKey(request: Request, scope: string, identifier 
 }
 
 export function enforceRateLimit({ key, limit, windowMs }: RateLimitOptions) {
+  if (key.length > MAX_RATE_LIMIT_KEY_LENGTH) {
+    throw new RateLimitError();
+  }
   const now = Date.now();
   const existing = rateLimitStore.get(key);
 
   if (!existing || existing.resetAt <= now) {
-    rateLimitStore.set(key, { count: 1, resetAt: now + windowMs });
     cleanupRateLimitStore(now);
+    if (rateLimitStore.size >= MAX_RATE_LIMIT_ENTRIES && !rateLimitStore.has(key)) {
+      throw new RateLimitError();
+    }
+    rateLimitStore.set(key, { count: 1, resetAt: now + windowMs });
     return;
   }
 
@@ -76,6 +87,11 @@ export function enforceRateLimit({ key, limit, windowMs }: RateLimitOptions) {
   }
 
   existing.count += 1;
+}
+
+export function enforceAuthRateLimit(clientKey: string, options: RateLimitOptions) {
+  enforceRateLimit({ key: clientKey, limit: AUTH_CLIENT_LIMIT, windowMs: AUTH_CLIENT_WINDOW_MS });
+  enforceRateLimit(options);
 }
 
 function assertSameOrigin({
@@ -131,6 +147,9 @@ function normalizeOrigin(value: string) {
 }
 
 function buildClientKey(scope: string, forwardedFor: string, identifier: string) {
+  if (identifier.length > MAX_EMAIL_LENGTH) {
+    throw new RateLimitError();
+  }
   const clientIp = forwardedFor.split(",")[0]?.trim() || "unknown";
   const normalizedIdentifier = identifier.trim().toLowerCase();
 

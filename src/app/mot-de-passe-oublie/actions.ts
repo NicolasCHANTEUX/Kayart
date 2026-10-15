@@ -7,7 +7,7 @@ import {
   requestPasswordRecovery
 } from "@/server/auth/supabase-auth";
 import {
-  enforceRateLimit,
+  enforceAuthRateLimit,
   getActionClientKey,
   RateLimitError,
   requireSameOriginAction
@@ -20,7 +20,7 @@ export async function passwordRecoveryAction(formData: FormData) {
 
   try {
     email = readRequiredField(formData, "email").toLowerCase();
-    enforceRateLimit({
+    enforceAuthRateLimit(await getActionClientKey("auth"), {
       key: await getActionClientKey("password-recovery", email),
       limit: 5,
       windowMs: 60 * 60 * 1000

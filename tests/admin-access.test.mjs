@@ -34,7 +34,7 @@ test('login preserves denied admin destination for explanation and keeps normal 
       'next/navigation': { redirect },
       '@/server/auth/session': { resolveAuthenticatedSession: async () => session(role), persistPasswordSession: async () => { persisted = true; } },
       '@/server/auth/supabase-auth': { signInWithPassword: async () => ({ user: session(role).user }) },
-      '@/server/security/request-guards': { requireSameOriginAction: async () => {}, enforceRateLimit: () => {}, getActionClientKey: async () => 'fixture' }
+      '@/server/security/request-guards': { requireSameOriginAction: async () => {}, enforceAuthRateLimit: () => {}, getActionClientKey: async () => 'fixture' }
     });
     const form = new FormData();form.set('email', 'fixture@example.invalid');form.set('password', 'fixture-only');form.set('redirect', target);
     await assert.rejects(loginAction(form), error => error.message === `REDIRECT:${expected}`);

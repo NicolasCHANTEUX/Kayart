@@ -13,7 +13,7 @@ import {
   signInWithPassword
 } from "@/server/auth/supabase-auth";
 import {
-  enforceRateLimit,
+  enforceAuthRateLimit,
   getActionClientKey,
   RateLimitError,
   requireSameOriginAction
@@ -28,7 +28,7 @@ export async function loginAction(formData: FormData) {
 
   try {
     email = readRequiredField(formData, "email").toLowerCase();
-    enforceRateLimit({
+    enforceAuthRateLimit(await getActionClientKey("auth"), {
       key: await getActionClientKey("login", email),
       limit: 8,
       windowMs: 15 * 60 * 1000
