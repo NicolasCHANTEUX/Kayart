@@ -662,8 +662,11 @@ export const prismaCatalogRepository: CatalogRepository = {
 
     const row = await prisma.order.create({
       data: {
+        billingAddress: input.billingAddress,
         currency: "EUR",
+        customerName: input.customerName,
         customerNote: formatManualOrderNote(input.customerNote),
+        fulfillmentMethod: "pickup",
         guestEmail: input.guestEmail,
         items: {
           create: orderItems.map((item) => ({

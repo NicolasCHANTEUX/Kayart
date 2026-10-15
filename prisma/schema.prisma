@@ -49,6 +49,14 @@ enum PaymentStatus {
   @@map("payment_status")
 }
 
+enum InvoiceArchiveStatus {
+  pending
+  ready
+  failed
+
+  @@map("invoice_archive_status")
+}
+
 enum RequestStatus {
   new
   inProgress @map("in_progress")
@@ -187,50 +195,51 @@ model ProductImage {
 }
 
 model Customer {
-  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  authUserId  String?       @unique @map("auth_user_id") @db.Uuid
-  email       String
-  role        CustomerRole  @default(customer)
-  firstName   String?       @map("first_name")
-  lastName    String?       @map("last_name")
-  phone       String?
-  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
-  orders      Order[]
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authUserId   String?       @unique @map("auth_user_id") @db.Uuid
+  email        String
+  role         CustomerRole  @default(customer)
+  firstName    String?       @map("first_name")
+  lastName     String?       @map("last_name")
+  phone        String?
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  orders       Order[]
   reservations Reservation[]
 
   @@map("customers")
 }
 
 model Order {
-  isTest                  Boolean       @default(false) @map("is_test")
-  checkoutKey             String?       @unique @map("checkout_key") @db.Uuid
-  checkoutFingerprint     String?       @map("checkout_fingerprint")
-  fulfillmentMethod       String?       @map("fulfillment_method")
-  shippingZoneId          String?       @map("shipping_zone_id") @db.Uuid
-  shippingZone            ShippingZone? @relation(fields: [shippingZoneId], references: [id], onDelete: SetNull)
+  isTest                  Boolean        @default(false) @map("is_test")
+  checkoutKey             String?        @unique @map("checkout_key") @db.Uuid
+  checkoutFingerprint     String?        @map("checkout_fingerprint")
+  fulfillmentMethod       String?        @map("fulfillment_method")
+  shippingZoneId          String?        @map("shipping_zone_id") @db.Uuid
+  shippingZone            ShippingZone?  @relation(fields: [shippingZoneId], references: [id], onDelete: SetNull)
   checkoutHolds           CheckoutHold[]
-  id                      String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orderNumber             String        @unique @map("order_number")
-  customerId              String?       @map("customer_id") @db.Uuid
-  guestEmail              String        @map("guest_email")
-  customerName            String?       @map("customer_name")
-  status                  OrderStatus   @default(pending)
-  paymentStatus           PaymentStatus @default(pending) @map("payment_status")
-  currency                String        @default("EUR") @db.Char(3)
-  subtotalCents           Int           @default(0) @map("subtotal_cents")
-  shippingCents           Int           @default(0) @map("shipping_cents")
-  totalCents              Int           @default(0) @map("total_cents")
-  customerNote            String?       @map("customer_note")
-  stripeCheckoutSessionId String?       @unique @map("stripe_checkout_session_id")
-  stripePaymentIntentId   String?       @unique @map("stripe_payment_intent_id")
-  billingAddress          Json?         @map("billing_address")
-  shippingAddress         Json?         @map("shipping_address")
-  paidAt                  DateTime?     @map("paid_at") @db.Timestamptz(6)
-  createdAt               DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt               DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
-  customer                Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  id                      String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderNumber             String         @unique @map("order_number")
+  customerId              String?        @map("customer_id") @db.Uuid
+  guestEmail              String         @map("guest_email")
+  customerName            String?        @map("customer_name")
+  status                  OrderStatus    @default(pending)
+  paymentStatus           PaymentStatus  @default(pending) @map("payment_status")
+  currency                String         @default("EUR") @db.Char(3)
+  subtotalCents           Int            @default(0) @map("subtotal_cents")
+  shippingCents           Int            @default(0) @map("shipping_cents")
+  totalCents              Int            @default(0) @map("total_cents")
+  customerNote            String?        @map("customer_note")
+  stripeCheckoutSessionId String?        @unique @map("stripe_checkout_session_id")
+  stripePaymentIntentId   String?        @unique @map("stripe_payment_intent_id")
+  billingAddress          Json?          @map("billing_address")
+  shippingAddress         Json?          @map("shipping_address")
+  paidAt                  DateTime?      @map("paid_at") @db.Timestamptz(6)
+  createdAt               DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime       @default(now()) @map("updated_at") @db.Timestamptz(6)
+  customer                Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
   items                   OrderItem[]
+  invoice                 Invoice?
 
   @@index([guestEmail])
   @@index([status])
@@ -254,36 +263,87 @@ model OrderItem {
 }
 
 model ShippingZone {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String
-  countryCodes String[] @map("country_codes")
-  postalPrefixes String[] @default([]) @map("postal_prefixes")
+  id                     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                   String
+  countryCodes           String[] @map("country_codes")
+  postalPrefixes         String[] @default([]) @map("postal_prefixes")
   excludedPostalPrefixes String[] @default([]) @map("excluded_postal_prefixes")
-  priceCents Int? @map("price_cents")
-  enabled Boolean @default(false)
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  orders Order[]
+  priceCents             Int?     @map("price_cents")
+  enabled                Boolean  @default(false)
+  updatedAt              DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  orders                 Order[]
+
   @@map("shipping_zones")
 }
 
 model CheckoutHold {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orderId String @map("order_id") @db.Uuid
-  productId String @map("product_id") @db.Uuid
-  quantity Int
-  status String @default("active")
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId   String   @map("order_id") @db.Uuid
+  productId String   @map("product_id") @db.Uuid
+  quantity  Int
+  status    String   @default("active")
   expiresAt DateTime @map("expires_at") @db.Timestamptz(6)
-  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
-  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
   @@unique([orderId, productId])
   @@index([status, expiresAt])
   @@map("checkout_holds")
 }
 
 model StripeEvent {
-  id String @id
+  id          String   @id
   processedAt DateTime @default(now()) @map("processed_at") @db.Timestamptz(6)
+
   @@map("stripe_events")
+}
+
+model InvoiceSequence {
+  series       String    @id @db.VarChar(16)
+  currentYear  Int       @default(0) @map("current_year")
+  lastNumber   Int       @default(0) @map("last_number")
+  lastIssuedAt DateTime? @map("last_issued_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("invoice_sequences")
+}
+
+model Invoice {
+  id                   String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId              String               @unique @map("order_id") @db.Uuid
+  orderNumber          String               @map("order_number")
+  series               String               @db.VarChar(16)
+  sequenceYear         Int                  @map("sequence_year")
+  sequenceNumber       Int                  @map("sequence_number")
+  invoiceNumber        String               @unique @map("invoice_number")
+  issuedAt             DateTime             @map("issued_at") @db.Timestamptz(6)
+  saleDate             DateTime             @map("sale_date") @db.Timestamptz(6)
+  issuedByUserId       String?              @map("issued_by_user_id") @db.Uuid
+  currency             String               @db.Char(3)
+  subtotalExclTaxCents Int                  @map("subtotal_excl_tax_cents")
+  shippingExclTaxCents Int                  @map("shipping_excl_tax_cents")
+  totalExclTaxCents    Int                  @map("total_excl_tax_cents")
+  taxCents             Int                  @map("tax_cents")
+  totalInclTaxCents    Int                  @map("total_incl_tax_cents")
+  snapshotVersion      Int                  @default(1) @map("snapshot_version")
+  sellerSnapshot       Json                 @map("seller_snapshot")
+  buyerSnapshot        Json                 @map("buyer_snapshot")
+  linesSnapshot        Json                 @map("lines_snapshot")
+  taxSnapshot          Json                 @map("tax_snapshot")
+  paymentSnapshot      Json                 @map("payment_snapshot")
+  archiveStatus        InvoiceArchiveStatus @default(pending) @map("archive_status")
+  storageBucket        String?              @map("storage_bucket")
+  storagePath          String?              @unique @map("storage_path")
+  pdfSha256            String?              @map("pdf_sha256") @db.Char(64)
+  pdfSizeBytes         Int?                 @map("pdf_size_bytes")
+  archivedAt           DateTime?            @map("archived_at") @db.Timestamptz(6)
+  createdAt            DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime             @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order                Order                @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@unique([series, sequenceYear, sequenceNumber])
+  @@index([issuedAt])
+  @@map("invoices")
 }
 
 model Reservation {
@@ -306,18 +366,18 @@ model Reservation {
 }
 
 model ContactRequest {
-  submissionKey String? @unique @map("submission_key") @db.Uuid
-  privacyAcknowledgedAt DateTime? @map("privacy_acknowledged_at") @db.Timestamptz(6)
-  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  email     String
-  phone     String?
-  subject   String
-  message   String
-  status    RequestStatus @default(new)
-  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  submissionKey         String?       @unique @map("submission_key") @db.Uuid
+  privacyAcknowledgedAt DateTime?     @map("privacy_acknowledged_at") @db.Timestamptz(6)
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  email                 String
+  phone                 String?
+  subject               String
+  message               String
+  status                RequestStatus @default(new)
+  createdAt             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt             DateTime?     @map("deleted_at") @db.Timestamptz(6)
 
   @@index([status])
   @@index([deletedAt, createdAt(sort: Desc)], map: "contact_requests_deleted_at_created_at_idx")
@@ -325,18 +385,18 @@ model ContactRequest {
 }
 
 model RepairRequest {
-  submissionKey String? @unique @map("submission_key") @db.Uuid
-  privacyAcknowledgedAt DateTime? @map("privacy_acknowledged_at") @db.Timestamptz(6)
-  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name              String
-  email             String
-  phone             String?
-  productType       String?       @map("product_type")
-  damageDescription String        @map("damage_description")
-  status            RequestStatus @default(new)
-  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt         DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt         DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  submissionKey         String?       @unique @map("submission_key") @db.Uuid
+  privacyAcknowledgedAt DateTime?     @map("privacy_acknowledged_at") @db.Timestamptz(6)
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  email                 String
+  phone                 String?
+  productType           String?       @map("product_type")
+  damageDescription     String        @map("damage_description")
+  status                RequestStatus @default(new)
+  createdAt             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt             DateTime?     @map("deleted_at") @db.Timestamptz(6)
 
   @@index([status])
   @@index([deletedAt, createdAt(sort: Desc)], map: "repair_requests_deleted_at_created_at_idx")
@@ -344,21 +404,21 @@ model RepairRequest {
 }
 
 model CustomRequest {
-  submissionKey String? @unique @map("submission_key") @db.Uuid
-  privacyAcknowledgedAt DateTime? @map("privacy_acknowledged_at") @db.Timestamptz(6)
-  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name               String
-  email              String
-  phone              String?
-  discipline         String?
-  practiceLevel      String?       @map("practice_level")
-  projectDescription String        @map("project_description")
-  constraints        String?
-  budgetHint         String?       @map("budget_hint")
-  status             RequestStatus @default(new)
-  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt          DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  submissionKey         String?       @unique @map("submission_key") @db.Uuid
+  privacyAcknowledgedAt DateTime?     @map("privacy_acknowledged_at") @db.Timestamptz(6)
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  email                 String
+  phone                 String?
+  discipline            String?
+  practiceLevel         String?       @map("practice_level")
+  projectDescription    String        @map("project_description")
+  constraints           String?
+  budgetHint            String?       @map("budget_hint")
+  status                RequestStatus @default(new)
+  createdAt             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt             DateTime?     @map("deleted_at") @db.Timestamptz(6)
 
   @@index([status])
   @@index([deletedAt, createdAt(sort: Desc)], map: "custom_requests_deleted_at_created_at_idx")
@@ -377,9 +437,10 @@ model RequestMedia {
 }
 
 model RequestRateLimit {
-  key String @id
-  count Int
+  key     String   @id
+  count   Int
   resetAt DateTime @map("reset_at") @db.Timestamptz(6)
+
   @@index([resetAt])
   @@map("request_rate_limits")
 }
@@ -423,5 +484,6 @@ model AuditLog {
   metadata    Json?
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
+  @@index([entityType, entityId, createdAt(sort: Desc)], map: "audit_logs_entity_created_at_idx")
   @@map("audit_logs")
 }

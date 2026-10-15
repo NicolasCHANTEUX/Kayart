@@ -99,6 +99,16 @@ export type AdminOrderItemInput = {
 
 export type AdminOrderCreateInput = {
   guestEmail: string;
+  customerName: string;
+  billingAddress: {
+    name: string;
+    line1: string;
+    line2?: string;
+    postalCode: string;
+    city: string;
+    country: string;
+    companyRegistration?: string;
+  };
   customerNote: string | null;
   items: AdminOrderItemInput[];
 };
@@ -430,8 +440,14 @@ export function parseCategoryDeleteFormData(formData: FormData): CategoryDeleteI
 
 export function parseAdminOrderFormData(formData: FormData): AdminOrderCreateInput {
   const issues: Record<string, string> = {};
-  const guestEmailInput = readNullableText(formData, "guestEmail");
-  const guestEmail = guestEmailInput ?? "vente-directe@kayart.local";
+  const guestEmail = readText(formData, "guestEmail").toLowerCase();
+  const customerName = readText(formData, "customerName");
+  const line1 = readText(formData, "billingLine1");
+  const line2 = readNullableText(formData, "billingLine2");
+  const postalCode = readText(formData, "billingPostalCode");
+  const city = readText(formData, "billingCity");
+  const country = readText(formData, "billingCountry").toUpperCase();
+  const companyRegistration = readNullableText(formData, "buyerRegistration");
   const customerNote = readNullableText(formData, "customerNote");
   const productIds = formData.getAll("productId");
   const quantities = formData.getAll("quantity");
@@ -439,6 +455,19 @@ export function parseAdminOrderFormData(formData: FormData): AdminOrderCreateInp
 
   if (!isEmailLike(guestEmail)) {
     issues.guestEmail = "L'adresse e-mail client n'est pas valide.";
+  }
+
+  if (customerName.length < 2 || customerName.length > 120) {
+    issues.customerName = "Le nom de facturation doit contenir entre 2 et 120 caractères.";
+  }
+  if (!line1 || line1.length > 200 || !postalCode || postalCode.length > 20 || !city || city.length > 100) {
+    issues.billingAddress = "L'adresse de facturation est incomplète ou invalide.";
+  }
+  if (!/^[A-Z]{2}$/.test(country)) {
+    issues.billingCountry = "Le pays doit être renseigné avec son code à deux lettres (ex. FR).";
+  }
+  if ((line2?.length ?? 0) > 200 || (companyRegistration?.length ?? 0) > 80) {
+    issues.billingAddress = "Les informations de facturation sont trop longues.";
   }
 
   productIds.forEach((value, index) => {
@@ -472,6 +501,16 @@ export function parseAdminOrderFormData(formData: FormData): AdminOrderCreateInp
 
   return {
     guestEmail,
+    customerName,
+    billingAddress: {
+      name: customerName,
+      line1,
+      ...(line2 ? { line2 } : {}),
+      postalCode,
+      city,
+      country,
+      ...(companyRegistration ? { companyRegistration } : {})
+    },
     customerNote,
     items: Array.from(quantityByProductId, ([productId, quantity]) => ({
       productId,

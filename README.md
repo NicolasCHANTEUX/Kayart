@@ -20,7 +20,7 @@ Le site est disponible sur http://localhost:3000. Utiliser `.env.example` comme 
 - `KAYART_DATA_SOURCE=prisma` : donn?es PostgreSQL/Supabase ; r?le admin li? ? l?identifiant Auth v?rifi?.
 - `/admin` : produits, commandes, demandes et livraison, r?serv?s aux administrateurs.
 
-Ne pas lancer de seed ou de `db push` sur une base existante pour passer aux donn?es r?elles. Suivre [le guide base de donn?es](docs/database.md).
+Ne pas lancer de seed ou de `db push` sur une base existante pour passer aux donn?es r?elles. Suivre [le guide base de donn?es](docs/database.md). La création de factures reste désactivée tant que la [mise en service de la facturation](docs/facturation.md) n’est pas entièrement validée.
 
 ## V?rifier
 
@@ -47,6 +47,6 @@ La CI ex?cute installation, g?n?ration Prisma, lint, tests, types et recette HTT
 - `tests`, `scripts` : v?rifications et op?rations explicites.
 - `docs` : guides actifs ; `outputs` : preuves dat?es et archives.
 
-Lire [l??tat V1](docs/v1-status.md), [l?architecture](docs/architecture.md), [le d?ploiement](docs/deployment.md), [la s?curit?](docs/security.md), [la recette Stripe test](docs/checkout-test-v1.md) et [l?index documentaire](docs/README.md).
+Lire [l??tat V1](docs/v1-status.md), [l?architecture](docs/architecture.md), [le d?ploiement](docs/deployment.md), [la s?curit?](docs/security.md), [la recette Stripe test](docs/checkout-test-v1.md), [la facturation](docs/facturation.md) et [l?index documentaire](docs/README.md).
 
 Les paiements r?els sont refus?s dans le code : une cl? de production ne suffit pas ? les activer. Les pages l?gales et l?indexation restent soumises ? leur configuration et validation explicites.

@@ -6,16 +6,21 @@ GRANT SELECT, INSERT ON public.media_assets, public.order_items, public.request_
 GRANT SELECT (id, auth_user_id, role) ON public.customers TO kayart_app;
 GRANT SELECT, INSERT, UPDATE ON public.shipping_zones, public.checkout_holds TO kayart_app;
 GRANT SELECT, INSERT ON public.stripe_events TO kayart_app;
+REVOKE ALL ON public.invoice_sequences, public.invoices, public.audit_logs FROM kayart_app;
+GRANT SELECT, INSERT ON public.invoice_sequences TO kayart_app;
+GRANT UPDATE (current_year, last_number, last_issued_at, updated_at) ON public.invoice_sequences TO kayart_app;
+GRANT SELECT, INSERT ON public.invoices, public.audit_logs TO kayart_app;
+GRANT UPDATE (archive_status, storage_bucket, storage_path, pdf_sha256, pdf_size_bytes, archived_at, updated_at) ON public.invoices TO kayart_app;
 
 DO $policies$
 DECLARE table_name text;
 BEGIN
-  FOREACH table_name IN ARRAY ARRAY['products','orders','contact_requests','repair_requests','custom_requests','categories','product_attributes','product_images','request_rate_limits','media_assets','order_items','request_media','shipping_zones','checkout_holds','stripe_events'] LOOP
+  FOREACH table_name IN ARRAY ARRAY['products','orders','contact_requests','repair_requests','custom_requests','categories','product_attributes','product_images','request_rate_limits','media_assets','order_items','request_media','shipping_zones','checkout_holds','stripe_events','invoice_sequences','invoices','audit_logs'] LOOP
     EXECUTE format('DROP POLICY IF EXISTS kayart_server ON public.%I', table_name);
     EXECUTE format('CREATE POLICY kayart_server ON public.%I TO kayart_app USING (true) WITH CHECK (true)', table_name);
   END LOOP;
 END; $policies$;
 DROP POLICY IF EXISTS kayart_server_role_lookup ON public.customers;
 CREATE POLICY kayart_server_role_lookup ON public.customers FOR SELECT TO kayart_app USING (true);
--- No DELETE on products, orders, media or customer requests. No customer writes,
+-- No DELETE on products, orders, invoices, audit logs, media or customer requests. No customer writes,
 -- no access to auth/storage tables, no management roles or migration table grants.

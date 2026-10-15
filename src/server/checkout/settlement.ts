@@ -16,6 +16,7 @@ export async function releaseRejectedCheckout(orderId: string) {
     if (!order || order.paymentStatus !== "pending" || order.stripeCheckoutSessionId) return;
     await releaseHolds(tx, orderId);
     await tx.order.update({ where: { id: orderId }, data: { status: "cancelled", paymentStatus: "cancelled", updatedAt: new Date() } });
+    await tx.auditLog.create({ data: { action: "order.checkout_rejected", entityType: "Order", entityId: orderId, metadata: { source: "stripe_test" } } });
   });
 }
 export async function settleVerifiedSession(session: Stripe.Checkout.Session, eventId: string, outcome: "paid" | "expired" | "failed") {
@@ -34,9 +35,11 @@ export async function settleVerifiedSession(session: Stripe.Checkout.Session, ev
         if (!order.checkoutHolds.length || order.checkoutHolds.some(hold => hold.status !== "active")) throw new Error("Paid session needs manual stock reconciliation.");
         await tx.checkoutHold.updateMany({ where: { orderId: order.id, status: "active" }, data: { status: "committed" } });
         await tx.order.update({ where: { id: order.id }, data: { status: "paid", paymentStatus: "paid", paidAt: new Date(), stripeCheckoutSessionId: session.id, stripePaymentIntentId: typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id ?? null, updatedAt: new Date() } });
+        await tx.auditLog.create({ data: { action: "order.payment_confirmed", entityType: "Order", entityId: order.id, metadata: { eventId, source: "stripe_test" } } });
       } else {
         await releaseHolds(tx, order.id);
         await tx.order.update({ where: { id: order.id }, data: { status: "cancelled", paymentStatus: outcome === "failed" ? "failed" : "cancelled", stripeCheckoutSessionId: session.id, updatedAt: new Date() } });
+        await tx.auditLog.create({ data: { action: outcome === "failed" ? "order.payment_failed" : "order.checkout_expired", entityType: "Order", entityId: order.id, metadata: { eventId, source: "stripe_test" } } });
       }
     });
   } catch (error) {

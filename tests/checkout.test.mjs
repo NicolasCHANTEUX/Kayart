@@ -16,6 +16,7 @@ function harness({stock=1, zones=[]}={}) {
   shippingZone:{findMany:async()=>zones},
   order:{findUnique:async q=>full(getOrder(q)),create:async({data})=>{const id=randomUUID(),order={...data,id,status:'pending',paymentStatus:'pending',stripeCheckoutSessionId:null,items:data.items.create};state.orders.push(order);for(const hold of data.checkoutHolds.create)state.holds.push({...hold,id:randomUUID(),orderId:id,status:'active'});return full(order);},update:async(q)=>{const row=getOrder(q);Object.assign(row,q.data);return full(row);},updateMany:async(q)=>{const row=getOrder(q);if(!row)return {count:0};Object.assign(row,q.data);return {count:1};}},
   checkoutHold:{findMany:async(q)=>structuredClone(state.holds.filter(h=>h.orderId===q.where.orderId&&h.status===q.where.status)),updateMany:async(q)=>{let count=0;for(const hold of state.holds){if((!q.where.id||q.where.id===hold.id)&&(!q.where.orderId||q.where.orderId===hold.orderId)&&hold.status===q.where.status){Object.assign(hold,q.data);count++;}}return {count};}},
+  auditLog:{create:async()=>({})},
   stripeEvent:{findUnique:async(q)=>state.events.includes(q.where.id)?{id:q.where.id}:null,create:async(q)=>{if(state.events.includes(q.data.id))throw Object.assign(new Error('duplicate'),{code:'P2002'});state.events.push(q.data.id);return q.data;}}
  };
  db.$transaction=(fn)=>{const run=lock.then(async()=>{const snapshot=structuredClone(state);try{return await fn(db);}catch(error){state=snapshot;throw error;}});lock=run.catch(()=>{});return run;};

@@ -10,6 +10,7 @@ Commencer par [l??tat V1](v1-status.md), qui distingue code livr?, validations e
 | [Base de donn?es](database.md) | Sources de v?rit? et migrations |
 | [S?curit?](security.md) | Acc?s, contr?les et limites |
 | [Checkout test](checkout-test-v1.md) | Configuration et sc?narios Stripe |
+| [Facturation](facturation.md) | Mise en service, stockage privé, règles d’émission et limites réglementaires |
 | [Sessions](sessions.md) | Renouvellement et d?connexion |
 | [R?f?rencement](referencement.md) | Activation robots et sitemap |
 | [Identité KayArt](ui-brand.md) | Direction actuelle, inspirée des logos |

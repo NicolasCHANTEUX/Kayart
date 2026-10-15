@@ -1,6 +1,7 @@
 import { siteConfig } from "@/config/site";
 import { randomUUID } from "node:crypto";
 import { CustomerRequestForm } from "@/components/requests/customer-request-form";
+import { productContactSubject } from "@/lib/contact";
 
 export const metadata = {
   title: "Contact",
@@ -11,7 +12,9 @@ export default async function ContactPage({ searchParams }: { searchParams?: Pro
   const params = searchParams ? await searchParams : {};
   const product = typeof params.produit === "string" ? params.produit.slice(0, 200) : "";
   const reference = typeof params.reference === "string" ? params.reference.slice(0, 100) : "";
-  const subject = product ? `Demande : ${product} (${reference})` : "Contacter l’atelier KayArt";
+  const subject = product
+    ? productContactSubject(product, reference)
+    : "Contacter l’atelier KayArt";
   const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}`;
   return (
     <section className="section">

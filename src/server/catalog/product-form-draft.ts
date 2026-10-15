@@ -24,6 +24,17 @@ export type ProductFormDraft = {
   weight?: string;
 };
 
+export type ProductFormActionState = {
+  status: "idle" | "error";
+  message: string;
+  errors?: Record<string, string>;
+};
+
+export const initialProductFormActionState: ProductFormActionState = {
+  status: "idle",
+  message: ""
+};
+
 export const productFormDraftCookieName = "kayart_product_draft";
 
 const textFields = [

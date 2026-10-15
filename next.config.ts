@@ -59,7 +59,14 @@ const nextConfig: NextConfig = {
     }
   },
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/product-images/**"
+      }
+    ],
     formats: ["image/avif", "image/webp"]
   }
 };

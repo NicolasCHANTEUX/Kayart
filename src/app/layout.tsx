@@ -4,10 +4,26 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { RouteLoadingIndicator } from "@/components/layout/route-loading-indicator";
 import { PageBackground } from "@/components/layout/page-background";
+import { PwaInstallPrompt } from "@/components/pwa/pwa-install-prompt";
 import { siteConfig } from "@/config/site";
 import { getIndexableOrigin } from "@/config/seo";
 import "./globals.css";
 import "./atelier-v2.css";
+
+const pwaInstallBootstrap = `
+  (() => {
+    if (window.__kayartPwaBootstrap) return;
+    window.__kayartPwaBootstrap = true;
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      window.__kayartInstallPrompt = event;
+      window.dispatchEvent(new Event("kayart:pwa-install-ready"));
+    });
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});
+    }
+  })();
+`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -17,6 +33,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
+  manifest: "/manifest.webmanifest",
   robots: getIndexableOrigin() ? { index: true, follow: true } : { index: false, follow: false },
   appleWebApp: {
     capable: true,
@@ -41,6 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="fr">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: pwaInstallBootstrap }} />
         {/* Discovered from the initial HTML instead of three levels deep inside a CSS @import, so the browser can start the font fetch immediately. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -59,6 +77,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <main id="main-content" tabIndex={-1}>{children}</main>
           <SiteFooter />
         </div>
+        <PwaInstallPrompt />
       </body>
     </html>
   );

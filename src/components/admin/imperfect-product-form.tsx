@@ -1,16 +1,23 @@
 "use client";
 
 import { ProductImageView } from "@/components/catalog/product-image";
-import { useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { useFormStatus } from "react-dom";
 import { ProductImageUploader } from "@/components/admin/product-image-uploader";
 import { productAvailabilityLabels } from "@/lib/catalog";
 import { formatMoneyCents } from "@/lib/format";
 import { formatEuroInput, sanitizeMoneyInput } from "@/lib/money";
+import {
+  initialProductFormActionState,
+  type ProductFormActionState
+} from "@/server/catalog/product-form-draft";
 import type { Product } from "@/types/catalog";
 
 type ImperfectProductFormProps = {
-  action?: (formData: FormData) => Promise<void>;
+  action?: (
+    previousState: ProductFormActionState,
+    formData: FormData
+  ) => Promise<ProductFormActionState>;
   baseProducts: Product[];
   canPersist: boolean;
   errorMessage?: string;
@@ -24,6 +31,11 @@ export function ImperfectProductForm({
   canPersist,
   errorMessage
 }: ImperfectProductFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [actionState, formAction] = useActionState(
+    action ?? unavailableProductAction,
+    initialProductFormActionState
+  );
   const initialProduct = baseProducts[0];
   const [selectedProductId, setSelectedProductId] = useState(initialProduct?.id ?? "");
   const [basePrice, setBasePrice] = useState(getModelPriceValue(initialProduct));
@@ -35,6 +47,23 @@ export function ImperfectProductForm({
   const preview = getSalePreview(basePrice, discountPercent);
   const canSubmit = canPersist && baseProducts.length > 0;
   const isSubmittingRef = useRef(false);
+
+  useEffect(() => {
+    if (actionState.status !== "error") {
+      return;
+    }
+
+    isSubmittingRef.current = false;
+    const firstInvalidField = Object.keys(actionState.errors ?? {})[0];
+    const control = firstInvalidField
+      ? formRef.current?.elements.namedItem(firstInvalidField)
+      : null;
+
+    if (control instanceof HTMLElement) {
+      control.focus();
+      control.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [actionState]);
 
   function handleModelChange(productId: string) {
     const product = baseProducts.find((candidate) => candidate.id === productId);
@@ -53,8 +82,26 @@ export function ImperfectProductForm({
   }
 
   return (
-    <form action={action} className="admin-form imperfect-form" onSubmit={handleSubmit}>
-      {errorMessage ? <p className="form-notice form-notice--error">{errorMessage}</p> : null}
+    <form
+      action={action ? formAction : undefined}
+      className="admin-form imperfect-form"
+      onSubmit={handleSubmit}
+      ref={formRef}
+    >
+      {actionState.status === "error" ? (
+        <div className="form-notice form-notice--error" role="alert">
+          <p>{actionState.message}</p>
+          {Object.keys(actionState.errors ?? {}).length > 1 ? (
+            <ul>
+              {Object.entries(actionState.errors ?? {}).map(([field, message]) => (
+                <li key={field}>{message}</li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      ) : errorMessage ? (
+        <p className="form-notice form-notice--error" role="alert">{errorMessage}</p>
+      ) : null}
 
       <fieldset className="form-stage">
         <legend>Modèle</legend>
@@ -179,6 +226,14 @@ export function ImperfectProductForm({
       </div>
     </form>
   );
+}
+
+async function unavailableProductAction(
+  previousState: ProductFormActionState,
+  formData: FormData
+) {
+  void formData;
+  return previousState;
 }
 
 function ImperfectProductSubmitButton({ canPersist, canSubmit }: { canPersist: boolean; canSubmit: boolean }) {
